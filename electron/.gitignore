@@ -1,0 +1,7 @@
+node_modules
+.DS_Store
+.env
+*.mp4
+dist
+release
+yarn.lock
