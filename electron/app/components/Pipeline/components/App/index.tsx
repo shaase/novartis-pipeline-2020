@@ -1,23 +1,19 @@
-import React, { useContext } from "react";
-import { AppContext } from "../../state";
-import { styleForScale } from "./utils";
-// import { Idler, IdlerTouch } from "../Idler";
-import styles from "./index.module.scss";
+import React from "react";
+import { CardProvider, DefinitionsProvider, FilterProvider, PipelineProvider, IdlePath } from "../../state";
+import Container from "./container";
 
-type Props = { home: string; idlePaths: string[]; isActive: boolean };
+type Props = { home: string; idlePaths: IdlePath[]; scale: number; isActive: boolean };
 
-const App: React.FC<Props> = ({ home, idlePaths, isActive }: Props) => {
-  const { scale } = useContext(AppContext);
-  const { screenWidth: width, screenHeight: height, transform } = styleForScale(scale);
+const AppProvider: React.FC<Props> = ({ home, idlePaths, scale, isActive }: Props) => (
+  <FilterProvider>
+    <PipelineProvider home={home} idlePaths={idlePaths} scale={scale} isActive={isActive}>
+      <CardProvider>
+        <DefinitionsProvider>
+          <Container home={home} idlePaths={idlePaths} isActive={isActive} />
+        </DefinitionsProvider>
+      </CardProvider>
+    </PipelineProvider>
+  </FilterProvider>
+);
 
-  return (
-    <div className={styles.container} style={{ width, height, transform }}>
-      {/* <Idler delay={120} /> */}
-      <div>{home}</div>
-      <div>{idlePaths}</div>
-      <div>{isActive}</div>
-    </div>
-  );
-};
-
-export default App;
+export default AppProvider;

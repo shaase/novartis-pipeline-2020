@@ -1,6 +1,5 @@
-import React, { createContext, useRef, useState } from "react";
-
-type Props = { path: string; children?: React.ReactNode };
+import React, { createContext, useContext, useRef, useState } from "react";
+import { PipelineContext } from "./pipeline";
 
 export interface DefinitionsContextInterface {
   isVisible: boolean;
@@ -12,9 +11,12 @@ const defaultValue: DefinitionsContextInterface = {
   onToggleDefs: () => {},
 };
 
+type Props = { children?: React.ReactNode };
+
 export const DefinitionsContext = createContext<DefinitionsContextInterface>(defaultValue);
 
-export const DefinitionsProvider: React.ComponentType<Props> = ({ path, children }: Props) => {
+export const DefinitionsProvider: React.ComponentType<Props> = ({ children }: Props) => {
+  const { path } = useContext(PipelineContext);
   const [isVisible, setVisible] = useState(false);
   const pathRef = useRef("");
 

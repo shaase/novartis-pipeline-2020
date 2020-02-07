@@ -1,12 +1,6 @@
-import React, { createContext, useRef, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
+import { PipelineContext } from "./pipeline";
 import { record } from "../metrics";
-
-type Props = {
-  path: string;
-  compound?: string;
-  isIdling: boolean;
-  children?: React.ReactNode;
-};
 
 export interface CardType {
   file: string;
@@ -35,9 +29,12 @@ const defaultValue: CardContextInterface = {
   onLightboxContent: () => {},
 };
 
+type Props = { children?: React.ReactNode };
+
 export const CardContext = createContext<CardContextInterface>(defaultValue);
 
-export const CardProvider: React.ComponentType<Props> = ({ path, compound, isIdling, children }: Props) => {
+export const CardProvider: React.ComponentType<Props> = ({ children }: Props) => {
+  const { path, compound, isIdling } = useContext(PipelineContext);
   const [cardIndex, setCardIndex] = useState(0);
   const [lightboxContent, setLightboxContent] = useState<LightboxContent | undefined>(undefined);
   const pathRef = useRef("");

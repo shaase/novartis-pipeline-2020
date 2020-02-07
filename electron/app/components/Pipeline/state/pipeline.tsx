@@ -1,7 +1,9 @@
-import React, { createContext, useRef, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
+import { FilterContext } from "./filter";
 import { record } from "../metrics";
 import { studiesForPath } from "../data";
 import { itemsForPath } from "../utils";
+import { PipelineStudy } from "../types";
 
 // TODO: move?
 export interface IdlePath {
@@ -10,42 +12,112 @@ export interface IdlePath {
   cardIndex: number;
 }
 
-interface RouteItem {
+interface PipelineRoute {
   path: string;
   compound?: string;
 }
 
-type Props = { home: string; idlePaths: IdlePath[]; isActive: boolean; children?: React.ReactNode };
+type Props = { home: string; idlePaths: IdlePath[]; scale: number; isActive: boolean; children?: React.ReactNode };
 
 export interface PipelineContextInterface {
+  scale: number;
   path: string;
   compound?: string;
   idlePaths: IdlePath[];
   isIdling: boolean;
+  onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
+  onNext: () => void;
+  onBack: () => void;
   onReset: () => void;
 }
 
 const defaultValue: PipelineContextInterface = {
+  scale: window.innerWidth / 1920,
   path: "",
   compound: undefined,
   idlePaths: [],
   isIdling: false,
+  onNavigate: () => {},
+  onNext: () => {},
+  onBack: () => {},
   onReset: () => {},
 };
 
 export const PipelineContext = createContext<PipelineContextInterface>(defaultValue);
 
-export const PipelineProvider: React.ComponentType<Props> = ({ home, idlePaths, isActive, children }: Props) => {
+export const PipelineProvider: React.ComponentType<Props> = ({ home, idlePaths, isActive, scale, children }: Props) => {
+  const { onClearFilters } = useContext(FilterContext);
   const defaultRoute = { path: home, compound: undefined };
-  const [route, setRoute] = useState<RouteItem>({ ...defaultRoute });
+  const [route, setRoute] = useState<PipelineRoute>({ ...defaultRoute });
   const [isIdling, setIdling] = useState(false);
 
   const activeRef = useRef(false);
-  const history = useRef([{ ...defaultRoute }]);
-  const nextHistory = useRef([]);
+  const prevPath = useRef(home);
+  const prevCompound = useRef(undefined);
+  const history = useRef<PipelineRoute[]>([{ ...defaultRoute }]);
+  const nextHistory = useRef<PipelineRoute[]>([]);
 
-  const onReset = (): void => {
+  const onNavigate = (definedPath: string, definedCompound?: string, idling = false): void => {
+    if (definedPath.includes("Content")) {
+      // TODO: only for kiosk
+      if (!isIdling) record(`SELECT, ${definedPath}`);
+
+      let newPath = definedPath;
+      let newCompound = definedCompound;
+
+      if (definedCompound === undefined) {
+        const studies = studiesForPath(definedPath, "target");
+        if (studies.length === 1) {
+          newCompound = studies[0].target;
+        }
+
+        if (prevCompound !== undefined) {
+          const { studyCode } = itemsForPath(definedPath);
+          const filtered = studies.filter((study: PipelineStudy) => study.target === prevCompound.current);
+
+          if (filtered.length > 0 && studyCode !== undefined) {
+            newCompound = prevCompound.current;
+          }
+        }
+      } else if (!isIdling) {
+        const { studyCode } = itemsForPath(prevPath.current);
+        newPath = studyCode === undefined ? newPath : prevPath.current;
+      }
+
+      const newRoute = { path: newPath, compound: newCompound };
+      history.current = [...history.current, newRoute];
+      nextHistory.current = [];
+
+      setRoute(newRoute);
+      setIdling(idling);
+    }
+  };
+
+  const onBack = (): void => {
+    if (history.current.length > 1) {
+      const lastItem = history.current.pop();
+      if (lastItem !== undefined) nextHistory.current.push(lastItem);
+    }
+
+    setIdling(false);
+  };
+
+  const onNext = (): void => {
+    if (nextHistory.current.length > 0) {
+      const lastItem = nextHistory.current.pop();
+      if (lastItem !== undefined) history.current.push(lastItem);
+      setRoute(history.current[history.current.length - 1]);
+    }
+
+    setIdling(false);
+  };
+
+  const onReset = (idling = false): void => {
+    history.current = [{ ...defaultRoute }];
+    nextHistory.current = [];
+    onClearFilters();
     setRoute({ ...defaultRoute });
+    setIdling(idling);
   };
 
   // active state based on pipeline container (e.g., TTE)
@@ -57,63 +129,17 @@ export const PipelineProvider: React.ComponentType<Props> = ({ home, idlePaths, 
     }, 550);
   }
 
-  // private
-  // const onRouteUpdate = (
-  //   route: RouteItem[],
-  //   nextRoute: RouteItem[],
-  //   isIdling: boolean
-  // ) => {
-  //   const { path, compound } = route[route.length - 1];
-
-  //   this.setState({
-  //     path,
-  //     compound,
-  //     route,
-  //     nextRoute,
-  //     isIdling
-  //   });
-  // };
-
-  // private
-
-  const onNavigate = (definedPath: string, definedCompound?: string, idling? = false): void => {
-    if (definedPath.includes("Content")) {
-      // TODO: only for kiosk
-      if (!isIdling) record(`SELECT, ${definedPath}`);
-
-      let path = definedPath;
-      let compound = definedCompound;
-
-      if (definedCompound === undefined) {
-        const studies = studiesForPath(definedPath, "target");
-        if (studies.length === 1) {
-          compound = studies[0].target;
-        }
-
-        if (prevCompound !== undefined) {
-          const { studyCode } = itemsForPath(definedPath);
-          const filtered = studies.filter(study => study.target === prevCompound);
-
-          if (filtered.length > 0 && studyCode !== undefined) {
-            compound = prevCompound;
-          }
-        }
-      } else if (!isIdling) {
-        const { studyCode } = itemsForPath(prevPath);
-        path = studyCode === undefined ? path : prevPath;
-      }
-
-      // this.handleRouteUpdate([...route, { path, compound }], [], isIdling);
-    }
-  };
-
   return (
     <PipelineContext.Provider
       value={{
+        scale,
         path: route.path,
         compound: route.compound,
         idlePaths,
         isIdling,
+        onNavigate,
+        onNext,
+        onBack,
         onReset,
       }}
     >
