@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="787" height="787" viewBox="0 0 787 787">
+  <g fill="none" fill-rule="evenodd">
+    <g transform="translate(.58 .58)">
+      <circle cx="392.5" cy="392.5" r="392.5" fill="#F2F2F2" fill-rule="nonzero"/>
+      <path stroke="#E6E6E6" stroke-dasharray="6.96" stroke-width="1.16" d="M392.5,785 C609.271764,785 785,609.271764 785,392.5 C785,175.728236 609.271764,0 392.5,0 C175.728236,0 0,175.728236 0,392.5 C0,609.271764 175.728236,785 392.5,785 Z"/>
+      <circle cx="392.5" cy="392.5" r="366.5" fill="#E6E6E6" fill-rule="nonzero"/>
+      <circle cx="392.5" cy="392.5" r="339" fill="#D9D9D9" fill-rule="nonzero"/>
+      <circle cx="392.42" cy="392.42" r="289" fill="#FFF" fill-rule="nonzero"/>
+      <path stroke="#E6E6E6" stroke-dasharray="7.02" stroke-width="1.17" d="M392.5,759 C594.912361,759 759,594.912361 759,392.5 C759,190.087639 594.912361,26 392.5,26 C190.087639,26 26,190.087639 26,392.5 C26,594.912361 190.087639,759 392.5,759 Z"/>
+      <path stroke="#E6E6E6" stroke-dasharray="7.01" stroke-width="1.08" d="M392.5,731.5 C579.72453,731.5 731.5,579.72453 731.5,392.5 C731.5,205.27547 579.72453,53.5 392.5,53.5 C205.27547,53.5 53.5,205.27547 53.5,392.5 C53.5,579.72453 205.27547,731.5 392.5,731.5 Z"/>
+      <path stroke="#CCC" stroke-dasharray="7.02" d="M392.5,705.5 C565.365127,705.5 705.5,565.365127 705.5,392.5 C705.5,219.634873 565.365127,79.5 392.5,79.5 C219.634873,79.5 79.5,219.634873 79.5,392.5 C79.5,565.365127 219.634873,705.5 392.5,705.5 Z"/>
+    </g>
+    <g fill="#333" font-family="ArialMT, Arial" font-size="12" transform="translate(361.23 686.608)">
+      <text transform="rotate(3.68 9.328 58.77)">
+        <tspan x="4.828" y="62.769">P</tspan>
+      </text>
+      <text transform="rotate(2.291 17.77 59.192)">
+        <tspan x="13.267" y="63.187">H</tspan>
+      </text>
+      <text transform="rotate(.93 26.905 59.446)">
+        <tspan x="22.405" y="63.446">A</tspan>
+      </text>
+      <text transform="rotate(-.93 35.535 59.45)">
+        <tspan x="31.035" y="63.45">S</tspan>
+      </text>
+      <text transform="rotate(-1.718 44.06 59.277)">
+        <tspan x="39.559" y="63.274">E</tspan>
+      </text>
+      <text transform="rotate(-3.47 53.905 58.799)">
+        <tspan x="51.905" y="62.799">I</tspan>
+      </text>
+      <text transform="rotate(-4.1 57.77 58.54)">
+        <tspan x="55.769" y="62.54">I</tspan>
+      </text>
+      <text transform="rotate(4.65 5.5 32.43)">
+        <tspan x="1" y="36.43">P</tspan>
+      </text>
+      <text transform="rotate(3.12 13.952 32.993)">
+        <tspan x="9.452" y="36.993">H</tspan>
+      </text>
+      <text transform="rotate(1.718 23.06 33.367)">
+        <tspan x="18.559" y="37.364">A</tspan>
+      </text>
+      <text transform="rotate(.93 31.615 33.486)">
+        <tspan x="27.115" y="37.486">S</tspan>
+      </text>
+      <text transform="rotate(-1.34 40.166 33.368)">
+        <tspan x="35.666" y="37.368">E</tspan>
+      </text>
+      <text transform="rotate(-2.862 50.04 32.982)">
+        <tspan x="48.038" y="36.974">I</tspan>
+      </text>
+      <text transform="rotate(-3.75 53.875 32.74)">
+        <tspan x="51.875" y="36.74">/</tspan>
+      </text>
+      <text transform="rotate(-4.42 57.736 32.46)">
+        <tspan x="55.736" y="36.46">I</tspan>
+      </text>
+      <text transform="rotate(-5.09 61.588 32.14)">
+        <tspan x="59.588" y="36.141">I</tspan>
+      </text>
+      <text transform="rotate(4.004 11.31 8.287)">
+        <tspan x="6.8" y="12.27">P</tspan>
+      </text>
+      <text transform="rotate(2.29 19.717 8.735)">
+        <tspan x="15.217" y="12.735">H</tspan>
+      </text>
+      <text transform="rotate(.93 28.855 8.966)">
+        <tspan x="24.355" y="12.966">A</tspan>
+      </text>
+      <text transform="rotate(-1.146 37.47 8.912)">
+        <tspan x="32.97" y="12.911">S</tspan>
+      </text>
+      <text transform="rotate(-2.291 45.94 8.672)">
+        <tspan x="41.437" y="12.667">E</tspan>
+      </text>
+      <text transform="rotate(-4.574 55.76 8.022)">
+        <tspan x="53.754" y="12">I</tspan>
+      </text>
+      <text transform="rotate(3.434 7.36 85.162)">
+        <tspan x="2.852" y="89.15">P</tspan>
+      </text>
+      <text transform="rotate(2.291 15.82 85.632)">
+        <tspan x="11.317" y="89.627">H</tspan>
+      </text>
+      <text transform="rotate(1.146 24.96 85.912)">
+        <tspan x="20.46" y="89.911">A</tspan>
+      </text>
+      <text transform="rotate(-.93 33.565 85.97)">
+        <tspan x="29.065" y="89.97">S</tspan>
+      </text>
+      <text transform="rotate(-1.45 42.148 85.84)">
+        <tspan x="37.648" y="89.84">E</tspan>
+      </text>
+      <text transform="rotate(-2.95 52.022 85.445)">
+        <tspan x="50.022" y="89.445">I</tspan>
+      </text>
+      <text transform="rotate(-3.52 55.881 85.227)">
+        <tspan x="53.881" y="89.227">I</tspan>
+      </text>
+      <text transform="rotate(-4.1 59.75 84.96)">
+        <tspan x="57.749" y="88.96">I</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

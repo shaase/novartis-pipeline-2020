@@ -1,28 +1,21 @@
-import React, { useContext } from "react";
-import { AppContext } from "../../state";
+import React, { useEffect, useState } from "react";
 import { styleForScale } from "./utils";
-import { Idler, IdlerTouch } from "../Idler";
+import Pipeline from "../Pipeline/components/App";
 import styles from "./index.module.scss";
 
 const App: React.FC = () => {
-  const { scale, index, back, next } = useContext(AppContext);
+  const [scale, setScale] = useState(window.innerWidth / 1920);
   const { screenWidth: width, screenHeight: height, transform } = styleForScale(scale);
+
+  useEffect(() => {
+    document.addEventListener("RESIZE", () => {
+      setScale(window.innerWidth / 1920);
+    });
+  }, []);
 
   return (
     <div className={styles.container} style={{ width, height, transform }}>
-      <Idler delay={120} />
-      <div className={styles.heading}>W2O Electron App</div>
-      <div className={styles.appIndex}>{index}</div>
-
-      <button onClick={back} className={styles.button}>
-        Back
-      </button>
-      <button onClick={next} className={styles.button}>
-        Next
-      </button>
-      <button onClick={IdlerTouch} className={styles.button}>
-        Touch
-      </button>
+      <Pipeline home="Content/Tumors" idlePaths={[]} isActive />
     </div>
   );
 };

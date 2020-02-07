@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="15.75" height="15.75" viewBox="0 0 15.75 15.75">
+  <title>Checkbox checked</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="phase_checkboxes" data-name="phase checkboxes">
+      <g>
+        <rect x="0.38" y="0.38" width="15" height="15" rx="1" fill="none" stroke="#0661aa" stroke-miterlimit="10" stroke-width="0.75"/>
+        <polyline points="3.38 8.25 6.38 11.25 12.38 5.25" fill="none" stroke="#0661aa" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>
+      </g>
+    </g>
+  </g>
+</svg>

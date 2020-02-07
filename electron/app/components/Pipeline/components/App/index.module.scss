@@ -1,0 +1,26 @@
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  // width defined in tsx
+  // height defined in tsx
+}
+
+.heading {
+  font-family: "BoldFont";
+  color: rgb(94, 0, 0);
+}
+
+.appIndex {
+  font-family: "LightFont";
+  color: rgb(0, 70, 128);
+}
+
+.button {
+  font-size: 12px;
+  border: 1px solid rgb(184, 89, 0);
+  border-radius: 2px;
+  color: rgb(184, 89, 0);
+  padding: 10px;
+  margin: 2px;
+}
