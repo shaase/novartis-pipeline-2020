@@ -1,78 +1,123 @@
-import React, { createContext, useEffect, useState } from "react";
-import { getOrientation } from "../../../panels";
-import { startClient, subscribe, post, SocketEvent } from "../socket-client";
+import React, { createContext, useRef, useState } from "react";
 import { record } from "../metrics";
+import { studiesForPath } from "../data";
+import { itemsForPath } from "../utils";
 
-export interface AppContextInterface {
-  scale: number;
-  index: number;
-  back: () => void;
-  next: () => void;
-  reset: () => void;
+// TODO: move?
+export interface IdlePath {
+  path: string;
+  compound: string;
+  cardIndex: number;
 }
 
-const defaultValue: AppContextInterface = {
-  scale: 1,
-  index: 0,
-  back: () => {},
-  next: () => {},
-  reset: () => {},
+interface RouteItem {
+  path: string;
+  compound?: string;
+}
+
+type Props = { home: string; idlePaths: IdlePath[]; isActive: boolean; children?: React.ReactNode };
+
+export interface PipelineContextInterface {
+  path: string;
+  compound?: string;
+  idlePaths: IdlePath[];
+  isIdling: boolean;
+  onReset: () => void;
+}
+
+const defaultValue: PipelineContextInterface = {
+  path: "",
+  compound: undefined,
+  idlePaths: [],
+  isIdling: false,
+  onReset: () => {},
 };
 
-type Props = { children?: React.ReactNode };
+export const PipelineContext = createContext<PipelineContextInterface>(defaultValue);
 
-export const AppContext = createContext<AppContextInterface>(defaultValue);
+export const PipelineProvider: React.ComponentType<Props> = ({ home, idlePaths, isActive, children }: Props) => {
+  const defaultRoute = { path: home, compound: undefined };
+  const [route, setRoute] = useState<RouteItem>({ ...defaultRoute });
+  const [isIdling, setIdling] = useState(false);
 
-export const AppProvider: React.ComponentType<Props> = ({ children }: Props) => {
-  const orientation = getOrientation();
-  const width = orientation === "landscape" ? 1920 : 1080;
+  const activeRef = useRef(false);
+  const history = useRef([{ ...defaultRoute }]);
+  const nextHistory = useRef([]);
 
-  const [scale, setScale] = useState(window.innerWidth / width);
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    document.addEventListener("RESIZE", () => {
-      setScale(window.innerWidth / width);
-    });
-
-    console.log(window.wsServerIP);
-    startClient(window.wsServerIP);
-
-    subscribe((event: SocketEvent) => {
-      const { type, message } = event;
-      console.log(type, message);
-    });
-  }, []);
-
-  useEffect(() => {
-    record(`screen navigation: ${index}`);
-  }, [index]);
-
-  const back = (): void => {
-    setIndex(Math.max(0, index - 1));
-    post("back", JSON.stringify(Math.min(5, index - 1)));
+  const onReset = (): void => {
+    setRoute({ ...defaultRoute });
   };
 
-  const next = (): void => {
-    setIndex(Math.min(5, index + 1));
-    post("next", JSON.stringify(Math.min(5, index + 1)));
-  };
+  // active state based on pipeline container (e.g., TTE)
+  if (activeRef.current !== isActive) {
+    activeRef.current = isActive;
 
-  const reset = (): void => {
-    setIndex(0);
+    setTimeout(() => {
+      onReset();
+    }, 550);
+  }
+
+  // private
+  // const onRouteUpdate = (
+  //   route: RouteItem[],
+  //   nextRoute: RouteItem[],
+  //   isIdling: boolean
+  // ) => {
+  //   const { path, compound } = route[route.length - 1];
+
+  //   this.setState({
+  //     path,
+  //     compound,
+  //     route,
+  //     nextRoute,
+  //     isIdling
+  //   });
+  // };
+
+  // private
+
+  const onNavigate = (definedPath: string, definedCompound?: string, idling? = false): void => {
+    if (definedPath.includes("Content")) {
+      // TODO: only for kiosk
+      if (!isIdling) record(`SELECT, ${definedPath}`);
+
+      let path = definedPath;
+      let compound = definedCompound;
+
+      if (definedCompound === undefined) {
+        const studies = studiesForPath(definedPath, "target");
+        if (studies.length === 1) {
+          compound = studies[0].target;
+        }
+
+        if (prevCompound !== undefined) {
+          const { studyCode } = itemsForPath(definedPath);
+          const filtered = studies.filter(study => study.target === prevCompound);
+
+          if (filtered.length > 0 && studyCode !== undefined) {
+            compound = prevCompound;
+          }
+        }
+      } else if (!isIdling) {
+        const { studyCode } = itemsForPath(prevPath);
+        path = studyCode === undefined ? path : prevPath;
+      }
+
+      // this.handleRouteUpdate([...route, { path, compound }], [], isIdling);
+    }
   };
 
   return (
-    <AppContext.Provider
+    <PipelineContext.Provider
       value={{
-        scale,
-        index,
-        back,
-        next,
-        reset,
+        path: route.path,
+        compound: route.compound,
+        idlePaths,
+        isIdling,
+        onReset,
       }}
     >
       {children}
-    </AppContext.Provider>
+    </PipelineContext.Provider>
   );
 };

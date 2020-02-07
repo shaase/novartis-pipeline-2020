@@ -1,8 +1,5 @@
 import React, { createContext, useState } from "react";
-// import { defaultPhases } from '../data';
-
-// TODO: integrate data/defaultPhases
-const defaultPhases = [1, 1.5, 2, 3];
+import { defaultPhases } from "../data";
 
 type Props = { children?: React.ReactNode };
 

@@ -24,6 +24,8 @@ const rules = {
   "jsx-a11y/no-static-element-interactions": "off",
   "max-len": "off",
   "implicit-arrow-linebreak": "off",
+  "operator-linebreak": "off",
+  "function-paren-newline": "off",
   "no-nested-ternary": "off",
   "no-prototype-builtins": "off",
   "object-curly-newline": "off",
