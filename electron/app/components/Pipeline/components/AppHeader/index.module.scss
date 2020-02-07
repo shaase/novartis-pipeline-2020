@@ -65,3 +65,15 @@
   width: 60%;
   margin-left: 40%;
 }
+
+.novartis {
+  position: absolute;
+
+  img {
+    @extend .absolute;
+
+    left: 248px;
+    top: 27px;
+    animation: fade-in 300ms forwards;
+  }
+}
