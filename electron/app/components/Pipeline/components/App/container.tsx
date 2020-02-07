@@ -1,21 +1,14 @@
-import React, { useContext } from "react";
-import { PipelineContext, IdlePath } from "../../state";
-// import { Idler, IdlerTouch } from "../Idler";
+import React from "react";
+import { IdlePath } from "../../state";
+// import { Idler } from "../Idler";
+import Header from "../AppHeader";
 import styles from "./index.module.scss";
 
-type Props = { home: string; idlePaths: IdlePath[]; isActive: boolean };
+const AppContainer: React.FC = () => (
+  <div className={styles.container}>
+    {/* {idlePaths.length > 0 && <Idler paths={idlePaths} />} */}
+    <Header />
+  </div>
+);
 
-const App: React.FC<Props> = ({ home, idlePaths, isActive }: Props) => {
-  const { scale } = useContext(PipelineContext);
-
-  return (
-    <div className={styles.container}>
-      {/* <Idler delay={120} /> */}
-      <div>{home}</div>
-      <div>{idlePaths}</div>
-      <div>{isActive}</div>
-    </div>
-  );
-};
-
-export default App;
+export default AppContainer;

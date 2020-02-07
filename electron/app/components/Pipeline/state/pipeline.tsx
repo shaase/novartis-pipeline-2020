@@ -23,6 +23,8 @@ export interface PipelineContextInterface {
   scale: number;
   path: string;
   compound?: string;
+  history: PipelineRoute[];
+  nextHistory: PipelineRoute[];
   idlePaths: IdlePath[];
   isIdling: boolean;
   onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
@@ -35,6 +37,8 @@ const defaultValue: PipelineContextInterface = {
   scale: window.innerWidth / 1920,
   path: "",
   compound: undefined,
+  history: [],
+  nextHistory: [],
   idlePaths: [],
   isIdling: false,
   onNavigate: () => {},
@@ -135,6 +139,8 @@ export const PipelineProvider: React.ComponentType<Props> = ({ home, idlePaths, 
         scale,
         path: route.path,
         compound: route.compound,
+        history: history.current,
+        nextHistory: nextHistory.current,
         idlePaths,
         isIdling,
         onNavigate,

@@ -1,0 +1,91 @@
+@font-face {
+  font-family: "HelveticaNeueLTStd";
+  src: url("../../fonts/HelveticaNeueLTStd-Roman_3.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "HelveticaNeueLTStd";
+  src: url("../../fonts/HelveticaNeueLTStd-Md_3.otf") format("opentype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "HelveticaNeueLTStd";
+  src: url("../../fonts/HelveticaNeueLTStd-Bd_1.otf") format("opentype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Arial";
+  src: url("../../fonts/arialbd.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Arial";
+  src: url("../../fonts/ariali.ttf") format("truetype");
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Arial";
+  src: url("../../fonts/ariblk.ttf") format("truetype");
+  font-weight: 900;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "HelveticaNeueLTStd", sans-serif;
+  font-weight: 400;
+  overflow: hidden;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+button {
+  background: none;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  font-family: "HelveticaNeueLTStd", sans-serif;
+}
+
+img {
+  pointer-events: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+svg {
+  background: none;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
+}
+
+svg text {
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+svg text::selection {
+  background: none;
+}
