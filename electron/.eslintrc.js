@@ -23,6 +23,7 @@ const rules = {
   "jsx-a11y/mouse-events-have-key-events": "off",
   "jsx-a11y/no-static-element-interactions": "off",
   "max-len": "off",
+  "implicit-arrow-linebreak": "off",
   "no-nested-ternary": "off",
   "no-prototype-builtins": "off",
   "object-curly-newline": "off",
