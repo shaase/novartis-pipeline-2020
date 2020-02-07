@@ -1,8 +1,8 @@
 const { remote, ipcRenderer } = require("electron");
 const { initPersistent } = require("radius-electron");
-const { sockets, metrics } = require("../store.json");
+const { sockets } = require("../store.json");
 const { startServer } = require("./socket-server");
-const { setMetrics } = require("./metrics");
+// const { setMetrics } = require("./metrics");
 const { port } = sockets;
 
 // PERSISTENT STORE PATH
@@ -22,6 +22,6 @@ if (sockets !== undefined) {
 }
 
 // SETTING UP METRICS
-if (metrics !== undefined) {
-  setMetrics();
-}
+// if (metrics !== undefined) {
+//   setMetrics();
+// }
