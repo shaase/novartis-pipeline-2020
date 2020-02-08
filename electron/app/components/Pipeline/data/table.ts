@@ -1,4 +1,3 @@
-// @flow
 import { getStudyContainers, flattenStudies } from "./utils";
 import { itemsForPath } from "../utils";
 import { PipelineItem, PipelineStudy } from "../types";

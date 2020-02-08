@@ -1,4 +1,3 @@
-// @flow
 import { flattenChildren } from "./flatteners";
 import { content } from "../loaded-json";
 import { itemsForPath } from "../../utils";

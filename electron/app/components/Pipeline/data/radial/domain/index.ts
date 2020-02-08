@@ -1,5 +1,3 @@
-// @flow
-
 import { flattenedCompoundChildren } from "../data";
 import { itemsForPath } from "../../../utils";
 import { PipelineItem } from "../../../types";

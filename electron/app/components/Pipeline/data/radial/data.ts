@@ -1,5 +1,4 @@
-// @flow
-import { PipelineItem, PipelineStudy } from "../../types";
+simport { PipelineItem, PipelineStudy } from "../../types";
 import { defaultPhases } from "../phases";
 import { content } from "../loaded-json";
 import { itemsForPath } from "../../utils";

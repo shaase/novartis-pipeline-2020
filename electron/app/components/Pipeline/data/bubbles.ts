@@ -1,4 +1,3 @@
-// @flow
 import { uniqBy } from "lodash";
 import { flattenChildren, flattenCombos } from "./utils";
 import { itemsForPath } from "../utils";

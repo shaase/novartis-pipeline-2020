@@ -1,4 +1,3 @@
-// @flow
 import { uniqBy } from "lodash";
 import { flattenChildren, flattenToContainers } from "./flatteners";
 import { defaultPhases } from "../phases";

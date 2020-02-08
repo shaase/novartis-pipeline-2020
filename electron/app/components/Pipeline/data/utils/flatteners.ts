@@ -1,5 +1,3 @@
-// @flow
-
 import { uniqBy } from "lodash";
 import { PipelineItem, PipelineStudy } from "../../types";
 import { itemsForPath } from "../../utils";

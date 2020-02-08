@@ -1,5 +1,3 @@
-// @flow
-
 import React, { useEffect, useState } from "react";
 import { colorForBackground } from "../../utils";
 import { PipelineItem, PipelineStudy } from "../../types";

@@ -1,0 +1,58 @@
+.section {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex: 1;
+}
+
+.buttonSection {
+  position: relative;
+  display: block;
+  text-align: left;
+  width: 50px;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  overflow: hidden;
+  text-transform: uppercase;
+  border-right: 1px solid rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.buttonSection:active {
+  opacity: 0.7;
+}
+
+.buttonSectionTitle {
+  position: relative;
+  width: 120px;
+  margin-left: -43px;
+  text-align: center;
+  transform: rotate(-90deg);
+}
+
+.buttonSectionTitleTop {
+  @extend .buttonSectionTitle;
+
+  position: absolute;
+  top: 60px;
+}
+
+.buttonSectionTitleFixed {
+  @extend .buttonSectionTitle;
+
+  position: fixed;
+  top: 310px;
+}
+
+.full {
+  flex: 1;
+  background-color: white;
+}
+
+.fullFlex {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: white;
+}
