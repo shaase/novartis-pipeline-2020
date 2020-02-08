@@ -9,9 +9,18 @@ import styles from "./index.module.scss";
 const AppContainer: React.FC = () => (
   <div className={styles.container}>
     {/* {idlePaths.length > 0 && <Idler paths={idlePaths} />} */}
-    <Header />
-    <Definitions />
-    <Lightbox />
+
+    <div className={styles.pipeline}>
+      <Header />
+
+      <div className={styles.panels}>
+        {/* TABLE */}
+        {/* RADIAL */}
+        {/* BUBBLES */}
+        <Definitions />
+        <Lightbox />
+      </div>
+    </div>
   </div>
 );
 
