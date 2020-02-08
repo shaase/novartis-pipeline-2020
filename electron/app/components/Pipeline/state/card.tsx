@@ -1,25 +1,13 @@
 import React, { createContext, useContext, useRef, useState } from "react";
 import { PipelineContext } from "./pipeline";
+import { LightboxContent } from "../types";
 import { record } from "../metrics";
-
-export interface CardType {
-  file: string;
-  label: string;
-  compound?: string;
-  studyCode?: string;
-}
-
-export interface LightboxContent {
-  type: string;
-  cards: CardType[];
-  color: string;
-}
 
 export interface CardContextInterface {
   cardIndex: number;
   lightboxContent?: LightboxContent;
   onCardIndex: (n: number) => void;
-  onLightboxContent: (l: LightboxContent) => void;
+  onLightboxContent: (l: LightboxContent | undefined) => void;
 }
 
 const defaultValue: CardContextInterface = {

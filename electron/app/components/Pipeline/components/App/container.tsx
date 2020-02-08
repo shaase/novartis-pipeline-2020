@@ -3,6 +3,7 @@ import React from "react";
 // import { Idler } from "../Idler";
 import Header from "../AppHeader";
 import Definitions from "../Definitions";
+import Lightbox from "../Lightbox";
 import styles from "./index.module.scss";
 
 const AppContainer: React.FC = () => (
@@ -10,6 +11,7 @@ const AppContainer: React.FC = () => (
     {/* {idlePaths.length > 0 && <Idler paths={idlePaths} />} */}
     <Header />
     <Definitions />
+    <Lightbox />
   </div>
 );
 
