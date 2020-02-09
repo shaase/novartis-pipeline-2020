@@ -6,8 +6,7 @@
   flex-direction: column;
   box-shadow: 5px 0 20px rgba($color: #000, $alpha: 0.09);
 }
-
-.empty {
+s .empty {
   @extend .container;
 
   background-color: #e6e6e6;

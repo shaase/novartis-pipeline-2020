@@ -19,6 +19,18 @@ export interface PipelineStudy {
   cards?: string[];
 }
 
+export interface RowItem {
+  title: string;
+  color: string;
+  path: string;
+  className: string;
+  header?: string;
+  lighten?: boolean;
+  indent?: number;
+  isStudyContainer?: boolean;
+  children?: RowItem[];
+}
+
 export interface CardType {
   file: string;
   label: string;
@@ -28,7 +40,7 @@ export interface CardType {
 
 export interface LightboxContent {
   type: string;
-  cards: Card[];
+  cards: CardType[];
   color: string;
 }
 
