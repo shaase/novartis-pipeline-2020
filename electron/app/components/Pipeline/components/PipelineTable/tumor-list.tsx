@@ -20,7 +20,7 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
   const pathRef = useRef("");
   const flexRef = useRef(false);
 
-  console.log(path, flexRows);
+  // console.log(path, flexRows);
 
   if (pathRef.current !== path || flexRef.current !== flexRows) {
     const { level } = itemsForPath(path);
@@ -46,7 +46,7 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
         compoundClassName = "itemFlex";
       }
 
-      console.log(className, subClassName);
+      // console.log(className, subClassName);
 
       const item: RowItem = {
         color: child.color || "#222222",

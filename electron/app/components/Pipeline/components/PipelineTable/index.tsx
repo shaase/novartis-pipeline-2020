@@ -13,7 +13,7 @@ let raf: number;
 const PipelineTable: React.FC = () => {
   const { phases } = useContext(FilterContext);
   const { scale, path, compound, onNavigate } = useContext(PipelineContext);
-  const [flexRows, setFlexRows] = useState(false);
+  const [flexRows, setFlexRows] = useState(true);
 
   const content = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
@@ -25,23 +25,22 @@ const PipelineTable: React.FC = () => {
   const diffY = useRef(0);
   const pathRef = useRef("");
   const compoundRef = useRef<string | undefined>(undefined);
-  const flexRef = useRef(false);
   const phaseRef = useRef<number[]>([]);
-
-  console.log("flexRows", flexRows);
 
   const checkFlex = (): void => {
     if (scroller.current !== null && content.current !== null) {
+      content.current.className = styles.content;
       const scrollerHeight = scroller.current.clientHeight + 3;
       const contentHeight = content.current.clientHeight;
+      const shouldFlex = scrollerHeight > contentHeight;
+      content.current.className = shouldFlex ? styles.contentFlex : styles.content;
 
-      console.log(scrollerHeight, contentHeight);
-
-      if (scrollerHeight < contentHeight && flexRows) {
-        setFlexRows(false);
-      } else if (scrollerHeight > contentHeight && !flexRows) {
+      if (shouldFlex && !flexRows) {
         setFlexRows(true);
+      } else if (!shouldFlex && flexRows) {
+        setFlexRows(false);
       }
+
       refreshFrames.current += 1;
       if (refreshFrames.current < 2) {
         requestAnimationFrame(checkFlex);
@@ -56,13 +55,9 @@ const PipelineTable: React.FC = () => {
       diffY.current = 0;
       pathRef.current = path;
       compoundRef.current = compound;
-      flexRef.current = flexRows;
       phaseRef.current = phases;
       scroller.current.scrollTop = 0;
-
       refreshFrames.current = 0;
-
-      setFlexRows(false);
       requestAnimationFrame(checkFlex);
     }
   }
@@ -161,7 +156,7 @@ const PipelineTable: React.FC = () => {
           onMouseUp={onUp}
           onMouseOut={onUp}
         >
-          <div className={flexRows ? styles.contentFlex : styles.content} ref={content}>
+          <div ref={content}>
             {React.Children.toArray(
               sections.map((section: PipelineItem) => (
                 <Section
