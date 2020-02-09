@@ -16,10 +16,11 @@ type Props = {
 const Card: React.FC<Props> = ({ index, type, file, compound, code }: Props) => {
   const [source, setSource] = useState("loading");
   const isMounted = useRef(false);
-  const fileRef = useRef("");
+  const fileRef = useRef("new");
 
   const checkSource = async (): Promise<void> => {
     let src = "";
+
     const path = isDev ? "images/pipeline/cards" : "dist/images/pipeline/cards";
     if (file !== "") {
       if (type === "Compounds") {
