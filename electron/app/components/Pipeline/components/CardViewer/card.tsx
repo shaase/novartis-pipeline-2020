@@ -1,4 +1,3 @@
-// @flow
 import React, { useEffect, useRef, useState } from "react";
 import isDev from "electron-is-dev";
 import { fileExists } from "./utils";

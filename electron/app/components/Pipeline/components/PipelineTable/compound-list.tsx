@@ -1,4 +1,3 @@
-// @flow
 import React, { useRef, useState } from "react";
 import { PipelineItem, RowItem } from "../../types";
 import { colorForBackground } from "../../utils";

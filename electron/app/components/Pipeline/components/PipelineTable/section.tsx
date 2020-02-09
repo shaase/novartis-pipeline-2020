@@ -1,4 +1,3 @@
-// @flow
 import React, { useRef, useState } from "react";
 import { PipelineItem } from "../../types";
 import Tumors from "./tumor-list";

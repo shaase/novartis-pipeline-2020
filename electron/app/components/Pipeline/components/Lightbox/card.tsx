@@ -1,4 +1,3 @@
-// @flow
 import React, { MouseEvent, TouchEvent, useContext, useRef, useState } from "react";
 import isDev from "electron-is-dev";
 import { PipelineContext } from "../../state";
