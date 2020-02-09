@@ -10,7 +10,7 @@ module.exports = {
   mode: NODE_ENV,
   target: "electron-renderer",
   stats: "errors-only",
-  entry: ["webpack-hot-middleware/client", "./app/index.tsx"],
+  entry: ["babel-polyfill", "webpack-hot-middleware/client", "./app/index.tsx"],
   devtool: "source-map",
   devServer: {
     contentBase: "../dist",

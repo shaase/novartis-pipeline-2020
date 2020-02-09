@@ -1,0 +1,130 @@
+.container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.buttons {
+  width: 100%;
+  height: 45px;
+  background-color: white;
+  display: flex;
+}
+
+.button {
+  flex: 1;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 17px;
+}
+
+.buttonSelected {
+  @extend .button;
+
+  border-radius: 0 100px 100px 0;
+}
+
+.btnLightbox {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 50px;
+  height: 50px;
+}
+
+.btnLightboxStudy {
+  @extend .btnLightbox;
+
+  top: 5px;
+}
+
+.iconExpand {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.btnWeblink {
+  position: absolute;
+  top: 6px;
+  right: 40px;
+  width: 38px;
+  height: 38px;
+}
+
+.cards {
+  position: relative;
+  width: 100%;
+  height: 822px;
+  display: flex;
+}
+
+.card {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.moa {
+  @extend .card;
+
+  width: 900px;
+  margin-left: 2%;
+  margin-top: -4.5%;
+}
+
+.moaRadial {
+  @extend .moa;
+
+  margin-left: 26%;
+  margin-top: 0%;
+}
+
+.imageCompound {
+  width: 100%;
+  margin-top: -31px;
+}
+
+.imageMOA {
+  width: 900px;
+}
+
+.imageStudy {
+  width: 100%;
+  margin-top: -1.6%;
+}
+
+.warning {
+  color: rgb(100, 32, 0);
+  width: 100%;
+  text-align: center;
+  padding-top: 40px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.logo {
+  width: 240px;
+  margin: 53% 17% 0 17%;
+}
+
+.logoShort {
+  width: 300px;
+  margin: 40% 17% 0 17%;
+}
+
+.logoShortRadial {
+  width: 300px;
+  margin: 35% 17% 0 17%;
+}
+
+.info {
+  font-size: 14px;
+  color: #58595b;
+  margin: 5% 10% 0 17%;
+}

@@ -5,7 +5,7 @@ import { PipelineItem } from "../../types";
 import { itemsForPath, eventPosition } from "../../utils";
 import PanelHeader from "../PanelHeader";
 import Section from "./section";
-// import CardPresenter from '../CardPresenter';
+import CardViewer from "../CardViewer";
 import styles from "./index.module.scss";
 
 let raf: number;
@@ -178,12 +178,7 @@ const PipelineTable: React.FC = () => {
           </div>
         </div>
       ) : (
-        // <CardPresenter
-        //   type="Compounds"
-        //   color={colorForData(path)}
-        //   items={cards}
-        // />
-        <div>Card</div>
+        <CardViewer type="Compounds" color={colorForData(path)} items={cards} />
       )}
     </div>
   );
