@@ -30,7 +30,7 @@ const CardViewer: React.FC<Props> = ({ type, color, items }: Props) => {
                 className={index === cardIndex ? styles.buttonSelected : styles.button}
                 style={{
                   backgroundColor: index === cardIndex ? color : "#FFFFFF",
-                  color: index === cardIndex ? colorForBackground(color, "#FFFFFF") : colorForBackground(color, color),
+                  color: index === cardIndex ? colorForBackground("#FFFFFF", color) : colorForBackground(color, color),
                   borderRadius: rounded(index, items.length, cardIndex),
                   borderLeft: leftBorder(index, items.length, color, cardIndex),
                   borderRight: rightBorder(index, items.length, color, cardIndex),

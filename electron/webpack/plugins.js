@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HtmlWebpackRootPlugin = require("html-webpack-root-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ErrorsPlugin = require("friendly-errors-webpack-plugin");
-// const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const onErrors = require("./errors");
 const { appName: title } = require("../package.json");
 
@@ -17,7 +17,7 @@ const base = [
   new MiniCssExtractPlugin(),
   new webpack.optimize.OccurrenceOrderPlugin(),
   new webpack.HotModuleReplacementPlugin(),
-  // new CopyWebpackPlugin([{ from: "./app/images", to: "images" }])
+  new CopyWebpackPlugin([{ from: "./app/images", to: "images" }]),
 ];
 
 const dev = [...base, new ErrorsPlugin({ onErrors })];

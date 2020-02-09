@@ -16,7 +16,9 @@ const AppContainer: React.FC = () => (
       <div className={styles.panels}>
         <PipelineTable />
         {/* RADIAL */}
+        <div className={styles.tempRadial} />
         {/* BUBBLES */}
+        <div className={styles.tempBubbles} />
         <Definitions />
         <Lightbox />
       </div>

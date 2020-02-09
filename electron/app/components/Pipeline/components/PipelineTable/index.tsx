@@ -15,8 +15,6 @@ const PipelineTable: React.FC = () => {
   const { scale, path, compound, onNavigate } = useContext(PipelineContext);
   const [flexRows, setFlexRows] = useState(false);
 
-  // TODO: CardPresenter
-
   const content = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const refreshFrames = useRef(0);
@@ -37,9 +35,11 @@ const PipelineTable: React.FC = () => {
       const scrollerHeight = scroller.current.clientHeight + 3;
       const contentHeight = content.current.clientHeight;
 
-      if (contentHeight > scrollerHeight && flexRows) {
+      console.log(scrollerHeight, contentHeight);
+
+      if (scrollerHeight < contentHeight && flexRows) {
         setFlexRows(false);
-      } else if (contentHeight < scrollerHeight && !flexRows) {
+      } else if (scrollerHeight > contentHeight && !flexRows) {
         setFlexRows(true);
       }
       refreshFrames.current += 1;
