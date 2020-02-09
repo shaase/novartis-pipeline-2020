@@ -39,17 +39,17 @@
 .gestures {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 20%;
+  width: 60%;
   height: 100%;
   pointer-events: all;
 }
 
 .btnClose {
-  display: block;
   position: absolute;
   top: 10px;
   right: 14px;
+  transform: translate3d(0, 0, 0);
 }
 
 .btnBack {

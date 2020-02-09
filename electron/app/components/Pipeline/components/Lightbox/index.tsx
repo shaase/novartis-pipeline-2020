@@ -15,13 +15,14 @@ const Lightbox: React.FC = () => {
   const [isVisible, setVisible] = useState(false);
   const [content, setContent] = useState<LightboxContent | undefined>(undefined);
   const immediate = useRef(false);
+  const contentRef = useRef<LightboxContent | undefined>(undefined);
 
   const { type, cards } = content || emptyContent;
   const empty = cards.filter((card: CardType) => card.file === "");
   const noEmpty = empty.length === 0;
   const x = cardIndex < cards.length ? -cardIndex * 100 : 0;
 
-  if (content !== lightboxContent) {
+  if (contentRef.current !== lightboxContent) {
     if (lightboxContent !== undefined) {
       if (content === undefined) {
         immediate.current = true;
@@ -32,7 +33,7 @@ const Lightbox: React.FC = () => {
       }
 
       setVisible(true);
-      setContent(content);
+      setContent(lightboxContent);
     } else {
       setVisible(false);
 
@@ -41,6 +42,7 @@ const Lightbox: React.FC = () => {
         setContent({ ...emptyContent, type: defaultType });
       }, 500);
     }
+    contentRef.current = lightboxContent;
   }
 
   return (
