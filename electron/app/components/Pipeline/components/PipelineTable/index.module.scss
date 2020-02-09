@@ -6,7 +6,8 @@
   flex-direction: column;
   box-shadow: 5px 0 20px rgba($color: #000, $alpha: 0.09);
 }
-s .empty {
+
+.empty {
   @extend .container;
 
   background-color: #e6e6e6;
@@ -16,186 +17,17 @@ s .empty {
   flex: 1;
 }
 
-.table b {
-  font-weight: bold;
-}
-
 .content {
   width: 100%;
 }
 
 .contentFlex {
-  width: 100%;
+  @extend .content;
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.full {
-  flex: 1;
-  background-color: white;
-}
-
-.fullFlex {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  background-color: white;
-}
-
-.buttonTable {
-  position: relative;
-  width: 100%;
-  text-align: left;
-  color: white;
-  border-right: 1px solid rgba(255, 255, 255, 0.8);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
-  font-size: 14px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.buttonTable:active {
-  opacity: 0.5;
-}
-
-/* HEADER */
-
-.buttonHeader {
-  @extend .buttonTable;
-
-  height: 26px;
-}
-
-.buttonHeader b {
-  font-weight: 900;
-  font-size: 130%;
-}
-
-.buttonHeaderLarge {
-  @extend .buttonHeader;
-
-  font-size: 17px;
-}
-
-.buttonHeaderTiny {
-  @extend .buttonHeader;
-
-  height: 17px;
-  font-size: 8.5px;
-}
-
-.buttonHeaderTiny div,
-.buttonSubTiny div {
-  margin-top: -1px;
-}
-
-.buttonHeaderFlex {
-  @extend .buttonHeader;
-
-  flex: 1;
-}
-
-/* SUB HEADER */
-
-.buttonSub {
-  @extend .buttonTable;
-
-  font-weight: 900;
-  font-size: 18px;
-  height: 28px;
-}
-
-.buttonSubPadded {
-  @extend .buttonSub;
-
-  font-size: 18px;
-}
-
-.buttonSubTiny {
-  @extend .buttonSub;
-
-  height: 15px;
-  font-size: 14px;
-}
-
-.buttonSubFlex {
-  @extend .buttonSub;
-
-  font-size: 18px;
-  flex: 1;
-}
-
-/* ITEMS */
-
-.buttonList {
-  @extend .buttonTable;
-
-  padding-left: 40px;
-  padding: 12px 12px 12px 40px;
-}
-
-.buttonListPadded {
-  @extend .buttonTable;
-
-  padding: 12px 12px 12px 34px;
-}
-
-.buttonListFlex {
-  @extend .buttonTable;
-
-  flex: 1;
-  font-size: 18px;
-}
-
-.buttonListFlexDouble {
-  @extend .buttonTable;
-
-  flex: 1.6;
-  font-size: 17px;
-}
-
-.buttonListFlexSmall {
-  @extend .buttonTable;
-
-  flex: 1;
-  font-size: 17px;
-}
-
-.buttonListFlexTiny {
-  @extend .buttonTable;
-
-  font-size: 14px;
-}
-
-.buttonList b {
-  font-weight: bold !important;
-}
-
-.buttonCompound {
-  @extend .buttonTable;
-
-  flex: 0;
-  padding: 15px 12px 15px 8px;
-}
-
-sup {
-  font-size: 60%;
-  margin-bottom: 5%;
-}
-
-.fader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.btnTitle {
+.rowTitle {
   display: block;
 }

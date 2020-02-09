@@ -2,8 +2,8 @@
 import React, { useRef, useState } from "react";
 import { PipelineItem, RowItem } from "../../types";
 import { colorForBackground } from "../../utils";
-import StudyTitle from "./study-title";
-import styles from "./index.module.scss";
+import RowTitle from "./row-title";
+import styles from "./list.module.scss";
 
 type Props = {
   path: string;
@@ -19,7 +19,7 @@ const CompoundList: React.FC<Props> = ({ path, flexRows, section, onNavigate }: 
   if (pathRef.current !== path) {
     const rowItems = (section.children || []).reduce((arr: RowItem[], child: PipelineItem) => {
       const title = child.type || "";
-      let className = "buttonCompound";
+      let className = "compound";
       if (flexRows) {
         className = "buttonListFlex";
       }
@@ -53,7 +53,7 @@ const CompoundList: React.FC<Props> = ({ path, flexRows, section, onNavigate }: 
               onNavigate(item.path, compound);
             }}
           >
-            <StudyTitle title={item.title} />
+            <RowTitle title={item.title} />
           </button>
         )),
       )}

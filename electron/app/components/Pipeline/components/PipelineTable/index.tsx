@@ -124,7 +124,6 @@ const PipelineTable: React.FC = () => {
   };
 
   const overflowY = flexRows ? "hidden" : "scroll";
-  const contentClass = flexRows ? styles.contentFlex : styles.content;
   const sections = sectionsForTable(path, phases);
   const allChildren: PipelineItem[] = sections.reduce(
     (a: PipelineItem[], b: PipelineItem) => a.concat(b.children || []),
@@ -162,7 +161,7 @@ const PipelineTable: React.FC = () => {
           onMouseUp={onUp}
           onMouseOut={onUp}
         >
-          <div className={contentClass} ref={content}>
+          <div className={flexRows ? styles.contentFlex : styles.content} ref={content}>
             {React.Children.toArray(
               sections.map((section: PipelineItem) => (
                 <Section

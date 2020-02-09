@@ -1,0 +1,122 @@
+.table {
+  flex: 1;
+  background-color: white;
+}
+
+.tableFlex {
+  @extend .table;
+  display: flex;
+  flex-direction: column;
+}
+
+sup {
+  font-size: 60%;
+  margin-bottom: 5%;
+}
+
+/* GLOBAL STYLE FOR ALL ROWS */
+
+.rowButton {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  color: white;
+  border-right: 1px solid rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.row:active {
+  opacity: 0.5;
+}
+
+/* HEADER */
+
+.header {
+  @extend .rowButton;
+
+  height: 26px;
+
+  b {
+    font-weight: 900;
+    font-size: 130%;
+    font-size: 18px;
+  }
+}
+
+.headerFlex {
+  @extend .header;
+
+  flex: 1;
+}
+
+/* SUB HEADER */
+
+.subHeader {
+  @extend .rowButton;
+
+  font-weight: 900;
+  font-size: 18px;
+  height: 28px;
+}
+
+.subHeaderPadded {
+  @extend .subHeader;
+
+  font-size: 18px;
+}
+
+.subHeaderFlex {
+  @extend .subHeader;
+
+  font-size: 18px;
+  flex: 1;
+}
+
+/* ITEMS */
+
+.item {
+  @extend .rowButton;
+
+  padding-left: 40px;
+  padding: 12px 12px 12px 40px;
+
+  b {
+    font-weight: bold !important;
+  }
+}
+
+.itemPadded {
+  @extend .rowButton;
+
+  padding: 12px 12px 12px 34px;
+}
+
+.itemFlex {
+  @extend .rowButton;
+
+  flex: 1;
+  font-size: 18px;
+}
+
+.compound {
+  @extend .rowButton;
+
+  flex: 0;
+  padding: 15px 12px 15px 8px;
+}
+
+/* FADER FOR UNRELATED ROWS */
+.fader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0.5;
+  pointer-events: none;
+}

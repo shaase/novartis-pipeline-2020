@@ -4,8 +4,8 @@ import { PipelineItem, PipelineStudy, RowItem } from "../../types";
 import { colorForBackground, itemsForPath, hexToRgb } from "../../utils";
 import { flattenToContainers } from "../../data";
 import getType from "./get-type";
-import StudyTitle from "./study-title";
-import styles from "./index.module.scss";
+import RowTitle from "./row-title";
+import styles from "./list.module.scss";
 
 type Props = {
   path: string;
@@ -29,26 +29,21 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
     const rowItems = (section.children || []).reduce((arr: RowItem[], child: PipelineItem) => {
       const cohorts = uniqBy(flattenToContainers(child.children || []), "type");
       const title = `<b>${child.type}</b> [${cohorts.length}]`;
-      let className = type === "Root" || type === "ShortList" ? "buttonHeader" : "buttonHeaderLarge";
-
-      if (child.type !== undefined && child.type.length > 40) {
-        className = "buttonHeader";
-      }
-
-      let subClassName = type === "LongList" ? "buttonSub" : "buttonSubPadded";
+      let className = "header";
+      let subClassName = type === "LongList" ? "subHeader" : "subHeaderPadded";
 
       if (flexRows && level < 4) {
         if (!path.includes("Content/Tumors/Heme/")) {
-          className = "buttonHeaderFlex";
+          className = "headerFlex";
         }
 
-        subClassName = "buttonSubFlex";
+        subClassName = "subHeaderFlex";
       }
 
-      let compoundClassName = type === "LongList" ? "buttonList" : "buttonListPadded";
+      let compoundClassName = type === "LongList" ? "item" : "itemPadded";
 
       if (flexRows) {
-        compoundClassName = "buttonListFlex";
+        compoundClassName = "itemFlex";
       }
 
       console.log(className, subClassName);
@@ -125,7 +120,7 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
   }
 
   return (
-    <div className={flexRows ? styles.fullFlex : styles.full}>
+    <div className={flexRows ? styles.tableFlex : styles.table}>
       {React.Children.toArray(
         items.map((item: RowItem) => (
           <button
@@ -141,7 +136,7 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
               onNavigate(item.path, compound);
             }}
           >
-            {item.title !== undefined && <StudyTitle title={item.title} />}
+            {item.title !== undefined && <RowTitle title={item.title} />}
 
             {item.lighten && <div className={styles.fader} />}
           </button>
