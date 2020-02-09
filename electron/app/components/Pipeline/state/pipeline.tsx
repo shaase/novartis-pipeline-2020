@@ -100,7 +100,10 @@ export const PipelineProvider: React.ComponentType<Props> = ({ home, idlePaths, 
   const onBack = (): void => {
     if (history.current.length > 1) {
       const lastItem = history.current.pop();
-      if (lastItem !== undefined) nextHistory.current.push(lastItem);
+      if (lastItem !== undefined) {
+        nextHistory.current.push(lastItem);
+        setRoute(history.current[history.current.length - 1]);
+      }
     }
 
     setIdling(false);
