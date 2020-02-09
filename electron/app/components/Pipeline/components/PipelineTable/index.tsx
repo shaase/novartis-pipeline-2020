@@ -50,16 +50,17 @@ const PipelineTable: React.FC = () => {
 
   if (pathRef.current !== path || compoundRef.current !== compound || phaseRef.current !== phases) {
     if (scroller.current !== null) {
-      originY.current = 0;
-      currentY.current = 0;
-      diffY.current = 0;
-      pathRef.current = path;
-      compoundRef.current = compound;
-      phaseRef.current = phases;
       scroller.current.scrollTop = 0;
-      refreshFrames.current = 0;
-      requestAnimationFrame(checkFlex);
     }
+
+    originY.current = 0;
+    currentY.current = 0;
+    diffY.current = 0;
+    pathRef.current = path;
+    compoundRef.current = compound;
+    phaseRef.current = phases;
+    refreshFrames.current = 0;
+    requestAnimationFrame(checkFlex);
   }
 
   const tick = (): void => {
