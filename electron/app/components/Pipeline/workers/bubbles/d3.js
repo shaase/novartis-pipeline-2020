@@ -5,6 +5,8 @@ import { forceSimulation, forceManyBody, forceCollide } from "d3-force";
 import { flattenStudies } from "../../data";
 import { colorForBackground } from "../../utils";
 
+/* D3.js JavaScript library copyright 2017 Mike Bostock. */
+
 const empty = {
   id: "",
   path: "",
@@ -52,7 +54,7 @@ const packBubbles = (items, width, height) => {
         d.id = d.data.id;
         d.fill = d.data.color || "#000000";
         d.path = d.data.path;
-        d.color = colorForBackground(d.data.color, "#FFFFFF");
+        d.color = colorForBackground("#FFFFFF", d.data.color);
         /* eslint-enable */
       }
     });
