@@ -1,0 +1,39 @@
+.toggle {
+  height: 26px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttons {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.check {
+  width: 86px;
+  color: #333;
+  font-weight: normal;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.check img {
+  width: 15px;
+  margin: 0 5px 0 0;
+}
+
+.check span {
+  margin-top: 5px;
+}
+
+.checkOff {
+  @extend .check;
+
+  opacity: 0.4;
+}

@@ -1,0 +1,89 @@
+.absolute {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.container {
+  position: relative;
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0 0 10px;
+  text-align: center;
+}
+
+.header {
+  margin: 28px 0 0;
+  font-size: 30px;
+  font-weight: 600;
+  color: #1b75bb;
+}
+
+.breadcrumbs {
+  position: relative;
+  margin: 3% 0 4% 11%;
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  margin: -12px 36px 0 0;
+  width: 250px;
+}
+
+.title {
+  color: #e64c25;
+  font-size: 39px;
+  line-height: 39px;
+}
+
+.tap {
+  margin: 4px 0 20px;
+  font-size: 20px;
+  color: #999;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
+}
+
+.bottomMOA {
+  @extend .bottom;
+
+  bottom: 15px;
+}
+
+.btnDef {
+  margin: 24px 0 14px 0;
+  background-color: #1b75bb;
+  color: white;
+  padding: 8px 40px 8px 40px;
+  border-radius: 100px;
+  font-size: 11px;
+  line-height: 12px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.btnDef:active {
+  opacity: 0.7;
+}
+
+.definitions {
+  color: black;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 15px;
+}
+
+.moaDisclaimer {
+  margin-top: 7px;
+}
+
+.shadow {
+  filter: drop-shadow(0 0 20px rgba($color: #000, $alpha: 0.15));
+}

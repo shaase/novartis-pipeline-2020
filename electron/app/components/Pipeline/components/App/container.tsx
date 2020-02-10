@@ -3,6 +3,7 @@ import React from "react";
 // import { Idler } from "../Idler";
 import Header from "../AppHeader";
 import PipelineTable from "../PipelineTable";
+import PipelineRadial from "../PipelineRadial";
 import PipelineBubble from "../PipelineBubble";
 import Definitions from "../Definitions";
 import Lightbox from "../Lightbox";
@@ -16,8 +17,7 @@ const AppContainer: React.FC = () => (
       <Header />
       <div className={styles.panels}>
         <PipelineTable />
-        {/* RADIAL */}
-        <div className={styles.tempRadial} />
+        <PipelineRadial />
         <PipelineBubble />
         <Definitions />
         <Lightbox />
