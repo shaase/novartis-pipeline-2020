@@ -55,3 +55,14 @@ export interface IdlePath {
   compound: string;
   cardIndex: number;
 }
+
+export interface Bubble {
+  id: string;
+  path: string;
+  fill: string;
+  color: string;
+  value: number;
+  r: number;
+  x: number;
+  y: number;
+}
