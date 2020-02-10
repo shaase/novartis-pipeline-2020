@@ -15,6 +15,7 @@ interface WorkerData {
   studyCode: string;
   url: string;
   bubbles: Bubble[];
+  marginLeft: number;
 }
 
 const defaultData: WorkerData = {
@@ -22,6 +23,7 @@ const defaultData: WorkerData = {
   studyCode: "",
   url: "",
   bubbles: [],
+  marginLeft: 0,
 };
 
 const PipelineBubble: React.FC = () => {
@@ -29,7 +31,7 @@ const PipelineBubble: React.FC = () => {
   const { phases } = useContext(FilterContext);
   const [workerData, setWorkerData] = useState<WorkerData>(defaultData);
   const pathRef = useRef("");
-  const { data, studyCode, url, bubbles } = workerData;
+  const { data, studyCode, url, bubbles, marginLeft } = workerData;
 
   console.log("render", workerData);
 
@@ -66,6 +68,7 @@ const PipelineBubble: React.FC = () => {
         path={path}
         width={500}
         height={800}
+        marginLeft={marginLeft}
         onNavigate={onNavigate}
       />
 

@@ -11,10 +11,11 @@ type Props = {
   path: string;
   width: number;
   height: number;
+  marginLeft: number;
   onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
 
-const BubbleChart: React.FC<Props> = ({ isVisible, bubbles, path, width, height, onNavigate }: Props) => {
+const BubbleChart: React.FC<Props> = ({ isVisible, bubbles, path, width, height, marginLeft, onNavigate }: Props) => {
   const groups = useRef<SVGGElement[]>([]);
   const circles = useRef<SVGGElement[]>([]);
 
@@ -34,18 +35,6 @@ const BubbleChart: React.FC<Props> = ({ isVisible, bubbles, path, width, height,
     });
   });
 
-  //   if (
-  //     path === "Content/Tumors/Heme/Malignant" ||
-  //     path === "Content/Tumors/Heme/Malignant/Lymphoma" ||
-  //     path === "Content/Compounds/Targeted/Eltrombopag" ||
-  //     path === "Content/Compounds/CAR-T/Tisagenlecleucel" ||
-  //     path === "Content/Compounds/Targeted/Asciminib"
-  //   ) {
-  //     svgClass = styles.svgFew;
-  //   } else if (path === "Content/Compounds/CAR-T/CTL119") {
-  //     svgClass = styles.svgFewCTL119;
-  //   }
-
   const addGroup = (el: SVGGElement | null): void => {
     if (el !== null && groups.current.length < 50) {
       groups.current.push(el);
@@ -60,7 +49,7 @@ const BubbleChart: React.FC<Props> = ({ isVisible, bubbles, path, width, height,
   };
 
   return (
-    <div className={isVisible ? styles.bubbles : styles.bubblesHidden}>
+    <div className={isVisible ? styles.bubbles : styles.bubblesHidden} style={{ marginLeft }}>
       <Bubbles
         items={bubbles}
         svgClass={styles.svg}

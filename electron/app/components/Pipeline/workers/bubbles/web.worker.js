@@ -4,8 +4,8 @@ import getBubbles from "./d3";
 
 const bubbleData = (path, phases, compound, width, height) => {
   const { data, studyCode, url } = getData(path, phases, compound);
-  const bubbles = getBubbles(data, width, height);
-  return { data, studyCode, url, bubbles };
+  const { bubbles, marginLeft } = getBubbles(data, width, height);
+  return { data, studyCode, url, bubbles, marginLeft };
 };
 
 self.addEventListener(

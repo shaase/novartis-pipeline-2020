@@ -25,38 +25,8 @@
   @extend .bubbles;
 
   flex: 0;
-  display: none;
-}
-
-.svg {
-  padding-left: 0;
-  transition: padding 200ms ease-in-out;
-}
-
-.node {
-  // transition: transform 500ms ease-in-out;
-}
-
-.circle {
-  // transition: transform 500ms ease-in-out;
 }
 
 .node:active {
   opacity: 0.7;
-}
-
-.svgFew {
-  padding-left: 40px;
-}
-
-.svgFewBig {
-  padding-left: 25px;
-}
-
-.svgFewCTL119 {
-  padding-left: 60px;
-}
-
-.svgFewBigCTL119 {
-  padding-left: 100px;
 }

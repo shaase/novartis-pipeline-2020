@@ -16,16 +16,6 @@ const empty = {
   r: 0,
 };
 
-const filterBubbles = (nodes, width, height) => {
-  const filtered = nodes.filter(node => node.id !== undefined && node.id !== "hidden");
-
-  for (let i = filtered.length; i < 50; i += 1) {
-    filtered.push({ ...empty, x: width / 2, y: height / 2 });
-  }
-
-  return filtered;
-};
-
 const packBubbles = (items, width, height) => {
   const children = items
     .map(item => {
@@ -102,10 +92,36 @@ const packBubbles = (items, width, height) => {
   return bubbles;
 };
 
-const getBubbles = (data, width, height) => {
-  const bubbles = packBubbles(data, width, height);
-  const filtered = filterBubbles(bubbles, width, height);
+const filterBubbles = (nodes, width, height) => {
+  const filtered = nodes.filter(node => node.id !== undefined && node.id !== "hidden");
+
+  for (let i = filtered.length; i < 50; i += 1) {
+    filtered.push({ ...empty, x: width / 2, y: height / 2 });
+  }
+
   return filtered;
+};
+
+const getMarginLeft = (nodes, width) => {
+  let left = width;
+  let right = 0;
+
+  nodes.forEach(({ x, r }) => {
+    left = Math.min(left, x - r);
+    right = Math.max(right, x + r);
+  });
+
+  const contentCenter = right - (right - left) / 2;
+  const marginLeft = 240 - contentCenter;
+
+  return marginLeft;
+};
+
+const getBubbles = (data, width, height) => {
+  const packed = packBubbles(data, width, height);
+  const bubbles = filterBubbles(packed, width, height);
+  const marginLeft = getMarginLeft(bubbles, width);
+  return { bubbles, marginLeft };
 };
 
 export default getBubbles;
