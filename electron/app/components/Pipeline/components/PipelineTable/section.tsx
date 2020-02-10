@@ -14,7 +14,7 @@ type Props = {
 };
 
 const Section: React.FC<Props> = ({ path, nct, flexRows, totalRows, section, onNavigate }: Props) => {
-  const [titleClass, setTitleClass] = useState("buttonSectionTitle");
+  const [titleClass, setTitleClass] = useState("sectionTitleCenter");
   const buttonSection = useRef<HTMLButtonElement>(null);
   const pathRef = useRef("");
   const flexRef = useRef(false);
@@ -22,24 +22,21 @@ const Section: React.FC<Props> = ({ path, nct, flexRows, totalRows, section, onN
   const checkSectionHeight = (): void => {
     if (buttonSection.current !== null) {
       const { top, height } = buttonSection.current.getBoundingClientRect();
-      let newTitleClass = "buttonSectionTitle";
+      let newTitleClass = "sectionTitleCenter";
 
       if (height > 800) {
-        newTitleClass = top > 250 ? "buttonSectionTitleTop" : "buttonSectionTitleFixed";
+        newTitleClass = top > 250 ? "sectionTitleTop" : "sectionTitleFixed";
       }
 
+      console.log("section", newTitleClass, height);
       if (newTitleClass !== titleClass) {
         setTitleClass(newTitleClass);
-      }
-
-      if (height > 800) {
-        requestAnimationFrame(checkSectionHeight);
       }
     }
   };
 
   if (pathRef.current !== path || flexRef.current !== flexRows) {
-    checkSectionHeight();
+    requestAnimationFrame(checkSectionHeight);
     pathRef.current = path;
     flexRef.current = flexRows;
   }

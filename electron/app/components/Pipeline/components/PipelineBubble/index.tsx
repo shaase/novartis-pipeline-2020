@@ -50,7 +50,7 @@ const PipelineBubble: React.FC = () => {
   const showBubbles =
     (root === "Tumors" && level < 5 && data.length > 1) || (root === "Compounds" && level < 4 && data.length > 1);
   const isEmpty = data.length === 0 && studyCode === undefined;
-  console.log(studyCode);
+
   return (
     <div className={isEmpty ? styles.empty : styles.container}>
       <PanelHeader category="Study" />
