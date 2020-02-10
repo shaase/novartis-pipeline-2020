@@ -9,6 +9,7 @@ export interface PipelineItem {
   children?: PipelineItem[];
   studies?: PipelineStudy[];
   size?: number;
+  phases?: StudyPhase[];
 }
 
 export interface PipelineStudy {
@@ -16,6 +17,7 @@ export interface PipelineStudy {
   path: string;
   title: string;
   phase: number;
+  phaseList: string;
   subtype?: string;
   target?: string;
   cards?: string[];
@@ -50,7 +52,7 @@ export interface LightboxContent {
 export interface StudyPhase {
   title: string;
   number: number;
-  studies: PipelineItem[];
+  studies: PipelineStudy[];
 }
 
 export interface IdlePath {
