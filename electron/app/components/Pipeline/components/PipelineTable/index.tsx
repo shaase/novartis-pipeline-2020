@@ -32,6 +32,7 @@ const PipelineTable: React.FC = () => {
   const refreshFrames = useRef(0);
   const dragging = useRef(false);
   const completing = useRef(false);
+  const canSelect = useRef(true);
   const originY = useRef(0);
   const currentY = useRef(0);
   const diffY = useRef(0);
@@ -73,7 +74,7 @@ const PipelineTable: React.FC = () => {
 
   useEffect(() => {
     refreshFrames.current = 0;
-    requestAnimationFrame(checkFlex);
+    checkFlex();
   }, [workerData]);
 
   useEffect(() => {
@@ -87,6 +88,9 @@ const PipelineTable: React.FC = () => {
         scroller.current.scrollTop += diffY.current * scale;
         originY.current = currentY.current;
         raf = requestAnimationFrame(tick);
+        if (Math.abs(diffY.current) > 5) {
+          canSelect.current = false;
+        }
       } else if (completing.current) {
         if (Math.abs(diffY.current) > 1) {
           diffY.current *= 0.7;
@@ -134,6 +138,16 @@ const PipelineTable: React.FC = () => {
       dragging.current = false;
       completing.current = true;
     }
+
+    setTimeout(() => {
+      canSelect.current = true;
+    }, 500);
+  };
+
+  const handleSelect = (p: string, c?: string): void => {
+    if (canSelect.current) {
+      onNavigate(p, c);
+    }
   };
 
   const overflowY = flexRows ? "hidden" : "scroll";
@@ -179,7 +193,7 @@ const PipelineTable: React.FC = () => {
                   path={path}
                   nct={studyCode || ""}
                   flexRows={flexRows}
-                  onNavigate={onNavigate}
+                  onNavigate={handleSelect}
                 />
               )),
             )}

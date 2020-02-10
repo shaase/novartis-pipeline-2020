@@ -22,6 +22,7 @@ const StudyTable: React.FC<Props> = ({ scale, data, compound, onNavigate }: Prop
   const refreshFrames = useRef(0);
   const dragging = useRef(false);
   const completing = useRef(false);
+  const canSelect = useRef(true);
   const originY = useRef(0);
   const currentY = useRef(0);
   const diffY = useRef(0);
@@ -85,6 +86,9 @@ const StudyTable: React.FC<Props> = ({ scale, data, compound, onNavigate }: Prop
         scroller.current.scrollTop += diffY.current * scale;
         originY.current = currentY.current;
         raf = requestAnimationFrame(tick);
+        if (Math.abs(diffY.current) > 5) {
+          canSelect.current = false;
+        }
       } else if (completing.current) {
         if (Math.abs(diffY.current) > 1) {
           diffY.current *= 0.7;
@@ -132,6 +136,16 @@ const StudyTable: React.FC<Props> = ({ scale, data, compound, onNavigate }: Prop
       dragging.current = false;
       completing.current = true;
     }
+
+    setTimeout(() => {
+      canSelect.current = true;
+    }, 500);
+  };
+
+  const handleSelect = (p: string, c?: string): void => {
+    if (canSelect.current) {
+      onNavigate(p, c);
+    }
   };
 
   return (
@@ -157,7 +171,7 @@ const StudyTable: React.FC<Props> = ({ scale, data, compound, onNavigate }: Prop
               compound={compound}
               flexRows={flexRows}
               studyCount={studyCount}
-              onClick={onNavigate}
+              onClick={handleSelect}
             />
           ))}
         </div>
