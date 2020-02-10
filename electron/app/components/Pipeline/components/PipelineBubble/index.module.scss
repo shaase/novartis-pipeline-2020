@@ -25,6 +25,7 @@
   @extend .bubbles;
 
   flex: 0;
+  display: none;
 }
 
 .node:active {
