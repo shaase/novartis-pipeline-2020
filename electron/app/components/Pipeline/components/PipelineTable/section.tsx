@@ -22,15 +22,14 @@ const Section: React.FC<Props> = ({ path, nct, flexRows, totalRows, section, onN
   const checkSectionHeight = (): void => {
     if (buttonSection.current !== null) {
       const { top, height } = buttonSection.current.getBoundingClientRect();
-      let newTitleClass = "sectionTitleCenter";
+      let newClass = "sectionTitleCenter";
 
       if (height > 800) {
-        newTitleClass = top > 250 ? "sectionTitleTop" : "sectionTitleFixed";
+        newClass = top > 250 ? "sectionTitleTop" : "sectionTitleFixed";
       }
 
-      console.log("section", newTitleClass, height);
-      if (newTitleClass !== titleClass) {
-        setTitleClass(newTitleClass);
+      if (newClass !== titleClass) {
+        setTitleClass(newClass);
       }
     }
   };
