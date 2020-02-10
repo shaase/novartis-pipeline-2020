@@ -47,7 +47,7 @@ const BubbleChart: React.FC<Props> = ({ isVisible, bubbles, path, width, height,
       circles.current.push(el);
     }
   };
-
+  console.log("bubble render");
   return (
     <div className={isVisible ? styles.bubbles : styles.bubblesHidden} style={{ marginLeft }}>
       <Bubbles

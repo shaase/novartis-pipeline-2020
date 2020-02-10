@@ -3,7 +3,7 @@ import { FilterContext, PipelineContext } from "../../state";
 import PanelHeader from "../PanelHeader";
 import BubbleChart from "./bubble-chart";
 // import StudyTable from '../StudyTable';
-// import CardPresenter from "../CardViewer";
+import CardViewer from "../CardViewer";
 import { postBubbleUpdate, subscribeToBubbleUpdates } from "../../workers";
 import { colorForData } from "../../data";
 import { itemsForPath } from "../../utils";
@@ -33,18 +33,12 @@ const PipelineBubble: React.FC = () => {
   const pathRef = useRef("");
   const { data, studyCode, url, bubbles, marginLeft } = workerData;
 
-  console.log("render", workerData);
-
   if (pathRef.current !== path) {
     postBubbleUpdate(path, phases, compound, 500, 800);
     pathRef.current = path;
   }
 
   const onWorkerUpdate = (wd: WorkerData): void => {
-    // setData(d);
-    // setStudyCode(sc);
-    // setURL(u);
-    // setBubbles(bb);
     setWorkerData(wd);
   };
 
@@ -78,13 +72,13 @@ const PipelineBubble: React.FC = () => {
       )} */}
 
       {/* STUDY */}
-      {/* {studyCode !== undefined && (
-        <CardPresenter
+      {studyCode !== undefined && (
+        <CardViewer
           type="Studies"
           color={colorForData(path)}
           items={[{ file: `${studyCode}.png`, label: "", studyCode, url }]}
         />
-      )} */}
+      )}
     </div>
   );
 };
