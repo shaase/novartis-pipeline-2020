@@ -15,5 +15,11 @@
       "*": ["*"]
     }
   },
-  "include": ["app", "tsconfig.json"]
+  "include": [
+    "app",
+    "tsconfig.json",
+    "electron/workers/bubbles/index.js",
+    "electron/workers/bubbles/data.js",
+    "electron/workers/bubbles/d3.js"
+  ]
 }

@@ -1,3 +1,5 @@
+import { SimulationNodeDatum } from "d3-force";
+
 export interface PipelineItem {
   type?: string;
   name?: string;
@@ -36,6 +38,7 @@ export interface CardType {
   label: string;
   compound?: string;
   studyCode?: string;
+  url?: string;
 }
 
 export interface LightboxContent {
@@ -56,7 +59,8 @@ export interface IdlePath {
   cardIndex: number;
 }
 
-export interface Bubble {
+// BUBBLE CHART INTERFACES
+export interface Bubble extends SimulationNodeDatum {
   id: string;
   path: string;
   fill: string;
@@ -66,3 +70,10 @@ export interface Bubble {
   x: number;
   y: number;
 }
+
+interface SimNode extends SimulationNodeDatum {
+  r: number;
+}
+
+export const isBubble = (object: any): object is Bubble => "path" in object && "fill" in object; // eslint-disable-line
+export const isSimNode = (object: any): object is SimNode => "r" in object; // eslint-disable-line

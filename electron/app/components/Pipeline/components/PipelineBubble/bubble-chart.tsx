@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import { TweenMax } from "gsap";
 import { uniqBy } from "lodash";
-import { hierarchy, pack } from "d3-hierarchy";
-import { forceSimulation, forceManyBody, forceCollide } from "d3-force";
-import { PipelineItem, Bubble } from "../../types";
+import { hierarchy, pack, HierarchyCircularNode } from "d3-hierarchy";
+import { forceSimulation, forceManyBody, forceCollide, SimulationNodeDatum } from "d3-force";
+import { PipelineItem, Bubble, isBubble, isSimNode } from "../../types";
 import { flattenStudies } from "../../data";
 import { colorForBackground, itemsForPath } from "../../utils";
 import Bubbles from "./bubbles";
@@ -11,13 +11,15 @@ import styles from "./index.module.scss";
 
 /* D3.js JavaScript library copyright 2017 Mike Bostock. */
 
-const empty = {
+const empty: Bubble = {
   id: "",
   path: "",
   fill: "rgba(255,0,0,0)",
   color: "rgba(255,0,0,0)",
   value: 0,
   r: 0,
+  x: 0,
+  y: 0,
 };
 
 type Props = {
@@ -33,8 +35,6 @@ const BubbleChart: React.FC<Props> = ({ isVisible, items, path, width, height, o
   const [nodes, setNodes] = useState<Bubble[]>([]);
   const groups = useRef<SVGGElement[]>([]);
   const circles = useRef<SVGGElement[]>([]);
-  const refGroup = useRef<SVGGElement | null>(null);
-  const refCircle = useRef<SVGCircleElement | null>(null);
   const pathRef = useRef("");
 
   const handleSelect = (node: Bubble): void => {
@@ -99,8 +99,8 @@ const BubbleChart: React.FC<Props> = ({ isVisible, items, path, width, height, o
       .padding(4);
 
     const root = hierarchy({ children })
-      .sum(d => d.value) // eslint-disable-line
-      .each(d => {
+      .sum((d: Bubble) => d.value)
+      .each((d: HierarchyCircularNode<Bubble>) => {
         if (d.data.id !== undefined) {
           d.id = d.data.id;
           d.fill = d.data.color || "#000000";
@@ -109,7 +109,7 @@ const BubbleChart: React.FC<Props> = ({ isVisible, items, path, width, height, o
         }
       });
 
-    const left = {
+    const left: Bubble = {
       id: "hidden",
       fill: "#000000",
       path: "hidden",
@@ -120,27 +120,51 @@ const BubbleChart: React.FC<Props> = ({ isVisible, items, path, width, height, o
       y: 380,
     };
 
-    const right = {
+    const right: Bubble = {
       ...left,
       x: 2455,
     };
 
-    const bottom = {
+    const bottom: Bubble = {
       ...left,
       r: 300,
       x: 250,
       y: 1040,
     };
 
-    const bubbles: Bubble[] =
-      children.length > 5 ? [...(chartPack(root).children || []), left, right, bottom] : chartPack(root).children;
+    const packed: Bubble[] = (chartPack(root).children || []).map(
+      (bn: Bubble | HierarchyCircularNode<unknown>): Bubble => {
+        if (isBubble(bn)) {
+          return {
+            id: bn.id || "",
+            path: bn.path || "",
+            fill: bn.fill || "",
+            color: bn.id || "",
+            value: bn.value || 0,
+            r: bn.r || 0,
+            x: bn.x || 0,
+            y: bn.y || 0,
+          };
+        }
+
+        return empty;
+      },
+    );
+
+    const bubbles: Bubble[] = children.length > 5 ? [...packed, left, right, bottom] : packed;
 
     const mod = width < 600 ? 2 : 10;
     const sim = forceSimulation(bubbles)
       .force("charge", forceManyBody().strength(20))
       .force(
         "collision",
-        forceCollide().radius((d: Bubble) => d.r + mod),
+        forceCollide().radius((n: SimulationNodeDatum) => {
+          if (isSimNode(n)) {
+            return n.r + mod;
+          }
+
+          return mod;
+        }),
       )
       .stop();
 
@@ -174,6 +198,21 @@ const BubbleChart: React.FC<Props> = ({ isVisible, items, path, width, height, o
       svgClass = styles.svgFewCTL119;
     }
   }
+
+  const addGroup = (el: SVGGElement | null): void => {
+    if (el !== null) {
+      groups.current.push(el);
+      // TODO: fix TweenMax set
+      // TweenMax.set(el, { x: 250, y: 400, opacity: 0 });
+    }
+  };
+
+  const addCircle = (el: SVGCircleElement | null): void => {
+    if (el !== null) {
+      circles.current.push(el);
+    }
+  };
+
   // TODO: hook into groups and circles refs to add to array
   return (
     <div className={isVisible ? styles.bubbles : styles.bubblesHidden}>
@@ -183,8 +222,8 @@ const BubbleChart: React.FC<Props> = ({ isVisible, items, path, width, height, o
         path={path}
         width={width}
         height={height}
-        refGroup={refGroup}
-        refCircle={refCircle}
+        refGroup={addGroup}
+        refCircle={addCircle}
         onSelect={handleSelect}
       />
     </div>

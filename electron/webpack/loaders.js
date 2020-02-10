@@ -10,6 +10,10 @@ module.exports = [
     use: ["babel-loader"],
   },
   {
+    test: /\.worker\.js$/,
+    use: { loader: "worker-loader" },
+  },
+  {
     test: /\.css$/,
     use: [
       {

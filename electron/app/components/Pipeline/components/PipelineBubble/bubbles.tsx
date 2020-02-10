@@ -1,4 +1,4 @@
-import React, { MutableRefObject } from "react";
+import React from "react";
 import { Bubble } from "../../types";
 import BubbleLabel from "./bubble-label";
 import styles from "./index.module.scss";
@@ -9,8 +9,8 @@ type Props = {
   svgClass: string;
   width: number;
   height: number;
-  refGroup: MutableRefObject<SVGGElement | null>;
-  refCircle: MutableRefObject<SVGCircleElement | null>;
+  refGroup: (el: SVGGElement | null) => void;
+  refCircle: (el: SVGCircleElement | null) => void;
   onSelect: (b: Bubble) => void;
 };
 
