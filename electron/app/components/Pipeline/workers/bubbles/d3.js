@@ -89,7 +89,7 @@ const packBubbles = (items, width, height) => {
     sim.tick();
   }
 
-  return bubbles;
+  return bubbles || [];
 };
 
 const filterBubbles = (nodes, width, height) => {
@@ -99,7 +99,7 @@ const filterBubbles = (nodes, width, height) => {
     filtered.push({ ...empty, x: width / 2, y: height / 2 });
   }
 
-  return filtered;
+  return filtered || [];
 };
 
 const getMarginLeft = (nodes, width) => {
