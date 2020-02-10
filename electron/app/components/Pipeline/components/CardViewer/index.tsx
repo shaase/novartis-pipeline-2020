@@ -11,7 +11,8 @@ import styles from "./index.module.scss";
 type Props = { type: string; color: string; items: CardType[] };
 
 const CardViewer: React.FC<Props> = ({ type, color, items }: Props) => {
-  const { cardIndex, onCardIndex, onLightboxContent } = useContext(CardContext);
+  const { cardIndex: cpdIndex, onCardIndex, onLightboxContent } = useContext(CardContext);
+  const cardIndex = type === "Compounds" ? cpdIndex : 0;
   const x = cardIndex < items.length ? -cardIndex * 100 : 0;
   return (
     <div className={styles.container}>
