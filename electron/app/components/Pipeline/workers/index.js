@@ -1,3 +1,4 @@
+const { postTableUpdate, subscribeToTableUpdates } = require("./table");
 const { postBubbleUpdate, subscribeToBubbleUpdates } = require("./bubbles");
 
-module.exports = { postBubbleUpdate, subscribeToBubbleUpdates };
+module.exports = { postTableUpdate, subscribeToTableUpdates, postBubbleUpdate, subscribeToBubbleUpdates };

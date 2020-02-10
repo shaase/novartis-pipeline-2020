@@ -17,12 +17,12 @@ type Props = {
 
 const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }: Props) => {
   const [items, setItems] = useState<RowItem[]>([]);
-  const pathRef = useRef("");
+  const sectionRef = useRef<PipelineItem | null>();
   const flexRef = useRef(false);
 
   // console.log(path, flexRows);
 
-  if (pathRef.current !== path || flexRef.current !== flexRows) {
+  if (sectionRef.current !== section || flexRef.current !== flexRows) {
     const { level } = itemsForPath(path);
     const type = getType(level, path);
 
@@ -115,7 +115,7 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
     }, []);
 
     setItems(rowItems);
-    pathRef.current = path;
+    sectionRef.current = section;
     flexRef.current = flexRows;
   }
 

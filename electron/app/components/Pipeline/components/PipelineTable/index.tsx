@@ -1,6 +1,7 @@
-import React, { MouseEvent, TouchEvent, useContext, useRef, useState } from "react";
+import React, { MouseEvent, TouchEvent, useContext, useEffect, useRef, useState } from "react";
 import { FilterContext, PipelineContext } from "../../state";
-import { sectionsForTable, cohorts, colorForData } from "../../data";
+import { postTableUpdate, subscribeToTableUpdates } from "../../workers";
+import { cohorts, colorForData } from "../../data";
 import { PipelineItem } from "../../types";
 import { itemsForPath, eventPosition } from "../../utils";
 import PanelHeader from "../PanelHeader";
@@ -10,10 +11,21 @@ import styles from "./index.module.scss";
 
 let raf: number;
 
+interface WorkerData {
+  sections: PipelineItem[];
+  allChildren: PipelineItem[];
+}
+
+const defaultData: WorkerData = {
+  sections: [],
+  allChildren: [],
+};
+
 const PipelineTable: React.FC = () => {
   const { phases } = useContext(FilterContext);
   const { scale, path, compound, onNavigate } = useContext(PipelineContext);
   const [flexRows, setFlexRows] = useState(true);
+  const [workerData, setWorkerData] = useState<WorkerData>(defaultData);
 
   const content = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
@@ -24,7 +36,6 @@ const PipelineTable: React.FC = () => {
   const currentY = useRef(0);
   const diffY = useRef(0);
   const pathRef = useRef("");
-  const compoundRef = useRef<string | undefined>(undefined);
   const phaseRef = useRef<number[]>([]);
 
   const checkFlex = (): void => {
@@ -40,28 +51,34 @@ const PipelineTable: React.FC = () => {
       } else if (!shouldFlex && flexRows) {
         setFlexRows(false);
       }
-
-      refreshFrames.current += 1;
-      if (refreshFrames.current < 2) {
-        requestAnimationFrame(checkFlex);
-      }
     }
   };
 
-  if (pathRef.current !== path || compoundRef.current !== compound || phaseRef.current !== phases) {
+  if (pathRef.current !== path || phaseRef.current !== phases) {
+    postTableUpdate(path, phases);
+    pathRef.current = path;
+    phaseRef.current = phases;
+  }
+
+  const onWorkerUpdate = (wd: WorkerData): void => {
     if (scroller.current !== null) {
       scroller.current.scrollTop = 0;
     }
-
     originY.current = 0;
     currentY.current = 0;
     diffY.current = 0;
-    pathRef.current = path;
-    compoundRef.current = compound;
-    phaseRef.current = phases;
+
+    setWorkerData(wd);
+  };
+
+  useEffect(() => {
     refreshFrames.current = 0;
     requestAnimationFrame(checkFlex);
-  }
+  }, [workerData]);
+
+  useEffect(() => {
+    subscribeToTableUpdates(onWorkerUpdate);
+  }, []);
 
   const tick = (): void => {
     if (scroller && scroller.current) {
@@ -120,11 +137,7 @@ const PipelineTable: React.FC = () => {
   };
 
   const overflowY = flexRows ? "hidden" : "scroll";
-  const sections = sectionsForTable(path, phases);
-  const allChildren: PipelineItem[] = sections.reduce(
-    (a: PipelineItem[], b: PipelineItem) => a.concat(b.children || []),
-    [],
-  );
+  const { sections, allChildren } = workerData;
   const isEmpty = allChildren.length === 0 && compound === undefined;
 
   const { studyCode } = itemsForPath(path);

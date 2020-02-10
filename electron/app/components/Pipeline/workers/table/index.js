@@ -11,12 +11,12 @@ const onMessage = e => {
 
 worker.addEventListener("message", onMessage);
 
-const postBubbleUpdate = (path, phases, compound, width, height) => {
-  worker.postMessage({ path, phases, compound, width, height });
+const postTableUpdate = (path, phases) => {
+  worker.postMessage({ path, phases });
 };
 
-const subscribeToBubbleUpdates = callback => {
+const subscribeToTableUpdates = callback => {
   subscribers.push(callback);
 };
 
-module.exports = { postBubbleUpdate, subscribeToBubbleUpdates };
+module.exports = { postTableUpdate, subscribeToTableUpdates };

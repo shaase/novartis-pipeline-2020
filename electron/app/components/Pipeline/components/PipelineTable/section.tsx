@@ -16,8 +16,16 @@ type Props = {
 const Section: React.FC<Props> = ({ path, nct, flexRows, totalRows, section, onNavigate }: Props) => {
   const [titleClass, setTitleClass] = useState("sectionTitleCenter");
   const buttonSection = useRef<HTMLButtonElement>(null);
-  const pathRef = useRef("");
+  const sectionRef = useRef<PipelineItem | null>(null);
   const flexRef = useRef(false);
+
+  const view = path.split("/")[1];
+  const flex = totalRows > 0 ? (section.children || []).length / totalRows : 0;
+  const display = flex > 0 ? "flex" : "none";
+
+  const sectionTitle = section.type === "Rare Disease" ? "Rare" : section.type;
+  const showTitle = path !== "Content/Tumors" || section.type !== "Rare Disease";
+  const sectionPath = section.path || "Content/Tumors";
 
   const checkSectionHeight = (): void => {
     if (buttonSection.current !== null) {
@@ -34,21 +42,14 @@ const Section: React.FC<Props> = ({ path, nct, flexRows, totalRows, section, onN
     }
   };
 
-  if (pathRef.current !== path || flexRef.current !== flexRows) {
+  if (sectionRef.current !== section || flexRef.current !== flexRows) {
     requestAnimationFrame(checkSectionHeight);
-    pathRef.current = path;
+    sectionRef.current = section;
     flexRef.current = flexRows;
   }
 
-  const view = path.split("/")[1];
-  const flex = totalRows > 0 ? (section.children || []).length / totalRows : 0;
-
-  const sectionTitle = section.type === "Rare Disease" ? "Rare" : section.type;
-  const showTitle = path !== "Content/Tumors" || section.type !== "Rare Disease";
-  const sectionPath = section.path || "Content/Tumors";
-
   return (
-    <div className={styles.section} style={{ backgroundColor: section.color, flex }}>
+    <div className={styles.section} style={{ backgroundColor: section.color, flex, display }}>
       {(sectionPath.includes(path) || path.includes(sectionPath)) && (
         <button
           className={styles.buttonSection}
