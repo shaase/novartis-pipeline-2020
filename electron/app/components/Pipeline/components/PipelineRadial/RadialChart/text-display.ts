@@ -1,5 +1,3 @@
-// @flow
-
 import { RadialNode } from "../../../types";
 import { itemsForPath, slicePath } from "../../../utils";
 
@@ -9,7 +7,7 @@ const textDisplay = (
   getArcLength: (n: RadialNode) => number,
   getArcWidth: (n: RadialNode) => number,
 ): string => {
-  const { route, name, parent, depth, isStudyContainer } = node;
+  const { route, name, parent, depth = 0, isStudyContainer } = node;
   const { root, level } = itemsForPath(path);
   const trunc = root === "Tumors" ? slicePath(path, 6) : path;
 

@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { Spring } from 'react-spring/renderprops';
 import { RadialNode, RootNode } from '../../../types';

@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import { animated } from 'react-spring/renderprops';
 import { itemsForPath } from '../../../utils';
