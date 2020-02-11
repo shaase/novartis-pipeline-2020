@@ -64,9 +64,9 @@ export const flattenCombos = (list: PipelineItem[], filterPath: string, phases: 
       },
     );
 
-    const { color, path } = item1;
+    const { type, color, path } = item1;
     if (childStudies.length > 0) {
-      combos.push({ color, path, children: ch1 });
+      combos.push({ type, color, path, children: ch1 });
     }
   });
 

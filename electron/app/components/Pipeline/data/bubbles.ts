@@ -93,7 +93,6 @@ export const dataForBubbles = (routePath: string, phases: number[], compound?: s
     }
 
     // COMPOUNDS
-
     if (level < 7) {
       const filtered = (item.children || []).filter(
         (child: PipelineItem) =>
@@ -130,6 +129,5 @@ export const dataForBubbles = (routePath: string, phases: number[], compound?: s
     }
     return arr;
   }, []);
-
   return data;
 };
