@@ -103,3 +103,23 @@ export const defaultWorkerData: WorkerData = {
   radialHierarchy: { flatRoot: {}, root: {} },
   bubbleData: { data: [], studyCode: "", url: "", bubbles: [], marginLeft: 0 },
 };
+
+export interface RadialNode {
+  parent: RadialNode;
+  route: string;
+  name: string;
+  color: string;
+  x0?: number;
+  x1?: number;
+  y0?: number;
+  y1?: number;
+  depth?: number;
+  isEmpty: boolean;
+  isStudyContainer: boolean;
+}
+
+export interface RadialText {
+  lines: (JSX.Element | JSX.Element[])[];
+  fontSize: number;
+  offsets: number[];
+}
