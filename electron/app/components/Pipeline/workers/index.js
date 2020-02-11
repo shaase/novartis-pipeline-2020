@@ -1,4 +1,13 @@
-const { postTableUpdate, subscribeToTableUpdates } = require("./table");
-const { postBubbleUpdate, subscribeToBubbleUpdates } = require("./bubbles");
+const { getTableData } = require("./table"); // path, phases
+const { getRadialHierarchy } = require("./radial"); // phasess
+const { getBubbleData } = require("./bubbles"); // path, phases, compound, width, height
 
-module.exports = { postTableUpdate, subscribeToTableUpdates, postBubbleUpdate, subscribeToBubbleUpdates };
+const getWorkerData = (path, phases, compound, width, height) => {
+  return Promise.all([
+    getTableData(path, phases),
+    getRadialHierarchy(phases),
+    getBubbleData(path, phases, compound, width, height),
+  ]);
+};
+
+module.exports = { getWorkerData };

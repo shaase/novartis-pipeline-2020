@@ -2,7 +2,7 @@ const Worker = require("./web.worker.js");
 
 const worker = new Worker();
 
-const getBubbleData = (path, phases, compound, width, height) =>
+const getRadialHierarchy = phases =>
   new Promise(resolve => {
     const handleEvent = e => {
       worker.removeEventListener("message", handleEvent);
@@ -10,7 +10,7 @@ const getBubbleData = (path, phases, compound, width, height) =>
     };
 
     worker.addEventListener("message", handleEvent);
-    worker.postMessage({ path, phases, compound, width, height });
+    worker.postMessage({ phases });
   });
 
-module.exports = { getBubbleData };
+module.exports = { getRadialHierarchy };

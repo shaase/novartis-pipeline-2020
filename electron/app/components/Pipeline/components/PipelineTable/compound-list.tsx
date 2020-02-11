@@ -6,28 +6,22 @@ import styles from "./list.module.scss";
 
 type Props = {
   path: string;
-  flexRows: boolean;
   section: PipelineItem;
   onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
 
-const CompoundList: React.FC<Props> = ({ path, flexRows, section, onNavigate }: Props) => {
+const CompoundList: React.FC<Props> = ({ path, section, onNavigate }: Props) => {
   const [items, setItems] = useState<RowItem[]>([]);
   const pathRef = useRef("");
 
   if (pathRef.current !== path) {
     const rowItems = (section.children || []).reduce((arr: RowItem[], child: PipelineItem) => {
       const title = child.type || "";
-      let className = "compound";
-      if (flexRows) {
-        className = "buttonListFlex";
-      }
-
       const item: RowItem = {
         color: child.color || "#222222",
         path: child.path || "Content/Tumors",
         title,
-        className,
+        className: "compound",
       };
       return [...arr, item];
     }, []);
@@ -37,7 +31,7 @@ const CompoundList: React.FC<Props> = ({ path, flexRows, section, onNavigate }: 
   }
 
   return (
-    <div className={flexRows ? styles.fullFlex : styles.full}>
+    <div className={styles.tableFlex}>
       {React.Children.toArray(
         items.map((item: RowItem) => (
           <button

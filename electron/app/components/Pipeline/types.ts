@@ -1,5 +1,3 @@
-import { SimulationNodeDatum } from "d3-force";
-
 export interface PipelineItem {
   type?: string;
   name?: string;
@@ -61,8 +59,7 @@ export interface IdlePath {
   cardIndex: number;
 }
 
-// BUBBLE CHART INTERFACES
-export interface Bubble extends SimulationNodeDatum {
+export interface Bubble {
   id: string;
   path: string;
   fill: string;
@@ -73,9 +70,36 @@ export interface Bubble extends SimulationNodeDatum {
   y: number;
 }
 
-interface SimNode extends SimulationNodeDatum {
-  r: number;
+export interface TableData {
+  sections: PipelineItem[];
+  allChildren: PipelineItem[];
 }
 
-export const isBubble = (object: any): object is Bubble => "path" in object && "fill" in object; // eslint-disable-line
-export const isSimNode = (object: any): object is SimNode => "r" in object; // eslint-disable-line
+export interface NodeMap {
+  [route: string]: Node;
+}
+
+export interface RadialHierarchy {
+  flatRoot: NodeMap;
+  root: NodeMap;
+}
+
+export interface BubbleData {
+  data: PipelineItem[];
+  studyCode: string;
+  url: string;
+  bubbles: Bubble[];
+  marginLeft: number;
+}
+
+export interface WorkerData {
+  tableData: TableData;
+  radialHierarchy: RadialHierarchy;
+  bubbleData: BubbleData;
+}
+
+export const defaultWorkerData: WorkerData = {
+  tableData: { sections: [], allChildren: [] },
+  radialHierarchy: { flatRoot: {}, root: {} },
+  bubbleData: { data: [], studyCode: "", url: "", bubbles: [], marginLeft: 0 },
+};

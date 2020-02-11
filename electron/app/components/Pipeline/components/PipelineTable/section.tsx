@@ -7,17 +7,15 @@ import styles from "./section.module.scss";
 type Props = {
   path: string;
   nct: string;
-  flexRows: boolean;
   section: PipelineItem;
   totalRows: number;
   onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
 
-const Section: React.FC<Props> = ({ path, nct, flexRows, totalRows, section, onNavigate }: Props) => {
+const Section: React.FC<Props> = ({ path, nct, totalRows, section, onNavigate }: Props) => {
   const [titleClass, setTitleClass] = useState("sectionTitleCenter");
   const buttonSection = useRef<HTMLButtonElement>(null);
   const sectionRef = useRef<PipelineItem | null>(null);
-  const flexRef = useRef(false);
 
   const view = path.split("/")[1];
   const flex = totalRows > 0 ? (section.children || []).length / totalRows : 0;
@@ -42,10 +40,9 @@ const Section: React.FC<Props> = ({ path, nct, flexRows, totalRows, section, onN
     }
   };
 
-  if (sectionRef.current !== section || flexRef.current !== flexRows) {
+  if (sectionRef.current !== section) {
     requestAnimationFrame(checkSectionHeight);
     sectionRef.current = section;
-    flexRef.current = flexRows;
   }
 
   return (
@@ -61,11 +58,11 @@ const Section: React.FC<Props> = ({ path, nct, flexRows, totalRows, section, onN
         </button>
       )}
 
-      <div className={flexRows ? styles.fullFlex : styles.full}>
+      <div className={styles.fullFlex}>
         {view === "Tumors" ? (
-          <Tumors path={path} nct={nct} section={section} flexRows={flexRows} onNavigate={onNavigate} />
+          <Tumors path={path} nct={nct} section={section} onNavigate={onNavigate} />
         ) : (
-          <Compounds section={section} path={path} flexRows={flexRows} onNavigate={onNavigate} />
+          <Compounds section={section} path={path} onNavigate={onNavigate} />
         )}
       </div>
     </div>

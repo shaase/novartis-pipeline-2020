@@ -1,5 +1,3 @@
-// @flow
-
 import React, { useContext } from "react";
 import { PipelineContext } from "../../state";
 import { domainForRadial, cohorts } from "../../data";

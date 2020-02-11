@@ -1,8 +1,6 @@
-import React, { MouseEvent, TouchEvent, useContext, useEffect, useRef, useState } from "react";
-import { FilterContext, PipelineContext } from "../../state";
-import { postTableUpdate, subscribeToTableUpdates } from "../../workers";
+import React, { MouseEvent, TouchEvent, useRef, useEffect } from "react";
 import { cohorts, colorForData } from "../../data";
-import { PipelineItem } from "../../types";
+import { PipelineItem, TableData } from "../../types";
 import { itemsForPath, eventPosition } from "../../utils";
 import PanelHeader from "../PanelHeader";
 import Section from "./section";
@@ -11,75 +9,35 @@ import styles from "./index.module.scss";
 
 let raf: number;
 
-interface WorkerData {
-  sections: PipelineItem[];
-  allChildren: PipelineItem[];
-}
-
-const defaultData: WorkerData = {
-  sections: [],
-  allChildren: [],
+type Props = {
+  scale: number;
+  path: string;
+  compound?: string;
+  data: TableData;
+  onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
 
-const PipelineTable: React.FC = () => {
-  const { phases } = useContext(FilterContext);
-  const { scale, path, compound, onNavigate } = useContext(PipelineContext);
-  const [flexRows, setFlexRows] = useState(true);
-  const [workerData, setWorkerData] = useState<WorkerData>(defaultData);
-
+const PipelineTable: React.FC<Props> = ({ scale, path, compound, data, onNavigate }: Props) => {
   const content = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
-  const refreshFrames = useRef(0);
   const dragging = useRef(false);
   const completing = useRef(false);
   const canSelect = useRef(true);
   const originY = useRef(0);
   const currentY = useRef(0);
   const diffY = useRef(0);
-  const pathRef = useRef("");
-  const phaseRef = useRef<number[]>([]);
 
-  const checkFlex = (): void => {
+  // checking styling (flex, scrolling) based on content size
+  useEffect(() => {
     if (scroller.current !== null && content.current !== null) {
       content.current.className = styles.content;
       const scrollerHeight = scroller.current.clientHeight + 3;
       const contentHeight = content.current.clientHeight;
       const shouldFlex = scrollerHeight > contentHeight;
+      scroller.current.className = shouldFlex ? styles.tableStatic : styles.tableScroll;
       content.current.className = shouldFlex ? styles.contentFlex : styles.content;
-
-      if (shouldFlex && !flexRows) {
-        setFlexRows(true);
-      } else if (!shouldFlex && flexRows) {
-        setFlexRows(false);
-      }
     }
-  };
-
-  if (pathRef.current !== path || phaseRef.current !== phases) {
-    postTableUpdate(path, phases);
-    pathRef.current = path;
-    phaseRef.current = phases;
-  }
-
-  const onWorkerUpdate = (wd: WorkerData): void => {
-    if (scroller.current !== null) {
-      scroller.current.scrollTop = 0;
-    }
-    originY.current = 0;
-    currentY.current = 0;
-    diffY.current = 0;
-
-    setWorkerData(wd);
-  };
-
-  useEffect(() => {
-    refreshFrames.current = 0;
-    checkFlex();
-  }, [workerData]);
-
-  useEffect(() => {
-    subscribeToTableUpdates(onWorkerUpdate);
-  }, []);
+  }, [data]);
 
   const tick = (): void => {
     if (scroller && scroller.current) {
@@ -150,8 +108,7 @@ const PipelineTable: React.FC = () => {
     }
   };
 
-  const overflowY = flexRows ? "hidden" : "scroll";
-  const { sections, allChildren } = workerData;
+  const { sections, allChildren } = data;
   const isEmpty = allChildren.length === 0 && compound === undefined;
 
   const { studyCode } = itemsForPath(path);
@@ -173,7 +130,6 @@ const PipelineTable: React.FC = () => {
       {cards === undefined ? (
         <div
           className={styles.table}
-          style={{ overflowY }}
           ref={scroller}
           onTouchStart={onDown}
           onTouchMove={onMove}
@@ -192,7 +148,6 @@ const PipelineTable: React.FC = () => {
                   section={section}
                   path={path}
                   nct={studyCode || ""}
-                  flexRows={flexRows}
                   onNavigate={handleSelect}
                 />
               )),

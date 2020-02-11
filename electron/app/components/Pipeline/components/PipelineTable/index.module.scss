@@ -13,8 +13,14 @@
   background-color: #e6e6e6;
 }
 
-.table {
+.tableStatic {
   flex: 1;
+  overflow: hidden;
+}
+
+.tableScroll {
+  flex: 1;
+  overflow-y: scroll;
 }
 
 .content {

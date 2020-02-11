@@ -1,56 +1,28 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { FilterContext, PipelineContext } from "../../state";
-import { postBubbleUpdate, subscribeToBubbleUpdates } from "../../workers";
+import React from "react";
 import PanelHeader from "../PanelHeader";
 import BubbleChart from "./bubble-chart";
 import StudyTable from "../StudyTable";
 import CardViewer from "../CardViewer";
 import { colorForData } from "../../data";
 import { itemsForPath } from "../../utils";
-import { PipelineItem, Bubble } from "../../types";
+import { BubbleData } from "../../types";
 import styles from "./index.module.scss";
 
-interface WorkerData {
-  data: PipelineItem[];
-  studyCode: string;
-  url: string;
-  bubbles: Bubble[];
-  marginLeft: number;
-}
-
-const defaultData: WorkerData = {
-  data: [],
-  studyCode: "",
-  url: "",
-  bubbles: [],
-  marginLeft: 0,
+type Props = {
+  scale: number;
+  path: string;
+  compound?: string;
+  phases: number[];
+  data: BubbleData;
+  onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
 
-const PipelineBubble: React.FC = () => {
-  const { scale, path, compound, onNavigate } = useContext(PipelineContext);
-  const { phases } = useContext(FilterContext);
-  const [workerData, setWorkerData] = useState<WorkerData>(defaultData);
-  const pathRef = useRef("");
-  const { data, studyCode, url, bubbles, marginLeft } = workerData;
-
-  if (pathRef.current !== path) {
-    postBubbleUpdate(path, phases, compound, 500, 800);
-    pathRef.current = path;
-  }
-
-  const onWorkerUpdate = (wd: WorkerData): void => {
-    setWorkerData(wd);
-  };
-
-  useEffect(() => {
-    subscribeToBubbleUpdates(onWorkerUpdate);
-  }, []);
-
+const PipelineBubble: React.FC<Props> = ({ scale, path, compound, data: bubbleData, onNavigate }: Props) => {
+  const { data, studyCode, url, bubbles, marginLeft } = bubbleData;
   const { root, level } = itemsForPath(path);
   const showBubbles =
     (root === "Tumors" && level < 5 && data.length > 1) || (root === "Compounds" && level < 4 && data.length > 1);
   const isEmpty = data.length === 0 && studyCode === undefined;
-
   return (
     <div className={isEmpty ? styles.empty : styles.container}>
       <PanelHeader category="Study" />

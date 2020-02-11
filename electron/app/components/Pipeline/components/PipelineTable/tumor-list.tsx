@@ -10,43 +10,21 @@ import styles from "./list.module.scss";
 type Props = {
   path: string;
   nct: string;
-  flexRows: boolean;
   section: PipelineItem;
   onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
 
-const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }: Props) => {
+const TumorList: React.FC<Props> = ({ path, nct, section, onNavigate }: Props) => {
   const [items, setItems] = useState<RowItem[]>([]);
   const sectionRef = useRef<PipelineItem | null>();
-  const flexRef = useRef(false);
 
-  // console.log(path, flexRows);
-
-  if (sectionRef.current !== section || flexRef.current !== flexRows) {
+  if (sectionRef.current !== section) {
     const { level } = itemsForPath(path);
     const type = getType(level, path);
 
     const rowItems = (section.children || []).reduce((arr: RowItem[], child: PipelineItem) => {
       const cohorts = uniqBy(flattenToContainers(child.children || []), "type");
       const title = `<b>${child.type}</b> [${cohorts.length}]`;
-      let className = "header";
-      let subClassName = type === "LongList" ? "subHeader" : "subHeaderPadded";
-
-      if (flexRows && level < 4) {
-        if (!path.includes("Content/Tumors/Heme/")) {
-          className = "headerFlex";
-        }
-
-        subClassName = "subHeaderFlex";
-      }
-
-      let compoundClassName = type === "LongList" ? "item" : "itemPadded";
-
-      if (flexRows) {
-        compoundClassName = "itemFlex";
-      }
-
-      // console.log(className, subClassName);
 
       const item: RowItem = {
         color: child.color || "#222222",
@@ -55,7 +33,7 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
         title,
         isStudyContainer: false,
         lighten: nct !== "",
-        className,
+        className: "header",
       };
 
       let children: RowItem[] = [];
@@ -65,7 +43,7 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
           let lighten = false;
 
           const compounds: RowItem[] = (sub.children || []).map((cpd: PipelineItem) => {
-            const cpdClass = compoundClassName;
+            const cpdClass = "item";
             const indent = sub.type === undefined ? 28 : 34;
             if (nct !== "") {
               const filtered = (cpd.studies || []).filter((std: PipelineStudy) => std.nct === nct);
@@ -102,7 +80,7 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
               isStudyContainer: false,
               indent: 30,
               lighten,
-              className: subClassName,
+              className: "subHeader",
             };
             children = [...children, subItem];
           }
@@ -116,11 +94,10 @@ const TumorList: React.FC<Props> = ({ path, nct, flexRows, section, onNavigate }
 
     setItems(rowItems);
     sectionRef.current = section;
-    flexRef.current = flexRows;
   }
 
   return (
-    <div className={flexRows ? styles.tableFlex : styles.table}>
+    <div className={styles.tableFlex}>
       {React.Children.toArray(
         items.map((item: RowItem) => (
           <button

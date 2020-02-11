@@ -27,18 +27,16 @@ sup {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  flex: 1;
 }
 
 .row:active {
   opacity: 0.5;
 }
 
-/* HEADER */
-
 .header {
   @extend .rowButton;
-
-  height: 26px;
+  height: 32px;
 
   b {
     font-weight: 900;
@@ -46,14 +44,6 @@ sup {
     font-size: 18px;
   }
 }
-
-.headerFlex {
-  @extend .header;
-
-  flex: 1;
-}
-
-/* SUB HEADER */
 
 .subHeader {
   @extend .rowButton;
@@ -63,49 +53,20 @@ sup {
   height: 28px;
 }
 
-.subHeaderPadded {
-  @extend .subHeader;
-
-  font-size: 18px;
-}
-
-.subHeaderFlex {
-  @extend .subHeader;
-
-  font-size: 18px;
-  flex: 1;
-}
-
-/* ITEMS */
-
 .item {
   @extend .rowButton;
 
   padding-left: 40px;
-  padding: 12px 12px 12px 40px;
+  padding: 12px 12px 12px 34px;
 
   b {
     font-weight: bold !important;
   }
 }
 
-.itemPadded {
-  @extend .rowButton;
-
-  padding: 12px 12px 12px 34px;
-}
-
-.itemFlex {
-  @extend .rowButton;
-
-  flex: 1;
-  font-size: 18px;
-}
-
 .compound {
   @extend .rowButton;
 
-  flex: 0;
   padding: 15px 12px 15px 8px;
 }
 

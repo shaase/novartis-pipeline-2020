@@ -112,7 +112,7 @@ const getMarginLeft = (nodes, width) => {
   });
 
   const contentCenter = right - (right - left) / 2;
-  const marginLeft = 240 - contentCenter;
+  const marginLeft = Math.round(240 - contentCenter);
 
   return marginLeft;
 };
