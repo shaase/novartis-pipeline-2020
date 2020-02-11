@@ -22,8 +22,9 @@ type Props = {
   phases: number[],
   yDomain: number[],
   yRange: number[],
-  onSelect: (string, string | typeof undefined) => void
+  onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
+
 
 type State = {
   xDomain: number[],
@@ -38,7 +39,16 @@ type Position = {
   isUnder: boolean
 };
 
-class RadialChart extends React.Component<Props, State> {
+const RadialChart: React.FC = () => {
+  
+  return (
+    <div >
+      {/* <h1>{path}</h1> */}
+    </div>
+  );
+};
+
+class OldRadialChart extends React.Component<Props, State> {
   static defaultProps = {
     compound: undefined
   };

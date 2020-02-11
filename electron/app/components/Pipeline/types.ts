@@ -109,13 +109,21 @@ export interface RadialNode {
   route: string;
   name: string;
   color: string;
+  fill?: string;
   x0?: number;
   x1?: number;
   y0?: number;
   y1?: number;
+  phase?: number;
+  label?: string;
   depth?: number;
   isEmpty: boolean;
+  children?: RadialNode[];
   isStudyContainer: boolean;
+}
+
+export interface RootNode {
+  descendants: () => RadialNode[];
 }
 
 export interface RadialText {
