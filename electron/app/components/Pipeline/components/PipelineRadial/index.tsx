@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import { PipelineContext } from "../../state";
+import React from "react";
 import { domainForRadial, cohorts } from "../../data";
+import { RadialHierarchy } from "../../types";
 import { itemsForPath } from "../../utils";
 import Header from "./header";
 // import RadialChart from './RadialChart';
@@ -10,8 +10,15 @@ import styles from "./index.module.scss";
 
 const width = 785;
 
-const PipelineRadial: React.FC = () => {
-  const { path, compound } = useContext(PipelineContext);
+type Props = {
+  path: string;
+  compound?: string;
+  phases: number[];
+  hierarchy: RadialHierarchy;
+  onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
+};
+
+const PipelineRadial: React.FC<Props> = ({ path, compound, phases, hierarchy, onNavigate }: Props) => {
   const { yd, yr } = domainForRadial(path, width);
   const { root, level, studyCode } = itemsForPath(path);
 
@@ -36,6 +43,8 @@ const PipelineRadial: React.FC = () => {
       }
     }
   }
+
+  console.log(hierarchy);
 
   return (
     <div className={styles.container}>

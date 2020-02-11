@@ -7,7 +7,7 @@ import { WorkerData, defaultWorkerData } from "../../types";
 import { getWorkerData } from "../../workers";
 import Header from "../AppHeader";
 import PipelineTable from "../PipelineTable";
-// import PipelineRadial from "../PipelineRadial";
+import PipelineRadial from "../PipelineRadial";
 import PipelineBubble from "../PipelineBubble";
 import Definitions from "../Definitions";
 import Lightbox from "../Lightbox";
@@ -33,10 +33,23 @@ const AppContainer: React.FC = () => {
     getData();
   }
 
-  const { tableData, bubbleData } = workerData;
+  const { tableData, radialHierarchy, bubbleData } = workerData;
   const pipelineTable = useMemo(
     () => <PipelineTable scale={scale} path={path} compound={compound} data={tableData} onNavigate={onNavigate} />,
     [tableData],
+  );
+
+  const pipelineRadial = useMemo(
+    () => (
+      <PipelineRadial
+        path={path}
+        compound={compound}
+        phases={phases}
+        hierarchy={radialHierarchy}
+        onNavigate={onNavigate}
+      />
+    ),
+    [radialHierarchy],
   );
 
   const pipelineBubble = useMemo(
@@ -61,7 +74,7 @@ const AppContainer: React.FC = () => {
         <Header />
         <div className={styles.panels}>
           {pipelineTable}
-          {/* <PipelineRadial /> */}
+          {pipelineRadial}
           {pipelineBubble}
           <Definitions />
           <Lightbox />
