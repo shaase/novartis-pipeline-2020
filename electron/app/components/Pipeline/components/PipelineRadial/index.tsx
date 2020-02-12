@@ -1,4 +1,5 @@
 import React from "react";
+
 import { RadialData } from "../../types";
 import Header from "./header";
 import RadialChart from "./RadialChart";
@@ -16,10 +17,9 @@ type Props = {
 
 const PipelineRadial: React.FC<Props> = ({ path, compound, phases, data, onNavigate }: Props) => {
   const { cards } = data;
-
   return (
     <div className={styles.container}>
-      {cards !== undefined && <Header cards={cards} />}
+      {cards.length === 0 && <Header cards={cards} />}
 
       <RadialChart
         isVisible={cards === undefined}
@@ -30,7 +30,7 @@ const PipelineRadial: React.FC<Props> = ({ path, compound, phases, data, onNavig
         onNavigate={onNavigate}
       />
 
-      {cards !== undefined && <CardViewer type="MOA" color="#333333" items={cards} />}
+      {cards.length === 0 && <CardViewer type="MOA" color="#333333" items={cards} />}
 
       <Bottom cards={cards} />
     </div>

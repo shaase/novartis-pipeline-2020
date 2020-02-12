@@ -3,7 +3,7 @@ import { colorForBackground } from "../../utils";
 
 /* D3.js JavaScript library copyright 2017 Mike Bostock. */
 
-const setHierarchy = data => {
+export const setHierarchy = data => {
   const flatRoot = {};
   const root = hierarchy(data)
     .sum(d => d.size)
@@ -75,5 +75,3 @@ const setHierarchy = data => {
 
   return { flatRoot, root };
 };
-
-export default setHierarchy;

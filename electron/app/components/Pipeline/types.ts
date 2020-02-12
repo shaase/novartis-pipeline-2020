@@ -1,3 +1,5 @@
+import { HierarchyNode } from "d3-hierarchy";
+
 export interface PipelineItem {
   type?: string;
   name?: string;
@@ -78,12 +80,11 @@ export interface TableData {
 }
 
 export interface NodeMap {
-  [route: string]: Node;
+  [route: string]: HierarchyNode<Node>;
 }
 
 export interface RadialData {
-  flatRoot: NodeMap;
-  root: NodeMap;
+  root: HierarchyNode<Node>;
   xDomain: number[];
   xRange: number[];
   yDomain: number[];
@@ -107,22 +108,6 @@ export interface WorkerData {
   bubbleData: BubbleData;
 }
 
-export const defaultWorkerData: WorkerData = {
-  tableData: { sections: [], allChildren: [], studyCode: "", cards: [] },
-  radialData: {
-    flatRoot: {},
-    root: {},
-    xDomain: [],
-    xRange: [],
-    yDomain: [],
-    yRange: [],
-    cards: [],
-    width: 0,
-    studyCode: "",
-  },
-  bubbleData: { data: [], studyCode: "", url: "", bubbles: [], marginLeft: 0 },
-};
-
 export interface RadialNode {
   parent: RadialNode;
   route: string;
@@ -139,10 +124,6 @@ export interface RadialNode {
   isEmpty: boolean;
   children?: RadialNode[];
   isStudyContainer: boolean;
-}
-
-export interface RootNode {
-  descendants: () => RadialNode[];
 }
 
 export interface RadialText {

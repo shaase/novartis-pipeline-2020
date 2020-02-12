@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { arc, DefaultArcObject } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
@@ -35,6 +35,8 @@ type Position = {
   size: number;
   isUnder: boolean;
 };
+
+type Origin = { x: number; y: number };
 
 const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
   const { root, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
@@ -104,7 +106,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     return curve.replace("LNaN,NaNZ", "");
   };
 
-  const getCentroid = (node: RadialNode, alignment: string, isRight: boolean) => {
+  const getCentroid = (node: RadialNode, alignment: string, isRight: boolean): Origin => {
     const { y0 } = node;
     let { y1 } = node;
     const mod = isRight ? 0.01 : 0.005;
@@ -121,7 +123,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     return { x, y };
   };
 
-  const getLabelAnchor = (node: RadialNode, lines: number) => {
+  const getLabelAnchor = (node: RadialNode, lines: number): string => {
     if (lines === 1 && !node.isStudyContainer) {
       return "middle";
     }

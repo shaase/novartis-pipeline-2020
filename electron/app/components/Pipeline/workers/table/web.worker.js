@@ -9,10 +9,10 @@ self.addEventListener(
     const sections = sectionsForTable(path, phases);
     const allChildren = sections.reduce((a, b) => a.concat(b.children || []), []);
 
-    const { studyCode } = itemsForPath(path);
+    const { studyCode = "" } = itemsForPath(path);
     const compoundCards = compound !== undefined ? cohorts[compound] : undefined;
 
-    let cards;
+    let cards = [];
     if (compound) {
       if (compoundCards) {
         ({ cards } = compoundCards);

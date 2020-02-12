@@ -1,10 +1,10 @@
 import React, { useContext, useMemo, useRef, useState } from "react";
 import { defaultPhases } from "../../data";
 import { FilterContext, PipelineContext } from "../../state";
-import { WorkerData, defaultWorkerData } from "../../types";
+import { WorkerData } from "../../types";
 // import { IdlePath } from "../../state";
 // import { Idler } from "../Idler";
-import { getWorkerData } from "../../workers";
+import { getWorkerData, defaultRoot } from "../../workers";
 import Header from "../AppHeader";
 import PipelineTable from "../PipelineTable";
 import PipelineRadial from "../PipelineRadial";
@@ -13,9 +13,26 @@ import Definitions from "../Definitions";
 import Lightbox from "../Lightbox";
 import styles from "./index.module.scss";
 
+const defaultData: WorkerData = {
+  tableData: { sections: [], allChildren: [], studyCode: "", cards: [] },
+  radialData: {
+    root: defaultRoot,
+    xDomain: [],
+    xRange: [],
+    yDomain: [],
+    yRange: [],
+    cards: [],
+    width: 0,
+    studyCode: "",
+  },
+  bubbleData: { data: [], studyCode: "", url: "", bubbles: [], marginLeft: 0 },
+};
+
+// root, xDomain, xRange, yDomain, yRange, cards, studyCode, width
+
 const AppContainer: React.FC = () => {
   const { scale, path, compound, onNavigate } = useContext(PipelineContext);
-  const [workerData, setWorkerData] = useState<WorkerData>(defaultWorkerData);
+  const [workerData, setWorkerData] = useState<WorkerData>(defaultData);
   const { phases } = useContext(FilterContext);
   const pathRef = useRef("");
   const compoundRef = useRef<string | undefined>(undefined);

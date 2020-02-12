@@ -115,7 +115,7 @@ const PipelineTable: React.FC<Props> = ({ scale, path, compound, data, onNavigat
     <div className={isEmpty ? styles.empty : styles.container}>
       <PanelHeader category="Compounds" />
 
-      {cards === undefined ? (
+      {cards.length === 0 ? (
         <div
           className={styles.table}
           ref={scroller}
