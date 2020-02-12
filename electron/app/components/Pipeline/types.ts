@@ -73,15 +73,24 @@ export interface Bubble {
 export interface TableData {
   sections: PipelineItem[];
   allChildren: PipelineItem[];
+  studyCode: string;
+  cards: CardType[];
 }
 
 export interface NodeMap {
   [route: string]: Node;
 }
 
-export interface RadialHierarchy {
+export interface RadialData {
   flatRoot: NodeMap;
   root: NodeMap;
+  xDomain: number[];
+  xRange: number[];
+  yDomain: number[];
+  yRange: number[];
+  width: number;
+  studyCode: string;
+  cards: CardType[];
 }
 
 export interface BubbleData {
@@ -94,13 +103,23 @@ export interface BubbleData {
 
 export interface WorkerData {
   tableData: TableData;
-  radialHierarchy: RadialHierarchy;
+  radialData: RadialData;
   bubbleData: BubbleData;
 }
 
 export const defaultWorkerData: WorkerData = {
-  tableData: { sections: [], allChildren: [] },
-  radialHierarchy: { flatRoot: {}, root: {} },
+  tableData: { sections: [], allChildren: [], studyCode: "", cards: [] },
+  radialData: {
+    flatRoot: {},
+    root: {},
+    xDomain: [],
+    xRange: [],
+    yDomain: [],
+    yRange: [],
+    cards: [],
+    width: 0,
+    studyCode: "",
+  },
   bubbleData: { data: [], studyCode: "", url: "", bubbles: [], marginLeft: 0 },
 };
 

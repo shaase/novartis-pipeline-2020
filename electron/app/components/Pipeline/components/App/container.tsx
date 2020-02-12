@@ -22,8 +22,8 @@ const AppContainer: React.FC = () => {
   const phasesRef = useRef<number[]>(defaultPhases);
 
   const getData = async (): Promise<void> => {
-    const [tableData, radialHierarchy, bubbleData] = await getWorkerData(path, phases, compound, 500, 800);
-    setWorkerData({ tableData, radialHierarchy, bubbleData });
+    const [tableData, radialData, bubbleData] = await getWorkerData(path, phases, compound, 500, 800);
+    setWorkerData({ tableData, radialData, bubbleData });
   };
 
   if (pathRef.current !== path || compoundRef.current !== compound || phasesRef.current !== phases) {
@@ -33,23 +33,15 @@ const AppContainer: React.FC = () => {
     getData();
   }
 
-  const { tableData, radialHierarchy, bubbleData } = workerData;
+  const { tableData, radialData, bubbleData } = workerData;
   const pipelineTable = useMemo(
     () => <PipelineTable scale={scale} path={path} compound={compound} data={tableData} onNavigate={onNavigate} />,
     [tableData],
   );
 
   const pipelineRadial = useMemo(
-    () => (
-      <PipelineRadial
-        path={path}
-        compound={compound}
-        phases={phases}
-        hierarchy={radialHierarchy}
-        onNavigate={onNavigate}
-      />
-    ),
-    [radialHierarchy],
+    () => <PipelineRadial path={path} compound={compound} phases={phases} data={radialData} onNavigate={onNavigate} />,
+    [radialData],
   );
 
   const pipelineBubble = useMemo(

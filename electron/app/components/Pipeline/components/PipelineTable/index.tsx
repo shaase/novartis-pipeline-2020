@@ -1,7 +1,7 @@
 import React, { MouseEvent, TouchEvent, useRef, useEffect } from "react";
-import { cohorts, colorForData } from "../../data";
+import { colorForData } from "../../data";
 import { PipelineItem, TableData } from "../../types";
-import { itemsForPath, eventPosition } from "../../utils";
+import { eventPosition } from "../../utils";
 import PanelHeader from "../PanelHeader";
 import Section from "./section";
 import CardViewer from "../CardViewer";
@@ -108,20 +108,8 @@ const PipelineTable: React.FC<Props> = ({ scale, path, compound, data, onNavigat
     }
   };
 
-  const { sections, allChildren } = data;
+  const { sections, allChildren, studyCode, cards } = data;
   const isEmpty = allChildren.length === 0 && compound === undefined;
-
-  const { studyCode } = itemsForPath(path);
-  const compoundCards = compound !== undefined ? cohorts[compound] : undefined;
-
-  let cards;
-  if (compound) {
-    if (compoundCards) {
-      ({ cards } = compoundCards);
-    } else {
-      cards = [{ file: "", label: "", compound: "" }];
-    }
-  }
 
   return (
     <div className={isEmpty ? styles.empty : styles.container}>

@@ -10,8 +10,8 @@ import rareDisease from "./rare";
 import solidTumors from "./solid-tumors";
 
 interface RadialDomain {
-  yd: number[];
-  yr: number[];
+  yDomain: number[];
+  yRange: number[];
 }
 
 export const domainForRadial = (routePath: string, chartWidth: number): RadialDomain => {
@@ -51,5 +51,5 @@ export const domainForRadial = (routePath: string, chartWidth: number): RadialDo
     yr = solidTumors(yd, level, width, inner, ring, outer);
   }
   // console.log(level);
-  return { yd, yr };
+  return { yDomain: yd, yRange: yr };
 };

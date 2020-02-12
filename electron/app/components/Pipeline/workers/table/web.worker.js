@@ -1,13 +1,27 @@
 // web worker
-import { sectionsForTable } from "../../data";
+import { sectionsForTable, cohorts } from "../../data";
+import { itemsForPath } from "../../utils";
 
 self.addEventListener(
   "message",
   e => {
-    const { path, phases } = e.data;
+    const { path, compound, phases } = e.data;
     const sections = sectionsForTable(path, phases);
     const allChildren = sections.reduce((a, b) => a.concat(b.children || []), []);
-    self.postMessage({ sections, allChildren });
+
+    const { studyCode } = itemsForPath(path);
+    const compoundCards = compound !== undefined ? cohorts[compound] : undefined;
+
+    let cards;
+    if (compound) {
+      if (compoundCards) {
+        ({ cards } = compoundCards);
+      } else {
+        cards = [{ file: "", label: "", compound: "" }];
+      }
+    }
+
+    self.postMessage({ sections, allChildren, studyCode, cards });
   },
   false,
 );
