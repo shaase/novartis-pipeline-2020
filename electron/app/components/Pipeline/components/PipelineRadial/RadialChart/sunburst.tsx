@@ -1,6 +1,6 @@
 import React from "react";
 import { Spring } from "react-spring/renderprops";
-import { RadialNode, RootNode } from "../../../types";
+import { RadialNode } from "../../../types";
 import SunburstSegment from "./segment";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
@@ -14,7 +14,7 @@ type Props = {
   studies: number;
   width: number;
   height: number;
-  root: RootNode;
+  segments: RadialNode[];
   xd: (n: number) => void;
   yd: (n: number) => void;
   yr: (n: number) => void;
@@ -35,7 +35,7 @@ const Sunburst: React.FC<Props> = ({
   noData,
   width,
   height,
-  root,
+  segments,
   xd,
   yd,
   yr,
@@ -56,7 +56,6 @@ const Sunburst: React.FC<Props> = ({
     <div className={styles.phaseContainer}>
       <img src={phaseRing} className={styles.phaseRing} alt="phase-ring" />
     </div>
-
     {noData ? (
       <img src={emptyRing} className={styles.empty} />
     ) : (
@@ -72,26 +71,24 @@ const Sunburst: React.FC<Props> = ({
           {({ t }) => (
             <g transform={`translate(${width / 2}, ${height / 2})`}>
               {React.Children.toArray(
-                root
-                  .descendants()
-                  .map((original: RadialNode, i: number) => (
-                    <SunburstSegment
-                      original={original}
-                      index={i}
-                      t={t}
-                      path={path}
-                      nct={nct}
-                      getArc={getArc}
-                      labelCurve={labelCurve}
-                      labelTransform={labelTransform}
-                      labelAnchor={labelAnchor}
-                      getDisplay={getDisplay}
-                      getTextDisplay={getTextDisplay}
-                      getArcLength={getArcLength}
-                      getArcWidth={getArcWidth}
-                      onSelect={onSelect}
-                    />
-                  )),
+                segments.map((original: RadialNode, i: number) => (
+                  <SunburstSegment
+                    original={original}
+                    index={i}
+                    t={t}
+                    path={path}
+                    nct={nct}
+                    getArc={getArc}
+                    labelCurve={labelCurve}
+                    labelTransform={labelTransform}
+                    labelAnchor={labelAnchor}
+                    getDisplay={getDisplay}
+                    getTextDisplay={getTextDisplay}
+                    getArcLength={getArcLength}
+                    getArcWidth={getArcWidth}
+                    onSelect={onSelect}
+                  />
+                )),
               )}
             </g>
           )}

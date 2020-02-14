@@ -79,12 +79,8 @@ export interface TableData {
   cards: CardType[];
 }
 
-export interface NodeMap {
-  [route: string]: HierarchyNode<Node>;
-}
-
 export interface RadialData {
-  root: HierarchyNode<Node>;
+  segments: RadialNode[];
   xDomain: number[];
   xRange: number[];
   yDomain: number[];
@@ -120,7 +116,7 @@ export interface RadialNode {
   y1?: number;
   phase?: number;
   label?: string;
-  depth?: number;
+  depth: number | undefined;
   isEmpty: boolean;
   children?: RadialNode[];
   isStudyContainer: boolean;

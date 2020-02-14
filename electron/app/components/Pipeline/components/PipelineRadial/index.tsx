@@ -22,7 +22,7 @@ const PipelineRadial: React.FC<Props> = ({ path, compound, phases, data, onNavig
       {cards.length === 0 && <Header cards={cards} />}
 
       <RadialChart
-        isVisible={cards === undefined}
+        isVisible={cards.length === 0}
         path={path}
         compound={compound}
         phases={phases}
@@ -30,7 +30,7 @@ const PipelineRadial: React.FC<Props> = ({ path, compound, phases, data, onNavig
         onNavigate={onNavigate}
       />
 
-      {cards.length === 0 && <CardViewer type="MOA" color="#333333" items={cards} />}
+      {cards.length > 0 && <CardViewer type="MOA" color="#333333" items={cards} />}
 
       <Bottom cards={cards} />
     </div>

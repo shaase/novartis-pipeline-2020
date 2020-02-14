@@ -117,6 +117,7 @@ const FormattedText = ({ currentFontSize, display, name, containerWidth, contain
       }
     }
   }
+
   if (maxWidth > containerWidth) {
     fontSize *= containerWidth / maxWidth;
   }

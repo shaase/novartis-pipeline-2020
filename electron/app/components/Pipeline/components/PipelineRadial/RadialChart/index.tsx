@@ -39,7 +39,7 @@ type Position = {
 type Origin = { x: number; y: number };
 
 const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
-  const { root, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
+  const { segments, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
   const { root: pathRoot, level } = itemsForPath(path);
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
@@ -140,8 +140,12 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const getLabelTransform = (node: RadialNode, index: number, length: number, fontSize: number): string => {
     const { start, end } = getPosition(node);
     const { center } = getNextPosition(node);
-    const isRight = center < Math.PI;
 
+    if (Number.isNaN(start)) {
+      return "translate(0, 0) rotate(-90) rotate(0)";
+    }
+
+    const isRight = center < Math.PI;
     const rDiff = lineRotation(index, length, fontSize, start, end, isRight);
 
     let alignment = length === 1 && !node.isStudyContainer ? "center" : "inside";
@@ -254,7 +258,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       studies={studies.length}
       width={width}
       height={height}
-      root={root}
+      segments={segments}
       xd={xd}
       yd={yd}
       yr={yr}

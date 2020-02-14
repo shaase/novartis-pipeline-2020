@@ -4,7 +4,7 @@ import { FilterContext, PipelineContext } from "../../state";
 import { WorkerData } from "../../types";
 // import { IdlePath } from "../../state";
 // import { Idler } from "../Idler";
-import { getWorkerData, defaultRoot } from "../../workers";
+import { getWorkerData } from "../../workers";
 import Header from "../AppHeader";
 import PipelineTable from "../PipelineTable";
 import PipelineRadial from "../PipelineRadial";
@@ -16,7 +16,7 @@ import styles from "./index.module.scss";
 const defaultData: WorkerData = {
   tableData: { sections: [], allChildren: [], studyCode: "", cards: [] },
   radialData: {
-    root: defaultRoot,
+    segments: [],
     xDomain: [],
     xRange: [],
     yDomain: [],

@@ -26,6 +26,7 @@ const rules = {
   "implicit-arrow-linebreak": "off",
   "operator-linebreak": "off",
   "function-paren-newline": "off",
+  "no-bitwise": "off",
   "no-nested-ternary": "off",
   "no-prototype-builtins": "off",
   "object-curly-newline": "off",

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo, useRef } from "react";
 import { animated } from "react-spring/renderprops";
 import { itemsForPath } from "../../../utils";
+import { lightenColor } from "./utils";
 import { RadialNode } from "../../../types";
 import WrappedLabel from "./WrappedLabel";
 import styles from "./index.module.scss";
@@ -49,21 +50,17 @@ const SunburstSegment: React.FC<Props> = ({
   getArcWidth,
   onSelect,
 }: Props) => {
-  const { root: pathRoot } = itemsForPath(path); // level
+  const { root: pathRoot } = itemsForPath(path);
+  const lengthRef = useRef(0);
   if (original.x0 === undefined) return null;
-
-  // need this?
-  // shouldComponentUpdate = ({ original, getArcLength }: Props) => {
-  //   const length = getArcLength(original);
-  //   const hadSize = this.prevLength > 0;
-  //   this.prevLength = length;
-  //   return hadSize || length > 0;
-  // };
 
   let node: RadialNode = original;
   const { parent, phase, isEmpty, depth, route } = node;
+  let name = node.name || "";
+  if (name === "Immune Thrombocytopenic Purpura") {
+    name = "Immune Thrombo... Purpura";
+  }
 
-  let name = node.label || "";
   const textDisplay = getTextDisplay(node);
   let opacity = 1;
   let lighten = nct !== "";
@@ -137,76 +134,64 @@ const SunburstSegment: React.FC<Props> = ({
 
   const arcLength = getArcLength(node);
   const arcWidth = getArcWidth(node);
+  const isCurved = textDisplay.includes("curved");
+  const containerWidth = isCurved ? arcLength - 6 : arcWidth - 7;
+  const containerHeight = isCurved ? arcWidth : arcLength;
 
-  if (name === "Immune Thrombocytopenic Purpura") {
-    name = "Immune Thrombo... Purpura";
-  }
-  return (
-    <g key={`node-${index}`}>
-      <animated.path
-        className={styles.path}
-        stroke="#FFFFFF"
-        strokeWidth={0.5}
-        fill={node.fill}
-        fillRule="evenodd"
-        opacity={opacity}
-        onClick={() => {
-          if (node.route !== undefined) {
-            onSelect(node);
-          }
-        }}
-        display={t.interpolate(() => getDisplay(node))}
-        d={t.interpolate(() => getArc(node))}
-      />
-
-      {textDisplay === "inline" && (
-        <WrappedLabel
-          path={path}
-          display={textDisplay}
-          node={node}
-          name={name}
-          t={t}
-          index={index}
-          opacity={textOpacity}
-          containerWidth={arcWidth - 7}
-          containerHeight={arcLength}
-          labelTransform={labelTransform}
-          labelAnchor={labelAnchor}
-          labelCurve={labelCurve}
-        />
-      )}
-
-      {(textDisplay === "curved" || textDisplay === "curved-capped") && (
-        <WrappedLabel
-          path={path}
-          display={textDisplay}
-          node={node}
-          name={name}
-          t={t}
-          index={index}
-          opacity={textOpacity}
-          containerWidth={arcLength - 6}
-          containerHeight={arcWidth}
-          labelTransform={labelTransform}
-          labelAnchor={labelAnchor}
-          labelCurve={labelCurve}
-        />
-      )}
-
-      {lighten && (
+  const childElements = useMemo(
+    () => (
+      <g key={`node-${index}`}>
         <animated.path
-          className={styles.fader}
+          className={styles.path}
           stroke="#FFFFFF"
-          strokeWidth={0.4}
-          fill="#DDDDDD"
+          strokeWidth={0.5}
+          fill={node.fill}
           fillRule="evenodd"
-          opacity={0.7}
+          opacity={opacity}
+          onClick={() => {
+            if (node.route !== undefined) {
+              onSelect(node);
+            }
+          }}
           display={t.interpolate(() => getDisplay(node))}
           d={t.interpolate(() => getArc(node))}
         />
-      )}
-    </g>
+
+        {textDisplay !== "none" && (
+          <WrappedLabel
+            path={path}
+            display={textDisplay}
+            node={node}
+            name={name}
+            t={t}
+            index={index}
+            opacity={textOpacity}
+            containerWidth={containerWidth}
+            containerHeight={containerHeight}
+            labelTransform={labelTransform}
+            labelAnchor={labelAnchor}
+            labelCurve={labelCurve}
+          />
+        )}
+
+        {lighten && (
+          <animated.path
+            className={styles.fader}
+            stroke="#FFFFFF"
+            strokeWidth={0.4}
+            fill="#DDDDDD"
+            fillRule="evenodd"
+            opacity={0.7}
+            display={t.interpolate(() => getDisplay(node))}
+            d={t.interpolate(() => getArc(node))}
+          />
+        )}
+      </g>
+    ),
+    [arcLength],
   );
+
+  return <g>{childElements}</g>;
 };
 
 export default SunburstSegment;
