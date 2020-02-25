@@ -59,7 +59,9 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       scene.current = new THREE.Scene();
       scene.current.background = new THREE.Color(0x444444);
       camera.current = new THREE.PerspectiveCamera(70, 1, 0.01, 10000);
-      camera.current.position.z = 10;
+      camera.current.position.x = 1;
+      camera.current.position.y = 0.5;
+      camera.current.position.z = 3.2;
       renderer.current = new THREE.WebGLRenderer({ antialias: true });
       renderer.current.setSize(785, 785);
       container.current.appendChild(renderer.current.domElement); // eslint-disable-line
