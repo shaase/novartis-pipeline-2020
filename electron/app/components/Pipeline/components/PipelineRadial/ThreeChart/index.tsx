@@ -41,6 +41,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       side: THREE.DoubleSide,
       flatShading: true,
     });
+
     cube.current = new THREE.Mesh(geometry, material);
 
     const lights = [];
@@ -64,31 +65,21 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     if (cube.current !== null && renderer.current !== null && scene.current !== null && camera.current !== null) {
       cube.current.rotation.x += 0.01;
       cube.current.rotation.y += 0.01;
-
       renderer.current.render(scene.current, camera.current);
-
-      // The window.requestAnimationFrame() method tells the browser that you wish to perform
-      // an animation and requests that the browser call a specified function
-      // to update an animation before the next repaint
       requestID.current = window.requestAnimationFrame(tick);
     }
   };
-
-  // const onResize = () => {
-  //   // startAnimationLoop
-  // };
 
   useEffect(() => {
     sceneSetup();
     addSceneObjects();
     tick();
-    // window.addEventListener("resize", onResize);
 
     return () => {
-      // window.removeEventListener("resize", onResize);
       window.cancelAnimationFrame(requestID.current);
     };
   }, []);
+
   return <div className={styles.sunburst} ref={container} />;
 };
 
