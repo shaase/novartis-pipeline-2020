@@ -124,7 +124,9 @@
     "react-dom": "^16.11.0",
     "react-hot-loader": "^4.12.18",
     "react-spring": "^8.0.27",
+    "svg-mesh-3d": "^1.1.0",
     "three": "^0.113.2",
+    "three-simplicial-complex": "^69.0.6",
     "websocket": "^1.0.31"
   }
 }

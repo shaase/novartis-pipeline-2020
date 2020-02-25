@@ -5,6 +5,8 @@ declare module "*.mp4";
 declare module "*.mp3";
 declare module "radius-utils";
 declare module "radius-electron";
+declare module "svg-mesh-3d";
+declare module "three-simplicial-complex";
 
 declare module "*.module.scss" {
   interface ClassNames {

@@ -154,7 +154,13 @@ const SunburstSegment: React.FC<Props> = ({
             }
           }}
           display={t.interpolate(() => getDisplay(node))}
-          d={t.interpolate(() => getArc(node))}
+          d={t.interpolate(() => {
+            if (node.name === "Lung") {
+              console.log(node.name, getArc(node));
+            }
+
+            return getArc(node);
+          })}
         />
 
         {textDisplay !== "none" && (

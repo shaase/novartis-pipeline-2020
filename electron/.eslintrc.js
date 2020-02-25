@@ -39,6 +39,7 @@ const rules = {
   "unicorn/prevent-abbreviations": "off",
   "unicorn/prefer-add-event-listener": "off",
   "unicorn/no-nested-ternary": "off",
+  "unicorn/number-literal-case": "off",
   "no-use-before-define": ["error", { functions: false, classes: true, variables: true }],
 };
 
