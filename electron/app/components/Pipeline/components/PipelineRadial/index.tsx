@@ -1,8 +1,8 @@
 import React from "react";
-
 import { RadialData } from "../../types";
 import Header from "./header";
-import RadialChart from "./RadialChart";
+// import RadialChart from "./RadialChart";
+import ThreeChart from "./ThreeChart";
 import CardViewer from "../CardViewer";
 import Bottom from "./bottom";
 import styles from "./index.module.scss";
@@ -21,7 +21,16 @@ const PipelineRadial: React.FC<Props> = ({ path, compound, phases, data, onNavig
     <div className={styles.container}>
       {cards.length === 0 && <Header cards={cards} />}
 
-      <RadialChart
+      {/* <RadialChart
+        isVisible={cards.length === 0}
+        path={path}
+        compound={compound}
+        phases={phases}
+        data={data}
+        onNavigate={onNavigate}
+      /> */}
+
+      <ThreeChart
         isVisible={cards.length === 0}
         path={path}
         compound={compound}
