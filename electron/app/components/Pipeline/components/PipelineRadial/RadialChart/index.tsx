@@ -1,5 +1,5 @@
 import React from "react";
-import { arc, DefaultArcObject } from "d3-shape";
+import { arc, DefaultArcObject, Arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
@@ -12,7 +12,9 @@ import Sunburst from "./sunburst";
 
 /* D3.js JavaScript library copyright 2017 Mike Bostock. */
 
-interface Arc extends DefaultArcObject {
+interface RadialArc extends DefaultArcObject {
+  route: string;
+  name: string;
   x0: number;
   x1: number;
   y0: number;
@@ -51,11 +53,25 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   xScale.domain(xDomain).range(xRange);
   yScale.domain(yDomain).range(yRange);
 
-  const getArc = arc()
-    .startAngle(d => Math.max(0, Math.min(2 * Math.PI, xScale(d.x0))))
-    .endAngle(d => Math.max(0, Math.min(2 * Math.PI, xScale(d.x1))))
-    .innerRadius(d => Math.max(0, yScale(d.y0)))
-    .outerRadius(d => Math.max(0, yScale(d.y1)));
+  // eslint-disable-next-line
+  const getArc: Arc<any, RadialArc> = arc<any, RadialArc>()
+    .startAngle((d: RadialArc) => Math.max(0, Math.min(2 * Math.PI, xScale(d.x0))))
+    .endAngle((d: RadialArc) => Math.max(0, Math.min(2 * Math.PI, xScale(d.x1))))
+    .innerRadius((d: RadialArc) => Math.max(0, yScale(d.y0)))
+    .outerRadius((d: RadialArc) => {
+      if (d.route.includes("/*/*/Lung") && d.name === "Lung") {
+        console.log(d);
+        // console.log(d.y0, d.y1, Math.max(0, yScale(d.y0)), Math.max(0, yScale(d.y1)));
+      }
+
+      return Math.max(0, yScale(d.y1));
+    });
+
+  // const getArc = arc()
+  //   .startAngle(d => Math.max(0, Math.min(2 * Math.PI, xScale(d.x0))))
+  //   .endAngle(d => Math.max(0, Math.min(2 * Math.PI, xScale(d.x1))))
+  //   .innerRadius(d => Math.max(0, yScale(d.y0)))
+  //   .outerRadius(d => Math.max(0, yScale(d.y1)));
 
   const getCurve = arc()
     .startAngle(d => Math.max(0, Math.min(2 * Math.PI, xScale(d.x0))))
@@ -247,19 +263,6 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const xd = d3interpolate(xScale.domain(), xDomain);
   const yd = d3interpolate(yScale.domain(), yDomain);
   const yr = d3interpolate(yScale.range(), yRange);
-
-  if (data.segments.length > 0) {
-    const node = data.segments[238];
-    if (node.route.includes("/*/*/Lung") && node.name === "Lung") {
-      console.log(
-        Math.max(0, Math.min(2 * Math.PI, xScale(node.x0 || 0))),
-        Math.max(0, Math.min(2 * Math.PI, xScale(node.x1 || 0))),
-        Math.max(0, yScale(node.y0 || 0)),
-        Math.max(0, yScale(node.y1 || 0)),
-      );
-      console.log(getArc(node));
-    }
-  }
 
   return (
     <Sunburst

@@ -154,13 +154,7 @@ const SunburstSegment: React.FC<Props> = ({
             }
           }}
           display={t.interpolate(() => getDisplay(node))}
-          d={t.interpolate(() => {
-            if (node.route.includes("/*/*/Lung") && node.name === "Lung") {
-              // console.log(getArc(node));
-            }
-
-            return getArc(node);
-          })}
+          d={t.interpolate(() => getArc(node))}
         />
 
         {textDisplay !== "none" && (
