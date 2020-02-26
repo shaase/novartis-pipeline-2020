@@ -1,4 +1,4 @@
-import { HierarchyNode } from "d3-hierarchy";
+import { DefaultArcObject } from "d3-shape";
 
 export interface PipelineItem {
   type?: string;
@@ -126,4 +126,11 @@ export interface RadialText {
   lines: (JSX.Element | JSX.Element[])[];
   fontSize: number;
   offsets: number[];
+}
+
+export interface RadialArc extends DefaultArcObject {
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
 }

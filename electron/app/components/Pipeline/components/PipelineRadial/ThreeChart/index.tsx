@@ -1,21 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { arc, DefaultArcObject, Arc } from "d3-shape";
+import { arc, Arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
-import svgMesh3d from "svg-mesh-3d";
-import CreateGeom from "three-simplicial-complex";
 import * as THREE from "three";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
-import { RadialNode, RadialData } from "../../../types";
+import { RadialNode, RadialData, RadialArc } from "../../../types";
 import { itemsForPath } from "../../../utils";
+import getSunburstSegment from "./segment";
 import styles from "./index.module.scss";
-
-interface RadialArc extends DefaultArcObject {
-  x0: number;
-  x1: number;
-  y0: number;
-  y1: number;
-}
 
 type Card = { file: string; label: string };
 
@@ -27,14 +19,6 @@ type Props = {
   data: RadialData;
   onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
-
-const hexdec = (hexString: string): number => {
-  const str = `${hexString}`.replace(/[^\da-f]/gi, "");
-  return parseInt(str, 16);
-};
-
-const LUNG =
-  "M-145.44990454622913,248.68263769811685A288.095,288.095,0,0,1,-285.6829528230724,-37.20187483568798L-152.356185163371,-19.83995080868849A153.64254230396793,153.64254230396793,0,0,0,-77.56918069509052,132.62372718303075Z";
 
 const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
   const { segments, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
@@ -49,7 +33,6 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const camera = useRef<THREE.PerspectiveCamera | null>(null);
   const renderer = useRef<THREE.WebGLRenderer | null>(null);
   const container = useRef<HTMLDivElement | null>(null);
-  const SvgGeom = CreateGeom(THREE);
 
   const sceneSetup = (): void => {
     if (container.current !== null) {
@@ -70,38 +53,13 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     .startAngle((d: RadialArc) => Math.max(0, Math.min(2 * Math.PI, xScale.current(d.x0))))
     .endAngle((d: RadialArc) => Math.max(0, Math.min(2 * Math.PI, xScale.current(d.x1))))
     .innerRadius((d: RadialArc) => Math.max(0, yScale.current(d.y0)))
-    .outerRadius((d: RadialArc) =>
-      // console.log(d.y0, d.y1, Math.max(0, yScale.current(d.y0)), Math.max(0, yScale.current(d.y1)));
-      Math.max(0, yScale.current(d.y1)),
-    );
-
-  const getSegment = (node: RadialNode): THREE.Mesh => {
-    // eslint-disable-next-line
-    console.log(node);
-    const nodeArc: RadialArc = {
-      x0: node.x0 || 0,
-      x1: node.x1 || 0,
-      y0: node.y0 || 0,
-      y1: node.y1 || 0,
-    };
-
-    // console.log(getArc(nodeArc));
-    // console.log("");
-    // console.log(LUNG);
-
-    const svgPath = getArc(nodeArc);
-    const meshData = svgMesh3d(svgPath);
-    const geo = new SvgGeom(meshData);
-    const mat = new THREE.MeshBasicMaterial({ color: hexdec(node.color), side: THREE.DoubleSide });
-    const mesh = new THREE.Mesh(geo, mat);
-    return mesh;
-  };
+    .outerRadius((d: RadialArc) => Math.max(0, yScale.current(d.y1)));
 
   const addSceneObjects = (): void => {
     if (segments.length > 0) {
       const node = segments[238];
-      const segment = getSegment(node);
-
+      const segment = getSunburstSegment(node, path, studyCode, getArc);
+      console.log(node);
       if (scene.current !== null) {
         scene.current.add(segment);
       }
