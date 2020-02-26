@@ -10,6 +10,13 @@ import { RadialNode, RadialData } from "../../../types";
 import { itemsForPath } from "../../../utils";
 import styles from "./index.module.scss";
 
+interface RadialArc extends DefaultArcObject {
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+}
+
 type Card = { file: string; label: string };
 
 type Props = {
@@ -31,22 +38,40 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const { root: pathRoot, level } = itemsForPath(path);
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
-  const xScale = scaleLinear();
-  const yScale = scaleSqrt();
-
-  xScale.domain(xDomain).range(xRange);
-  yScale.domain(yDomain).range(yRange);
 
   const requestID = useRef(0);
+  const xScale = useRef(scaleLinear());
+  const yScale = useRef(scaleSqrt());
   const scene = useRef<THREE.Scene | null>(null);
   const camera = useRef<THREE.PerspectiveCamera | null>(null);
   const renderer = useRef<THREE.WebGLRenderer | null>(null);
   const container = useRef<HTMLDivElement | null>(null);
   const SvgGeom = CreateGeom(THREE);
 
+  // eslint-disable-next-line
+  const getArc: Arc<any, RadialArc> = arc<any, RadialArc>()
+    .startAngle((d: RadialArc) => Math.max(0, Math.min(2 * Math.PI, xScale.current(d.x0))))
+    .endAngle((d: RadialArc) => Math.max(0, Math.min(2 * Math.PI, xScale.current(d.x1))))
+    .innerRadius((d: RadialArc) => Math.max(0, yScale.current(d.y0)))
+    .outerRadius((d: RadialArc) => Math.max(0, yScale.current(d.y1)));
+
   const getSegment = (node: RadialNode): THREE.Mesh => {
-    const svgPath =
-      "M-145.44990454622913,248.68263769811685A288.095,288.095,0,0,1,-285.6829528230724,-37.20187483568798L-152.356185163371,-19.83995080868849A153.64254230396793,153.64254230396793,0,0,0,-77.56918069509052,132.62372718303075Z";
+    // eslint-disable-next-line
+    const nodeArc: RadialArc = {
+      x0: node.x0 || 0,
+      x1: node.x1 || 0,
+      y0: node.y0 || 0,
+      y1: node.y1 || 0,
+    };
+
+    // console.log(getArc(nodeArc));
+    // console.log("");
+    // console.log(
+    //   "M-145.44990454622913,248.68263769811685A288.095,288.095,0,0,1,-285.6829528230724,-37.20187483568798L-152.356185163371,-19.83995080868849A153.64254230396793,153.64254230396793,0,0,0,-77.56918069509052,132.62372718303075Z",
+    // );
+    // console.log(node);
+
+    const svgPath = getArc(nodeArc);
     const meshData = svgMesh3d(svgPath);
     const geo = new SvgGeom(meshData);
     const mat = new THREE.MeshBasicMaterial({ color: hexdec(node.color), side: THREE.DoubleSide });
@@ -96,7 +121,20 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   }, []);
 
   useEffect(() => {
-    addSceneObjects();
+    if (data.segments.length > 0) {
+      if (xScale.current.domain().length === 0) {
+        xScale.current.domain(xDomain).range(xRange);
+        yScale.current.domain(yDomain).range(yRange);
+      } else {
+        const xd = d3interpolate(xScale.current.domain(), xDomain);
+        const yd = d3interpolate(yScale.current.domain(), yDomain);
+        const yr = d3interpolate(yScale.current.range(), yRange);
+        xScale.current.domain(xd(1)).range(xRange);
+        yScale.current.domain(yd(1)).range(yr(1));
+      }
+
+      addSceneObjects();
+    }
   }, [data]);
 
   return <div className={styles.sunburst} ref={container} />;

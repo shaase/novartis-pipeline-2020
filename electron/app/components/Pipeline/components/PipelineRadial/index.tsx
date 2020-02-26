@@ -1,7 +1,7 @@
 import React from "react";
 import { RadialData } from "../../types";
 import Header from "./header";
-import RadialChart from "./RadialChart";
+// import RadialChart from "./RadialChart";
 import ThreeChart from "./ThreeChart";
 import CardViewer from "../CardViewer";
 import Bottom from "./bottom";

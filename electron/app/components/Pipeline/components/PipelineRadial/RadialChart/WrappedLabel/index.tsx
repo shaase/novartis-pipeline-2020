@@ -33,7 +33,6 @@ const WrappedLabel: React.FC<Props> = ({
   labelAnchor,
 }: Props) => {
   const { color } = node;
-  console.log(color);
   const { lines, fontSize, offsets } = sizedText({
     path,
     display,

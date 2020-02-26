@@ -225,7 +225,6 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     } else if (level === 7) {
       inferredCompound = parent.name;
     }
-
     if (studyCode !== undefined) {
       onNavigate(route, inferredCompound);
     } else {
@@ -248,6 +247,19 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const xd = d3interpolate(xScale.domain(), xDomain);
   const yd = d3interpolate(yScale.domain(), yDomain);
   const yr = d3interpolate(yScale.range(), yRange);
+
+  if (data.segments.length > 0) {
+    const node = data.segments[238];
+    if (node.route.includes("/*/*/Lung") && node.name === "Lung") {
+      console.log(
+        Math.max(0, Math.min(2 * Math.PI, xScale(node.x0 || 0))),
+        Math.max(0, Math.min(2 * Math.PI, xScale(node.x1 || 0))),
+        Math.max(0, yScale(node.y0 || 0)),
+        Math.max(0, yScale(node.y1 || 0)),
+      );
+      console.log(getArc(node));
+    }
+  }
 
   return (
     <Sunburst
