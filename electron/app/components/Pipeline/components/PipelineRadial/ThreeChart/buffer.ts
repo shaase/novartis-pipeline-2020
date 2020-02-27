@@ -1,11 +1,13 @@
 import * as THREE from "three";
-import { RadialNode } from "../../../types";
+import { RadialNode, NodeArc } from "../../../types";
 import Shape from "./shape";
 
 class Segment extends THREE.Mesh {
   node: RadialNode;
 
-  constructor(n: RadialNode) {
+  getArc: (node: RadialNode) => NodeArc;
+
+  constructor(n: RadialNode, ga: (node: RadialNode) => NodeArc) {
     const segment = new Shape();
     segment.move(0, 0);
     segment.line(50, 0);
@@ -19,12 +21,13 @@ class Segment extends THREE.Mesh {
     // material.opacity = 0.4;
     super(geometry, material);
     this.node = n;
+    this.getArc = ga;
   }
 
   update(): void {
-    // console.log(this.node);
-
     if (this.geometry instanceof THREE.BufferGeometry) {
+      const arc = this.getArc(this.node);
+      console.log(arc);
       const segment = new Shape();
       segment.move(0, 0);
       segment.line(500, 0);

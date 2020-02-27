@@ -35,6 +35,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const camera = useRef<THREE.OrthographicCamera | null>(null);
   const renderer = useRef<THREE.WebGLRenderer | null>(null);
   const container = useRef<HTMLDivElement | null>(null);
+  const testBuffer = useRef<Segment | null>(null);
 
   const sceneSetup = (): void => {
     if (container.current !== null) {
@@ -65,21 +66,19 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   };
 
   const addSceneObjects = (): void => {
-    if (segments.length > 0) {
-      const node = segments[238];
-      // const buffer = getBuffer(node, startAngle, endAngle, innerRadius, outerRadius);
-      const buffer = new Segment(node);
+    const node = segments[238];
+    testBuffer.current = new Segment(node, getNodeArc);
+    const segment = getSunburstSegment(node, path, studyCode, getArc);
 
-      setTimeout(() => {
-        buffer.update();
-      }, 2000);
+    if (scene.current !== null) {
+      scene.current.add(testBuffer.current);
+      scene.current.add(segment);
+    }
+  };
 
-      const segment = getSunburstSegment(node, path, studyCode, getArc);
-
-      if (scene.current !== null) {
-        scene.current.add(buffer);
-        scene.current.add(segment);
-      }
+  const updateObjects = (): void => {
+    if (testBuffer.current !== null) {
+      testBuffer.current.update();
     }
   };
 
@@ -91,6 +90,11 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   };
 
   if (data.segments.length > 0) {
+    if (!hasAddedObjects.current) {
+      addSceneObjects();
+      hasAddedObjects.current = true;
+    }
+
     if (xScale.current.domain().length === 0) {
       xScale.current.domain(xDomain).range(xRange);
       yScale.current.domain(yDomain).range(yRange);
@@ -102,10 +106,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       yScale.current.domain(yd(1)).range(yr(1));
     }
 
-    if (!hasAddedObjects.current) {
-      addSceneObjects();
-      hasAddedObjects.current = true;
-    }
+    updateObjects();
   }
 
   useEffect(() => {
