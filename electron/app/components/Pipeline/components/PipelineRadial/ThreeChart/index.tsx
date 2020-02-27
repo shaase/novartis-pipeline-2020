@@ -4,9 +4,10 @@ import { scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
 import * as THREE from "three";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
-import { RadialNode, RadialData, RadialArc } from "../../../types";
+import { RadialNode, RadialData, RadialArc, NodeArc } from "../../../types";
 import { itemsForPath } from "../../../utils";
 import getSunburstSegment from "./segment";
+import Segment from "./buffer";
 import styles from "./index.module.scss";
 
 type Card = { file: string; label: string };
@@ -26,24 +27,23 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
 
+  const hasAddedObjects = useRef(false);
   const requestID = useRef(0);
   const xScale = useRef(scaleLinear());
   const yScale = useRef(scaleSqrt());
   const scene = useRef<THREE.Scene | null>(null);
-  const camera = useRef<THREE.PerspectiveCamera | null>(null);
+  const camera = useRef<THREE.OrthographicCamera | null>(null);
   const renderer = useRef<THREE.WebGLRenderer | null>(null);
   const container = useRef<HTMLDivElement | null>(null);
 
   const sceneSetup = (): void => {
     if (container.current !== null) {
+      const w = 785;
       scene.current = new THREE.Scene();
       scene.current.background = new THREE.Color(0x444444);
-      camera.current = new THREE.PerspectiveCamera(70, 1, 0.01, 10000);
-      camera.current.position.x = 1;
-      camera.current.position.y = 0.5;
-      camera.current.position.z = 3.2;
+      camera.current = new THREE.OrthographicCamera(w / -2, w / 2, w / 2, w / -2, -100, 100);
       renderer.current = new THREE.WebGLRenderer({ antialias: true });
-      renderer.current.setSize(785, 785);
+      renderer.current.setSize(w, w);
       container.current.appendChild(renderer.current.domElement); // eslint-disable-line
     }
   };
@@ -55,12 +55,29 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     .innerRadius((d: RadialArc) => Math.max(0, yScale.current(d.y0)))
     .outerRadius((d: RadialArc) => Math.max(0, yScale.current(d.y1)));
 
+  const getNodeArc = (node: RadialNode): NodeArc => {
+    const { x0 = 0, x1 = 0, y0 = 0, y1 = 0 } = node;
+    const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
+    const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));
+    const innerRadius = Math.max(0, yScale.current(y0));
+    const outerRadius = Math.max(0, yScale.current(y1));
+    return { startAngle, endAngle, innerRadius, outerRadius };
+  };
+
   const addSceneObjects = (): void => {
     if (segments.length > 0) {
       const node = segments[238];
+      // const buffer = getBuffer(node, startAngle, endAngle, innerRadius, outerRadius);
+      const buffer = new Segment(node);
+
+      setTimeout(() => {
+        buffer.update();
+      }, 2000);
+
       const segment = getSunburstSegment(node, path, studyCode, getArc);
-      console.log(node);
+
       if (scene.current !== null) {
+        scene.current.add(buffer);
         scene.current.add(segment);
       }
     }
@@ -85,7 +102,10 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       yScale.current.domain(yd(1)).range(yr(1));
     }
 
-    addSceneObjects();
+    if (!hasAddedObjects.current) {
+      addSceneObjects();
+      hasAddedObjects.current = true;
+    }
   }
 
   useEffect(() => {

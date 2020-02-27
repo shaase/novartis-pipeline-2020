@@ -134,3 +134,10 @@ export interface RadialArc extends DefaultArcObject {
   y0: number;
   y1: number;
 }
+
+export interface NodeArc {
+  startAngle: number;
+  endAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+}
