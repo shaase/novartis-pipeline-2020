@@ -55,6 +55,10 @@ export const setHierarchy = data => {
         d.name = "Rare Disease";
       }
 
+      if (d.name === "Immune Thrombocytopenic Purpura") {
+        d.name = "Immune Thrombo... Purpura";
+      }
+
       const nodeRoute = d.route || "";
 
       if (

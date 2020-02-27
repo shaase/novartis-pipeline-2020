@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { RadialNode, NodeArc } from "../../../types";
 import Shape from "./shape";
+import fixedNode from "./fixed-node";
 
 class Segment extends THREE.Mesh {
   node: RadialNode;
@@ -24,9 +25,9 @@ class Segment extends THREE.Mesh {
     this.getArc = ga;
   }
 
-  update(): void {
+  update(path: string): void {
     if (this.geometry instanceof THREE.BufferGeometry) {
-      const arc = this.getArc(this.node);
+      const arc = this.getArc(fixedNode(this.node, path));
       console.log(arc);
       const segment = new Shape();
       segment.move(0, 0);

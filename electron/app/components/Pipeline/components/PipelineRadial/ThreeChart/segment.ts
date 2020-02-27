@@ -45,10 +45,6 @@ const getSunburstSegment: any = (
 
   let node: RadialNode = original;
   const { parent, phase, isEmpty, depth, route } = node;
-  let name = node.name || "";
-  if (name === "Immune Thrombocytopenic Purpura") {
-    name = "Immune Thrombo... Purpura";
-  }
 
   // const textDisplay = getTextDisplay(node);
   // let opacity = 1;

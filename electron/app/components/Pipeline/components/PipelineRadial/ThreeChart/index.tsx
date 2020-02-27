@@ -78,7 +78,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
   const updateObjects = (): void => {
     if (testBuffer.current !== null) {
-      testBuffer.current.update();
+      testBuffer.current.update(path);
     }
   };
 
