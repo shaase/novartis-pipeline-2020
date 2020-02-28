@@ -6,8 +6,7 @@ import * as THREE from "three";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, RadialArc, NodeArc } from "../../../types";
 import { itemsForPath } from "../../../utils";
-import getSunburstSegment from "./segment";
-import Segment from "./buffer";
+import Segment from "./segment";
 import styles from "./index.module.scss";
 
 type Card = { file: string; label: string };
@@ -36,7 +35,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const camera = useRef<THREE.OrthographicCamera | null>(null);
   const renderer = useRef<THREE.WebGLRenderer | null>(null);
   const container = useRef<HTMLDivElement | null>(null);
-  const testBuffer = useRef<Segment | null>(null);
+  const testSegment = useRef<Segment | null>(null);
   const xd = useRef(d3interpolate(xScale.current.domain(), xDomain));
   const yd = useRef(d3interpolate(yScale.current.domain(), yDomain));
   const yr = useRef(d3interpolate(yScale.current.range(), yRange));
@@ -53,13 +52,6 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     }
   };
 
-  // eslint-disable-next-line
-  const getArc: Arc<any, RadialArc> = arc<any, RadialArc>()
-    .startAngle((d: RadialArc) => Math.max(0, Math.min(2 * Math.PI, xScale.current(d.x0))))
-    .endAngle((d: RadialArc) => Math.max(0, Math.min(2 * Math.PI, xScale.current(d.x1))))
-    .innerRadius((d: RadialArc) => Math.max(0, yScale.current(d.y0)))
-    .outerRadius((d: RadialArc) => Math.max(0, yScale.current(d.y1)));
-
   const getNodeArc = (node: RadialNode): NodeArc => {
     const { x0 = 0, x1 = 0, y0 = 0, y1 = 0 } = node;
     const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
@@ -72,17 +64,14 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const addSceneObjects = (): void => {
     if (scene.current !== null) {
       const node = segments[238];
-      testBuffer.current = new Segment(node, getNodeArc);
-      const segment = getSunburstSegment(node, path, studyCode, getArc);
-
-      scene.current.add(testBuffer.current);
-      scene.current.add(segment);
+      testSegment.current = new Segment(node, getNodeArc);
+      scene.current.add(testSegment.current);
     }
   };
 
   const updateObjects = (): void => {
-    if (testBuffer.current !== null) {
-      testBuffer.current.update(path);
+    if (testSegment.current !== null) {
+      testSegment.current.update(path);
     }
   };
 
