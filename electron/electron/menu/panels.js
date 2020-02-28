@@ -1,6 +1,6 @@
 const { app } = require("electron");
 const { setPersistent } = require("radius-electron");
-const { panel: panelStore } = require("../../store.json");
+const { panel: panelStore } = require("../../store");
 
 let arrPanel = [];
 

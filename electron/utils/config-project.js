@@ -17,7 +17,7 @@ const prompt = async message =>
   const { value: description } = await prompt("Description");
 
   console.log(" ");
-  console.log("Updating package.json and store.json");
+  console.log("Updating package.json and store");
 
   let pkg = editJsonFile(`${__dirname}/../package.json`);
 
@@ -30,7 +30,7 @@ const prompt = async message =>
 
   pkg.save();
 
-  let str = editJsonFile(`${__dirname}/../store.json`);
+  let str = editJsonFile(`${__dirname}/../store`);
   const projKey = display.replace(/ /g, "_");
   const panelKey = `${projKey}_Panel_Key`;
   const metricsKey = `${projKey}_Metrics_Key`;
@@ -42,5 +42,5 @@ const prompt = async message =>
 
   str.save();
 
-  console.log("Configured package.json and store.json");
+  console.log("Configured package.json and store");
 })();

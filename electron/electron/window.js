@@ -2,7 +2,7 @@ const path = require("path");
 const { BrowserWindow, screen } = require("electron");
 const devTools = require("./dev-tools");
 const { getPersistent } = require("radius-electron");
-const { panel: panelStore } = require("../store.json");
+const { panel: panelStore } = require("../store");
 
 const { NODE_ENV, DEBUG_PROD } = process.env;
 let resizeTimeout;

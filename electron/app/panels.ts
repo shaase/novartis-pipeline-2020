@@ -1,5 +1,5 @@
 import { getPersistent } from "radius-electron";
-import { panel as panelStore } from "../store.json";
+import { panel as panelStore } from "../store";
 
 const { key: PANEL_KEY, values, orientations } = panelStore || { key: "", values: [], orientations: [] };
 const panels: string[] = values;

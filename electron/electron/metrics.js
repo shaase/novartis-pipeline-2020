@@ -2,9 +2,8 @@ const { remote } = require("electron");
 const fs = require("fs");
 const csv = require("fast-csv");
 const { getPersistent, setPersistent } = require("radius-electron");
-const { metrics } = require("../store.json");
+const { metrics } = require("../store");
 
-const { key: storeKey, defaultPath, headers: definedHeaders } = metrics;
 let metricsPath;
 let csvFile;
 let writer;
@@ -14,6 +13,7 @@ const record = ({ detail: metric }) => {
 };
 
 const setMetrics = async () => {
+  const { key: storeKey, defaultPath, headers: definedHeaders } = metrics;
   metricsPath = getPersistent(storeKey);
 
   if (metricsPath === undefined) {
