@@ -36,7 +36,7 @@ class Segment extends THREE.Mesh {
   }
 
   update(path: string): void {
-    if (this.geometry instanceof THREE.ShapeBufferGeometry) {
+    if (this.geometry instanceof THREE.BufferGeometry) {
       const fn = fixedNode(this.node, path);
       const { startAngle, endAngle, innerRadius, outerRadius } = this.getArc(fn);
       const x1 = Math.cos(endAngle) * innerRadius;
@@ -50,7 +50,6 @@ class Segment extends THREE.Mesh {
       if (isCircle) {
         const geometry = new THREE.RingBufferGeometry(innerRadius, outerRadius, 128);
         const { position } = geometry.attributes;
-        console.log(position.count);
         this.geometry.setAttribute("position", position);
       } else {
         const segment = new THREE.Shape();
@@ -60,7 +59,6 @@ class Segment extends THREE.Mesh {
 
         const geometry = new THREE.ShapeBufferGeometry(segment, 64);
         const { position } = geometry.attributes;
-        console.log(position.count);
         this.geometry.setAttribute("position", position);
       }
     }
