@@ -1,5 +1,4 @@
 import React, { MouseEvent, TouchEvent, useContext, useRef, useState } from "react";
-import isDev from "electron-is-dev";
 import { PipelineContext } from "../../state";
 import { eventPosition } from "../../utils";
 import novartis from "../../../../images/pipeline/novartis.svg";
@@ -27,7 +26,7 @@ const Card: React.FC<Props> = ({ isVisible, index, type, file, compound }: Props
   const visRef = useRef(false);
 
   let source;
-  const path = isDev ? "images/pipeline/cards/" : "dist/images/pipeline/cards";
+  const path = "images/pipeline/cards/";
   if (file !== "") {
     if (type.includes("Compounds")) {
       source = `${path}/compounds/${file}`;

@@ -66,11 +66,11 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   };
 
   const addSceneObjects = (): void => {
-    const node = segments[238];
-    testBuffer.current = new Segment(node, getNodeArc);
-    const segment = getSunburstSegment(node, path, studyCode, getArc);
-
     if (scene.current !== null) {
+      const node = segments[238];
+      testBuffer.current = new Segment(node, getNodeArc);
+      const segment = getSunburstSegment(node, path, studyCode, getArc);
+
       scene.current.add(testBuffer.current);
       scene.current.add(segment);
     }

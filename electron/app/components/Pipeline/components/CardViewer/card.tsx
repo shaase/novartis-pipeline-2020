@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import isDev from "electron-is-dev";
 import { fileExists } from "./utils";
 import novartis from "../../../../images/pipeline/novartis.svg";
 import styles from "./index.module.scss";
@@ -20,7 +19,7 @@ const Card: React.FC<Props> = ({ index, type, file, compound, code }: Props) => 
   const checkSource = async (): Promise<void> => {
     let src = "";
 
-    const path = isDev ? "images/pipeline/cards" : "dist/images/pipeline/cards";
+    const path = "images/pipeline/cards";
     if (file !== "") {
       if (type === "Compounds") {
         src = `${path}/compounds/${file}`;
