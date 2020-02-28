@@ -27,6 +27,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
 
+  const iterator = useRef(1);
   const hasAddedObjects = useRef(false);
   const requestID = useRef(0);
   const xScale = useRef(scaleLinear());
@@ -36,6 +37,9 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const renderer = useRef<THREE.WebGLRenderer | null>(null);
   const container = useRef<HTMLDivElement | null>(null);
   const testBuffer = useRef<Segment | null>(null);
+  const xd = useRef(d3interpolate(xScale.current.domain(), xDomain));
+  const yd = useRef(d3interpolate(yScale.current.domain(), yDomain));
+  const yr = useRef(d3interpolate(yScale.current.range(), yRange));
 
   const sceneSetup = (): void => {
     if (container.current !== null) {
@@ -87,6 +91,13 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       renderer.current.render(scene.current, camera.current);
       requestID.current = window.requestAnimationFrame(tick);
     }
+
+    if (iterator.current < 1) {
+      iterator.current = Math.min(1, iterator.current + 0.05);
+      xScale.current.domain(xd.current(iterator.current));
+      yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
+      updateObjects();
+    }
   };
 
   if (data.segments.length > 0) {
@@ -99,11 +110,12 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       xScale.current.domain(xDomain).range(xRange);
       yScale.current.domain(yDomain).range(yRange);
     } else {
-      const xd = d3interpolate(xScale.current.domain(), xDomain);
-      const yd = d3interpolate(yScale.current.domain(), yDomain);
-      const yr = d3interpolate(yScale.current.range(), yRange);
-      xScale.current.domain(xd(1)).range(xRange);
-      yScale.current.domain(yd(1)).range(yr(1));
+      xd.current = d3interpolate(xScale.current.domain(), xDomain);
+      yd.current = d3interpolate(yScale.current.domain(), yDomain);
+      yr.current = d3interpolate(yScale.current.range(), yRange);
+      iterator.current = 0;
+      xScale.current.domain(xd.current(iterator.current)).range(xRange);
+      yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
     }
 
     updateObjects();
