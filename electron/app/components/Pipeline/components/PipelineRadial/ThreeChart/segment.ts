@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { RadialNode, NodeArc } from "../../../types";
 import fixedNode from "./fixed-node";
-import ThreeRadial from ".";
 
 const hexColor = (hexString: string): number => {
   const str = `${hexString}`.replace(/[^\da-f]/gi, "");
