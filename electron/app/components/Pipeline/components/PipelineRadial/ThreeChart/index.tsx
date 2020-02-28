@@ -1,10 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { arc, Arc } from "d3-shape";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
 import * as THREE from "three";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
-import { RadialNode, RadialData, RadialArc, NodeArc } from "../../../types";
+import { RadialNode, RadialData, NodeArc } from "../../../types";
 import { itemsForPath } from "../../../utils";
 import Segment from "./segment";
 import styles from "./index.module.scss";
