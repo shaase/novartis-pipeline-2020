@@ -27,6 +27,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
   const iterator = useRef(1);
   const startTime = useRef(Date.now());
+  const iteratorFrames = useRef(0);
   const hasAddedObjects = useRef(false);
   const requestID = useRef(0);
   const xScale = useRef(scaleLinear());
@@ -62,7 +63,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   };
 
   const addSceneObjects = (): void => {
-    const sliced = segments.slice(0, 400);
+    const sliced = segments.slice(0, 300);
     sliced.forEach((node: RadialNode) => {
       const segment = new Segment(node, getNodeArc);
       nodeArcs.current.push(segment);
@@ -87,8 +88,9 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
     if (iterator.current < 1) {
       const now = Date.now();
-      const diff = (now - startTime.current) * 0.0005;
-      iterator.current = Math.min(1, iterator.current + diff);
+      const diff = (now - startTime.current) / 500;
+      iteratorFrames.current += 1;
+      iterator.current = Math.min(1, diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
       updateObjects();
@@ -105,12 +107,13 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       xScale.current.domain(xDomain).range(xRange);
       yScale.current.domain(yDomain).range(yRange);
     } else {
+      console.log(iteratorFrames.current);
       xd.current = d3interpolate(xScale.current.domain(), xDomain);
       yd.current = d3interpolate(yScale.current.domain(), yDomain);
       yr.current = d3interpolate(yScale.current.range(), yRange);
-      console.log("update");
       startTime.current = Date.now();
       iterator.current = 0;
+      iteratorFrames.current = 0;
       xScale.current.domain(xd.current(iterator.current)).range(xRange);
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
     }

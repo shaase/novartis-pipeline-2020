@@ -23,8 +23,6 @@ class Segment extends THREE.Group {
     this.arc = new SegmentArc(material);
     this.ring = new SegmentRing(material);
     this.getArc = ga;
-    this.add(this.arc);
-    this.add(this.ring);
   }
 
   update(path: string): void {
@@ -36,15 +34,15 @@ class Segment extends THREE.Group {
     const isCircle = diff > 6.2;
 
     if (diff === 0) {
-      this.ring.visible = false;
-      this.arc.visible = false;
+      this.remove(this.arc);
+      this.remove(this.ring);
     } else if (isCircle) {
-      this.ring.visible = true;
-      this.arc.visible = false;
+      this.remove(this.arc);
+      this.add(this.ring);
       this.ring.update(innerRadius, outerRadius);
     } else {
-      this.ring.visible = false;
-      this.arc.visible = true;
+      this.add(this.arc);
+      this.remove(this.ring);
       this.arc.update(startAngle, endAngle, innerRadius, outerRadius);
     }
   }

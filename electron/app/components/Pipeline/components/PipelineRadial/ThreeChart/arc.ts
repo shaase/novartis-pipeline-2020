@@ -31,9 +31,9 @@ class SegmentArc extends THREE.Mesh {
 
   update(startAngle: number, endAngle: number, innerRadius: number, outerRadius: number): void {
     if (this.geometry instanceof THREE.BufferGeometry) {
-      const geometry = arcGeometry(startAngle, endAngle, innerRadius, outerRadius);
-      const { position } = geometry.attributes;
-      this.geometry.setAttribute("position", position);
+      // const geometry = arcGeometry(startAngle, endAngle, innerRadius, outerRadius);
+      // const { position } = geometry.attributes;
+      // this.geometry.setAttribute("position", position);
     }
   }
 }
