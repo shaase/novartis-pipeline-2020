@@ -63,8 +63,8 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   };
 
   const addSceneObjects = (): void => {
-    const sliced = segments.slice(0, 300);
-    sliced.forEach((node: RadialNode) => {
+    const sliced = segments.slice(0, 620);
+    segments.forEach((node: RadialNode) => {
       const segment = new Segment(node, getNodeArc);
       nodeArcs.current.push(segment);
 

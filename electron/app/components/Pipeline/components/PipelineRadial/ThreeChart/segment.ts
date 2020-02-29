@@ -28,12 +28,14 @@ class Segment extends THREE.Group {
   update(path: string): void {
     const fn = fixedNode(this.node, path);
     const { startAngle, endAngle, innerRadius, outerRadius } = this.getArc(fn);
+    const width = outerRadius - innerRadius;
     const max = Math.max(startAngle, endAngle);
     const min = Math.min(startAngle, endAngle);
     const diff = Math.round((max - min) * 100) / 100;
     const isCircle = diff > 6.2;
+    // console.log(this.node.name, startAngle, endAngle, innerRadius, outerRadius);
 
-    if (diff === 0) {
+    if (diff === 0 || width === 0) {
       this.remove(this.arc);
       this.remove(this.ring);
     } else if (isCircle) {

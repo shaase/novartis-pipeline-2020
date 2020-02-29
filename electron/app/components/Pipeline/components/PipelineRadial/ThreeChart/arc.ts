@@ -14,7 +14,7 @@ const arcGeometry = (
   segment.lineTo(x1, y1);
   segment.absarc(0, 0, innerRadius, endAngle, startAngle, true);
 
-  const geometry = new THREE.ShapeBufferGeometry(segment, 64);
+  const geometry = new THREE.ShapeBufferGeometry(segment, 16);
   return geometry;
 };
 
@@ -31,9 +31,9 @@ class SegmentArc extends THREE.Mesh {
 
   update(startAngle: number, endAngle: number, innerRadius: number, outerRadius: number): void {
     if (this.geometry instanceof THREE.BufferGeometry) {
-      // const geometry = arcGeometry(startAngle, endAngle, innerRadius, outerRadius);
-      // const { position } = geometry.attributes;
-      // this.geometry.setAttribute("position", position);
+      const geometry = arcGeometry(startAngle, endAngle, innerRadius, outerRadius);
+      const { position } = geometry.attributes;
+      this.geometry.setAttribute("position", position);
     }
   }
 }
