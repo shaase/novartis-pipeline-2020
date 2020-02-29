@@ -35,7 +35,10 @@ class Segment extends THREE.Group {
     const diff = Math.round((max - min) * 100) / 100;
     const isCircle = diff === 6.28;
 
-    if (isCircle) {
+    if (diff === 0) {
+      this.ring.visible = false;
+      this.arc.visible = false;
+    } else if (isCircle) {
       this.ring.visible = true;
       this.arc.visible = false;
       this.ring.update(innerRadius, outerRadius);
