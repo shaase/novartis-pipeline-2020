@@ -1,7 +1,7 @@
 {
   "name": "novartis-pipeline-2020",
   "appName": "Novartis Pipeline 2020",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "New version of pipeline",
   "private": true,
   "main": "electron/index.js",
