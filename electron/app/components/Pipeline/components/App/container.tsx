@@ -1,4 +1,5 @@
 import React, { useContext, useMemo, useRef, useState } from "react";
+import FPSStats from "react-fps-stats";
 import { defaultPhases } from "../../data";
 import { FilterContext, PipelineContext } from "../../state";
 import { WorkerData } from "../../types";
@@ -87,6 +88,7 @@ const AppContainer: React.FC = () => {
           {pipelineBubble}
           <Definitions />
           <Lightbox />
+          <FPSStats />
         </div>
       </div>
     </div>

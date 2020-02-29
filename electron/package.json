@@ -127,6 +127,7 @@
     "radius-utils": "^1.1.7",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
+    "react-fps-stats": "^0.1.2",
     "react-hot-loader": "^4.12.18",
     "react-spring": "^8.0.27",
     "svg-mesh-3d": "^1.1.0",

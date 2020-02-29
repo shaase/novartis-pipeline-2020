@@ -7,6 +7,7 @@ declare module "radius-utils";
 declare module "radius-electron";
 declare module "svg-mesh-3d";
 declare module "three-simplicial-complex";
+declare module "react-fps-stats";
 
 declare module "*.module.scss" {
   interface ClassNames {
