@@ -20,10 +20,10 @@ const arcGeometry = (
 
 class SegmentArc extends THREE.Mesh {
   constructor(material: THREE.MeshBasicMaterial) {
-    const startAngle = 0;
-    const endAngle = 1;
-    const innerRadius = 150;
-    const outerRadius = 200;
+    const startAngle = 0.522;
+    const endAngle = 6.078;
+    const innerRadius = 129;
+    const outerRadius = 162;
 
     const geometry = arcGeometry(startAngle, endAngle, innerRadius, outerRadius);
     super(geometry, material);

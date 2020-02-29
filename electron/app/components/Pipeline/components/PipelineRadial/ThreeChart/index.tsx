@@ -81,7 +81,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     }
 
     if (iterator.current < 1) {
-      iterator.current = Math.min(1, iterator.current + 0.05);
+      iterator.current = Math.min(1, iterator.current + 0.02);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
       updateObjects();
