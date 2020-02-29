@@ -26,6 +26,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const noData = studies.length === 0;
 
   const iterator = useRef(1);
+  const startTime = useRef(Date.now());
   const hasAddedObjects = useRef(false);
   const requestID = useRef(0);
   const xScale = useRef(scaleLinear());
@@ -34,7 +35,7 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const camera = useRef<THREE.OrthographicCamera | null>(null);
   const renderer = useRef<THREE.WebGLRenderer | null>(null);
   const container = useRef<HTMLDivElement | null>(null);
-  const testSegment = useRef<Segment | null>(null);
+  const nodeArcs = useRef<[Segment]>([]);
   const xd = useRef(d3interpolate(xScale.current.domain(), xDomain));
   const yd = useRef(d3interpolate(yScale.current.domain(), yDomain));
   const yr = useRef(d3interpolate(yScale.current.range(), yRange));
@@ -61,17 +62,21 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   };
 
   const addSceneObjects = (): void => {
-    if (scene.current !== null) {
-      const node = segments[238];
-      testSegment.current = new Segment(node, getNodeArc);
-      scene.current.add(testSegment.current);
-    }
+    const sliced = segments.slice(0, 400);
+    sliced.forEach((node: RadialNode) => {
+      const segment = new Segment(node, getNodeArc);
+      nodeArcs.current.push(segment);
+
+      if (scene.current !== null) {
+        scene.current.add(segment);
+      }
+    });
   };
 
   const updateObjects = (): void => {
-    if (testSegment.current !== null) {
-      testSegment.current.update(path);
-    }
+    nodeArcs.current.forEach((segment: Segment) => {
+      segment.update(path);
+    });
   };
 
   const tick = (): void => {
@@ -81,7 +86,9 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     }
 
     if (iterator.current < 1) {
-      iterator.current = Math.min(1, iterator.current + 0.02);
+      const now = Date.now();
+      const diff = (now - startTime.current) * 0.0005;
+      iterator.current = Math.min(1, iterator.current + diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
       updateObjects();
@@ -101,6 +108,8 @@ const ThreeRadial: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       xd.current = d3interpolate(xScale.current.domain(), xDomain);
       yd.current = d3interpolate(yScale.current.domain(), yDomain);
       yr.current = d3interpolate(yScale.current.range(), yRange);
+      console.log("update");
+      startTime.current = Date.now();
       iterator.current = 0;
       xScale.current.domain(xd.current(iterator.current)).range(xRange);
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));

@@ -33,7 +33,7 @@ class Segment extends THREE.Group {
     const max = Math.max(startAngle, endAngle);
     const min = Math.min(startAngle, endAngle);
     const diff = Math.round((max - min) * 100) / 100;
-    const isCircle = diff === 6.28;
+    const isCircle = diff > 6.2;
 
     if (diff === 0) {
       this.ring.visible = false;
