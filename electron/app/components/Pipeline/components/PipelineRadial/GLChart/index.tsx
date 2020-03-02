@@ -28,7 +28,6 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
 
   const iterator = useRef(1);
   const startTime = useRef(Date.now());
-  const iteratorFrames = useRef(0);
   const raf = useRef(0);
   const xScale = useRef(scaleLinear());
   const yScale = useRef(scaleSqrt());
@@ -64,7 +63,6 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
     if (iterator.current < 1) {
       const now = Date.now();
       const diff = (now - startTime.current) / 500;
-      iteratorFrames.current += 1;
       iterator.current = Math.min(1, diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
@@ -78,13 +76,11 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
       xScale.current.domain(xDomain).range(xRange);
       yScale.current.domain(yDomain).range(yRange);
     } else {
-      console.log(iteratorFrames.current);
       xd.current = d3interpolate(xScale.current.domain(), xDomain);
       yd.current = d3interpolate(yScale.current.domain(), yDomain);
       yr.current = d3interpolate(yScale.current.range(), yRange);
       startTime.current = Date.now();
       iterator.current = 0;
-      iteratorFrames.current = 0;
       xScale.current.domain(xd.current(iterator.current)).range(xRange);
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
     }
