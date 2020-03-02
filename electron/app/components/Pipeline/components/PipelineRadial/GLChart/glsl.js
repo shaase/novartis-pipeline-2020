@@ -1,5 +1,5 @@
 import reglConstructor from "regl";
-import mesh from "./mesh";
+import { position, elements } from "./mesh";
 import { frag, vert } from "./shaders";
 
 let regl;
@@ -21,10 +21,8 @@ export const startGL = canvas => {
       radius: regl.prop("radius"),
       color: regl.prop("color"),
     },
-    attributes: {
-      position: mesh.positions,
-    },
-    elements: mesh.cells,
+    attributes: { position },
+    elements,
   });
 };
 
