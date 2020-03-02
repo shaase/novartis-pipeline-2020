@@ -5,6 +5,7 @@ import { startGL, updateGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc } from "../../../types";
 import { itemsForPath } from "../../../utils";
+import fixedNode from "./fixed-node";
 import { hexToRgb } from "./utils";
 import styles from "./index.module.scss";
 
@@ -46,11 +47,11 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
   };
 
   const update = (): void => {
-    const sliced = segments.slice(238, 239);
-    const arcs = sliced.map((node: RadialNode) => {
-      const { startAngle, endAngle, innerRadius, outerRadius } = getNodeArc(node);
+    const arcs = segments.map((node: RadialNode) => {
+      const fn = fixedNode(node, path);
+      const { startAngle, endAngle, innerRadius, outerRadius } = getNodeArc(fn);
       const theta = [startAngle, endAngle];
-      const radius = [0.75, 1];
+      const radius = [innerRadius / 785, outerRadius / 785];
       const color = hexToRgb(node.color);
 
       return { theta, radius, color };
@@ -77,6 +78,7 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
       xScale.current.domain(xDomain).range(xRange);
       yScale.current.domain(yDomain).range(yRange);
     } else {
+      console.log(iteratorFrames.current);
       xd.current = d3interpolate(xScale.current.domain(), xDomain);
       yd.current = d3interpolate(yScale.current.domain(), yDomain);
       yr.current = d3interpolate(yScale.current.range(), yRange);
