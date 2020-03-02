@@ -28,7 +28,7 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
   const iterator = useRef(1);
   const startTime = useRef(Date.now());
   const iteratorFrames = useRef(0);
-  const requestID = useRef(0);
+  const raf = useRef(0);
   const xScale = useRef(scaleLinear());
   const yScale = useRef(scaleSqrt());
   const canvas = useRef<HTMLCanvasElement | null>(null);
@@ -49,8 +49,7 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
     const sliced = segments.slice(238, 239);
     const arcs = sliced.map((node: RadialNode) => {
       const { startAngle, endAngle, innerRadius, outerRadius } = getNodeArc(node);
-      console.log(startAngle, endAngle, innerRadius, outerRadius);
-      const theta = [0, 2 * Math.PI];
+      const theta = [startAngle, endAngle];
       const radius = [0.75, 1];
       const color = hexToRgb(node.color);
 
@@ -69,6 +68,7 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
       update();
+      raf.current = window.requestAnimationFrame(tick);
     }
   };
 
@@ -77,7 +77,6 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
       xScale.current.domain(xDomain).range(xRange);
       yScale.current.domain(yDomain).range(yRange);
     } else {
-      console.log(iteratorFrames.current);
       xd.current = d3interpolate(xScale.current.domain(), xDomain);
       yd.current = d3interpolate(yScale.current.domain(), yDomain);
       yr.current = d3interpolate(yScale.current.range(), yRange);
@@ -89,15 +88,16 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
     }
 
     update();
+    raf.current = window.requestAnimationFrame(tick);
   }
 
   useEffect(() => {
     if (canvas.current !== null) {
       startGL(canvas.current);
     }
-    tick();
+
     return () => {
-      window.cancelAnimationFrame(requestID.current);
+      window.cancelAnimationFrame(raf.current);
     };
   }, []);
 
