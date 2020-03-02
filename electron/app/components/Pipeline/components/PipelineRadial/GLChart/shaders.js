@@ -16,7 +16,6 @@ export const frag = `
     float m = mask(size, vpos, radius);
       if (m < 0.01) discard;
       gl_FragColor = vec4(color,m);
-
   }
 `;
 
