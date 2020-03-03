@@ -3,7 +3,7 @@ import { scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
 import { startGL, updateGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
-import { RadialNode, RadialData, NodeArc, GLArc } from "../../../types";
+import { RadialNode, RadialData, NodeArc } from "../../../types";
 import { itemsForPath } from "../../../utils";
 import fixedNode from "./fixed-node";
 import { hexToRgb } from "./utils";
@@ -36,7 +36,7 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
   const yd = useRef(d3interpolate(yScale.current.domain(), yDomain));
   const yr = useRef(d3interpolate(yScale.current.range(), yRange));
 
-  const getArc = (node: RadialNode): GLArc => {
+  const getArc = (node: RadialNode): NodeArc => {
     const { x0 = 0, x1 = 0, y0 = 0, y1 = 0 } = node;
     const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
     const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));

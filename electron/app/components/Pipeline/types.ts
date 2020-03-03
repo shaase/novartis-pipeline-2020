@@ -136,13 +136,6 @@ export interface RadialArc extends DefaultArcObject {
 }
 
 export interface NodeArc {
-  startAngle: number;
-  endAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-}
-
-export interface GLArc {
   theta: number[];
   radius: number[];
   color: number[];
