@@ -21,7 +21,7 @@ type Props = {
   onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
 
-const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
+const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
   const { segments, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
   const { root: pathRoot, level } = itemsForPath(path);
   const studies = studiesForPathAndPhases(path, phases, compound);
@@ -106,4 +106,4 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
   );
 };
 
-export default GLChart;
+export default RadialChart;

@@ -1,7 +1,7 @@
 import React from "react";
 import { RadialData } from "../../types";
 import Header from "./header";
-import GLChart from "./GLChart";
+import RadialChart from "./RadialChart";
 import CardViewer from "../CardViewer";
 import Bottom from "./bottom";
 import styles from "./index.module.scss";
@@ -21,7 +21,7 @@ const PipelineRadial: React.FC<Props> = ({ path, compound, phases, data, onNavig
       {cards.length === 0 && <Header cards={cards} />}
 
       {cards.length === 0 && (
-        <GLChart
+        <RadialChart
           isVisible={cards.length === 0}
           path={path}
           compound={compound}
