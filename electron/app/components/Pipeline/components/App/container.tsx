@@ -88,6 +88,7 @@ const AppContainer: React.FC = () => {
           {pipelineBubble}
           <Definitions />
           <Lightbox />
+          <div className={styles.topShadow} />
           {/* <FPSStats /> */}
         </div>
       </div>

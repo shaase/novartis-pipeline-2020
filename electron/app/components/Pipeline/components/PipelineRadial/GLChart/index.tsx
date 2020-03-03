@@ -6,6 +6,8 @@ import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc } from "../../../types";
 import { itemsForPath } from "../../../utils";
 import { hexToRgb } from "./utils";
+import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
+import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
 import styles from "./index.module.scss";
 
 type Card = { file: string; label: string };
@@ -89,7 +91,19 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
     };
   }, []);
 
-  return <canvas className={styles.sunburst} width="785" height="785" ref={canvas} />;
+  return (
+    <div className={styles.sunburst}>
+      <div className={styles.phaseContainer}>
+        <img src={phaseRing} className={styles.phaseRing} alt="phase-ring" />
+      </div>
+
+      {noData ? (
+        <img src={emptyRing} className={styles.empty} />
+      ) : (
+        <canvas className={styles.canvas} width="785" height="785" ref={canvas} />
+      )}
+    </div>
+  );
 };
 
 export default GLChart;
