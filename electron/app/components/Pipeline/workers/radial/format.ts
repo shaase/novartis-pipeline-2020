@@ -1,5 +1,5 @@
-import { RadialNode } from "../../../types";
-import { itemsForPath } from "../../../utils";
+import { RadialNode } from "../../types";
+import { itemsForPath } from "../../utils";
 
 const flattenToSubtypes = (list: RadialNode[]): RadialNode[] =>
   list.reduce(
@@ -12,7 +12,7 @@ const flattenToSubtypes = (list: RadialNode[]): RadialNode[] =>
     [],
   );
 
-const getFixedNode = (n: RadialNode, path: string): RadialNode => {
+export const getFixedNode = (n: RadialNode, path: string): RadialNode => {
   let node: RadialNode = n;
   const { parent, phase, isEmpty, depth, route } = node;
   const { root: pathRoot } = itemsForPath(path);
@@ -67,5 +67,3 @@ const getFixedNode = (n: RadialNode, path: string): RadialNode => {
 
   return node;
 };
-
-export default getFixedNode;

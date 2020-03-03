@@ -5,7 +5,6 @@ import { startGL, updateGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc } from "../../../types";
 import { itemsForPath } from "../../../utils";
-import fixedNode from "./fixed-node";
 import { hexToRgb } from "./utils";
 import styles from "./index.module.scss";
 
@@ -56,7 +55,8 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
       iterator.current = Math.min(1, diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
-      const arcs = segments.map((node: RadialNode) => getArc(fixedNode(node, path)));
+      // const arcs = segments.map((node: RadialNode) => getArc(fixedNode(node, path)));
+      const arcs = segments.map((node: RadialNode) => getArc(node));
 
       updateGL(arcs);
       raf.current = window.requestAnimationFrame(tick);
