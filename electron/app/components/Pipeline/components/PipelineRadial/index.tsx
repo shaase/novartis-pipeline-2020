@@ -19,14 +19,17 @@ const PipelineRadial: React.FC<Props> = ({ path, compound, phases, data, onNavig
   return (
     <div className={styles.container}>
       {cards.length === 0 && <Header cards={cards} />}
-      <GLChart
-        isVisible={cards.length === 0}
-        path={path}
-        compound={compound}
-        phases={phases}
-        data={data}
-        onNavigate={onNavigate}
-      />
+
+      {cards.length === 0 && (
+        <GLChart
+          isVisible={cards.length === 0}
+          path={path}
+          compound={compound}
+          phases={phases}
+          data={data}
+          onNavigate={onNavigate}
+        />
+      )}
 
       {cards.length > 0 && <CardViewer type="MOA" color="#333333" items={cards} />}
 
