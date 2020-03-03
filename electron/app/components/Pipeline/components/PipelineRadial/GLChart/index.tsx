@@ -3,7 +3,7 @@ import { scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
 import { startGL, updateGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
-import { RadialNode, RadialData, NodeArc } from "../../../types";
+import { RadialNode, RadialData, NodeArc, GLArc } from "../../../types";
 import { itemsForPath } from "../../../utils";
 import fixedNode from "./fixed-node";
 import { hexToRgb } from "./utils";
@@ -36,37 +36,29 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
   const yd = useRef(d3interpolate(yScale.current.domain(), yDomain));
   const yr = useRef(d3interpolate(yScale.current.range(), yRange));
 
-  const getNodeArc = (node: RadialNode): NodeArc => {
+  const getArc = (node: RadialNode): GLArc => {
     const { x0 = 0, x1 = 0, y0 = 0, y1 = 0 } = node;
     const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
     const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));
     const innerRadius = Math.max(0, yScale.current(y0));
     const outerRadius = Math.max(0, yScale.current(y1));
-    return { startAngle, endAngle, innerRadius, outerRadius };
-  };
+    const theta = [startAngle, endAngle];
+    const radius = [innerRadius / 785, outerRadius / 785];
+    const color = hexToRgb(node.color);
 
-  const update = (): void => {
-    const arcs = segments.map((node: RadialNode) => {
-      const fn = fixedNode(node, path);
-      const { startAngle, endAngle, innerRadius, outerRadius } = getNodeArc(fn);
-      const theta = [startAngle, endAngle];
-      const radius = [innerRadius / 785, outerRadius / 785];
-      const color = hexToRgb(node.color);
-
-      return { theta, radius, color };
-    });
-
-    updateGL(arcs);
+    return { theta, radius, color };
   };
 
   const tick = (): void => {
     if (iterator.current < 1) {
       const now = Date.now();
-      const diff = (now - startTime.current) / 500;
+      const diff = (now - startTime.current) / 600;
       iterator.current = Math.min(1, diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
-      update();
+      const arcs = segments.map((node: RadialNode) => getArc(fixedNode(node, path)));
+
+      updateGL(arcs);
       raf.current = window.requestAnimationFrame(tick);
     }
   };
@@ -85,8 +77,7 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
     }
 
-    update();
-    raf.current = window.requestAnimationFrame(tick);
+    tick();
   }
 
   useEffect(() => {

@@ -141,3 +141,9 @@ export interface NodeArc {
   innerRadius: number;
   outerRadius: number;
 }
+
+export interface GLArc {
+  theta: number[];
+  radius: number[];
+  color: number[];
+}
