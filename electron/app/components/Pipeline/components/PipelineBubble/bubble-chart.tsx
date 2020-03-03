@@ -29,8 +29,8 @@ const BubbleChart: React.FC<Props> = ({ isVisible, bubbles, path, width, height,
     bubbles.forEach(({ x, y, r }, i) => {
       if (groups.current[i] !== undefined && circles.current[i] !== undefined) {
         const opacity = r === 0 ? 0 : 1;
-        TweenMax.to(groups.current[i], 0.4, { x, y, opacity });
-        TweenMax.to(circles.current[i], 0.4, { attr: { r } });
+        TweenMax.to(groups.current[i], 0.6, { x, y, opacity });
+        TweenMax.to(circles.current[i], 0.6, { attr: { r } });
       }
     });
   });

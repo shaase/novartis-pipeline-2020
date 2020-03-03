@@ -27,6 +27,6 @@ export const startGL = canvas => {
 };
 
 export const updateGL = arcs => {
-  regl.clear({ color: [0, 0, 0, 1], depth: true }); // transparent: [0, 0, 0, 0]
+  regl.clear({ color: [0, 0, 0, 0], depth: true });
   update(arcs);
 };

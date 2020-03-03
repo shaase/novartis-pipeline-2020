@@ -41,9 +41,10 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
     const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));
     const innerRadius = Math.max(0, yScale.current(y0));
     const outerRadius = Math.max(0, yScale.current(y1));
+
     const theta = [startAngle, endAngle];
     const radius = [innerRadius / 785, outerRadius / 785];
-    const color = hexToRgb(node.color);
+    const color = hexToRgb(node.fill || "#FFFFFF");
 
     return { theta, radius, color };
   };
@@ -55,9 +56,7 @@ const GLChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onN
       iterator.current = Math.min(1, diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
-      // const arcs = segments.map((node: RadialNode) => getArc(fixedNode(node, path)));
       const arcs = segments.map((node: RadialNode) => getArc(node));
-
       updateGL(arcs);
       raf.current = window.requestAnimationFrame(tick);
     }
