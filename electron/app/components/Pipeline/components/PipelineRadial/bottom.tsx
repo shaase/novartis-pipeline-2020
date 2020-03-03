@@ -3,12 +3,12 @@ import { DefinitionsContext } from "../../state";
 import { CardType } from "../../types";
 import styles from "./index.module.scss";
 
-type Props = { cards?: CardType[] };
+type Props = { cards: CardType[] };
 
 const Bottom: React.FC<Props> = ({ cards }: Props) => {
   const { onToggleDefs } = useContext(DefinitionsContext);
   return (
-    <div className={cards === undefined ? styles.bottom : styles.bottomMOA}>
+    <div className={cards.length === 0 ? styles.bottom : styles.bottomMOA}>
       <button
         className={styles.btnDef}
         onClick={() => {
@@ -24,7 +24,7 @@ const Bottom: React.FC<Props> = ({ cards }: Props) => {
         established.
         <br />
         There is no guarantee that they will become commercially available for the use(s) under investigation.
-        {cards !== undefined && (
+        {cards.length > 0 && (
           <div className={styles.moaDisclaimer}>
             MOA data are based on in vitro/in vivo data. Clinical benefit is unknown.
           </div>
