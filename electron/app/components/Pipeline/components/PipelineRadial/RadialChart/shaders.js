@@ -35,6 +35,6 @@ export const vert = `
   void main () {
     vpos = plot(position, theta);
     vec2 aspect = vec2(1,size.x/size.y);
-    gl_Position = vec4(vpos*aspect*0.5,0,1);
+    gl_Position = vec4(vpos*aspect*1.0,0,0.5);
   }
 `;
