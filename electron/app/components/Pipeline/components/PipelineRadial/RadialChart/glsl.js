@@ -22,6 +22,7 @@ export const startGL = canvas => {
       theta: regl.prop("theta"),
       radius: regl.prop("radius"),
       color: regl.prop("color"),
+      alpha: regl.prop("alpha"),
     },
   });
 };

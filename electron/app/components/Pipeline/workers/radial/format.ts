@@ -16,22 +16,25 @@ export const getFixedNode = (n: RadialNode, path: string): RadialNode => {
   let node: RadialNode = n;
   const { parent, phase, isEmpty, depth, route } = node;
   const { root: pathRoot } = itemsForPath(path);
+  let opacity = 1;
 
   if (phase !== undefined) {
     const dist = (node.y1 || 0) - (node.y0 || 0);
     let length = dist;
     if (phase === 1) {
-      // opacity = 0.3;
+      opacity = 0.3;
       length *= 0.24;
     } else if (phase === 1.5) {
-      // opacity = 0.45;
+      opacity = 0.45;
       length *= 0.475;
     } else if (phase === 2) {
-      // opacity = 0.65;
+      opacity = 0.65;
       length *= 0.75;
     } else if (phase === 3) {
-      // opacity = 0.8;
+      opacity = 0.8;
     }
+
+    node = { ...node, opacity };
 
     const y1 = (node.y0 || 0) + length;
     node = { ...node, y1 };

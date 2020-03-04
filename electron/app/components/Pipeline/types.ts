@@ -114,6 +114,7 @@ export interface RadialNode {
   x1?: number;
   y0?: number;
   y1?: number;
+  opacity: number;
   phase?: number;
   label?: string;
   depth: number | undefined;
@@ -139,4 +140,5 @@ export interface NodeArc {
   theta: number[];
   radius: number[];
   color: number[];
+  alpha: number;
 }
