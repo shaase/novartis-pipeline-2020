@@ -1,3 +1,17 @@
+// const plot = (position, theta) => {
+//   const th = Math.min(theta.y, Math.max(theta.x, position.x));
+//   const pos = {x: Math.cos(th) * 2 * position.y, y: Math.sin(th) * 2 * position.y}
+//   const x = Math.max(Math.abs(pos.x), Math.abs(pos.y)) - 0.001;
+//   return {x: pos.x / x, y: pos.y / x}
+
+// }
+
+// export const vertices = (name, position, theta, size) => {
+//  const pos = plot(position, theta)
+//  const aspect = {x: 1, y: size.x / size.y }
+//  return [name, ]
+// }
+
 export const vert = `
   precision highp float;
 
@@ -34,6 +48,6 @@ export const frag = `
   void main () {
     float m = mask(size, vpos, radius);
     if (m < 0.01) discard;
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(color, m);
   }
 `;

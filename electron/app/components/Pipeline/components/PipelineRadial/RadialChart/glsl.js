@@ -18,7 +18,7 @@ export const startGL = canvas => {
       func: { src: "src alpha", dst: "one minus src alpha" },
     },
     uniforms: {
-      size: [785, 785],
+      size: [789, 789],
       theta: regl.prop("theta"),
       radius: regl.prop("radius"),
       color: regl.prop("color"),

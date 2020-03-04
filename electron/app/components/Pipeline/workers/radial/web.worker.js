@@ -5,7 +5,7 @@ import { itemsForPath } from "../../utils";
 self.addEventListener(
   "message",
   e => {
-    const width = 785;
+    const width = 789;
     const { path, compound, phases } = e.data;
     const { yDomain, yRange } = domainForRadial(path, width);
     const radial = dataForRadial(phases);

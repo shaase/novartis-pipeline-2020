@@ -45,7 +45,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     const outerRadius = Math.max(0, yScale.current(y1));
 
     const theta = [startAngle, endAngle];
-    const radius = [innerRadius / 785, outerRadius / 785];
+    const radius = [innerRadius / 789, outerRadius / 789];
     const color = hexToRgb(node.fill || "#FFFFFF");
 
     return { theta, radius, color };
@@ -58,6 +58,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       iterator.current = Math.min(1, diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
+      const sliced = segments.slice(0, 300);
       const arcs = segments.map((node: RadialNode) => getArc(node));
       updateGL(arcs);
       raf.current = window.requestAnimationFrame(tick);
@@ -91,7 +92,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     };
   }, []);
 
-  const size = 785 * window.devicePixelRatio;
+  const size = 789 * window.devicePixelRatio;
 
   return (
     <div className={styles.sunburst}>
