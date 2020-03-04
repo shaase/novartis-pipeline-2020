@@ -1,6 +1,6 @@
 import reglConstructor from "regl";
-import { position, elements } from "./mesh";
-import { frag, vert } from "./shaders";
+import { attributes, elements } from "./vertices";
+import { vert, frag } from "./shaders";
 
 let regl;
 let update;
@@ -9,8 +9,10 @@ export const startGL = canvas => {
   regl = reglConstructor(canvas);
 
   update = regl({
-    frag,
     vert,
+    frag,
+    attributes,
+    elements,
     blend: {
       enable: true,
       func: { src: "src alpha", dst: "one minus src alpha" },
@@ -21,8 +23,6 @@ export const startGL = canvas => {
       radius: regl.prop("radius"),
       color: regl.prop("color"),
     },
-    attributes: { position },
-    elements,
   });
 };
 
