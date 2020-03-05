@@ -15,7 +15,7 @@ export const startGL = canvas => {
     elements,
     blend: {
       enable: true,
-      func: { src: "src alpha", dst: "one minus src alpha" },
+      func: { srcRGB: "src alpha", srcAlpha: 1, dstRGB: "one minus src alpha", dstAlpha: 1 },
     },
     uniforms: {
       size: [789, 789],
@@ -28,6 +28,6 @@ export const startGL = canvas => {
 };
 
 export const updateGL = arcs => {
-  regl.clear({ color: [0, 0, 0, 0], depth: true });
+  regl.clear({ color: [0, 0, 0, 0], depth: 1 });
   update(arcs);
 };

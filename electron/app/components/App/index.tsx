@@ -15,7 +15,7 @@ const App: React.FC = () => {
 
   return (
     <div className={styles.container} style={{ width, height, transform }}>
-      <Pipeline home="Content/Tumors" idlePaths={[]} scale={scale} isActive />
+      <Pipeline home="Content/Tumors/Solid Tumors/*/*/Lung" idlePaths={[]} scale={scale} isActive />
     </div>
   );
 };
