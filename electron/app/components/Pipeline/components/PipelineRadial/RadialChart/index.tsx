@@ -41,7 +41,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, opacity = 1 } = node;
     const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
     const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));
-    const innerRadius = Math.max(0, yScale.current(y0)) - 2;
+    const innerRadius = Math.max(0, yScale.current(y0)) - 10;
     const outerRadius = Math.max(0, yScale.current(y1));
 
     const theta = [startAngle, endAngle];
