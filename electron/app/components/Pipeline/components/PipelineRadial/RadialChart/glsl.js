@@ -6,7 +6,12 @@ let regl;
 let update;
 
 export const startGL = canvas => {
-  regl = reglConstructor(canvas);
+  const gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
+
+  // regl = reglConstructor(canvas);
+  regl = reglConstructor({ gl });
+
+  console.log(canvas, gl);
 
   update = regl({
     vert,
@@ -30,4 +35,16 @@ export const startGL = canvas => {
 export const updateGL = arcs => {
   regl.clear({ color: [0, 0, 0, 0], depth: 1 });
   update(arcs);
+};
+
+export const readGL = (x, y) => {
+  const pixels = regl.read({
+    x,
+    y,
+    width: 1,
+    height: 1,
+    data: new Uint8Array(4),
+  });
+
+  console.log(pixels);
 };

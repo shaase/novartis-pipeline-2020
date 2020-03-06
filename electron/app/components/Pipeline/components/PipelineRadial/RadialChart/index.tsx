@@ -1,16 +1,22 @@
-import React, { useEffect, useRef } from "react";
+import React, { MouseEvent, TouchEvent, useEffect, useRef } from "react";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
-import { startGL, updateGL } from "./glsl";
+import { startGL, updateGL, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc } from "../../../types";
-import { itemsForPath } from "../../../utils";
+import { itemsForPath, eventPosition } from "../../../utils";
 import { hexToRgb } from "./utils";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
 import styles from "./index.module.scss";
 
 type Card = { file: string; label: string };
+
+const onClick = (e: MouseEvent | TouchEvent): void => {
+  const { x, y } = eventPosition(e);
+  console.log(x, y);
+  readGL(x, y);
+};
 
 type Props = {
   isVisible: boolean;
@@ -104,7 +110,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       {noData ? (
         <img src={emptyRing} className={styles.empty} />
       ) : (
-        <canvas className={styles.canvas} width={size} height={size} ref={canvas} />
+        <canvas className={styles.canvas} width={size} height={size} ref={canvas} onClick={onClick} />
       )}
     </div>
   );
