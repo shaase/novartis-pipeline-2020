@@ -4,13 +4,17 @@ import { vert, frag } from "./shaders";
 
 let regl;
 let update;
+let reglInteractor;
+let updateInteractor;
 
-export const startGL = canvas => {
-  const gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
+export const startGL = (canvas, interactor) => {
+  const gl = canvas.getContext("webgl");
+  const glInteractor = interactor.getContext("webgl", { preserveDrawingBuffer: true });
 
   regl = reglConstructor({ gl });
+  reglInteractor = reglConstructor({ gl: glInteractor });
 
-  update = regl({
+  const props = {
     vert,
     frag,
     attributes,
@@ -26,7 +30,10 @@ export const startGL = canvas => {
       color: regl.prop("color"),
       alpha: regl.prop("alpha"),
     },
-  });
+  };
+
+  update = regl(props);
+  updateInteractor = reglInteractor(props);
 };
 
 export const updateGL = arcs => {
@@ -34,8 +41,13 @@ export const updateGL = arcs => {
   update(arcs);
 };
 
+export const updateGLInteractor = arcs => {
+  reglInteractor.clear({ color: [0, 0, 0, 0], depth: 1 });
+  updateInteractor(arcs);
+};
+
 export const readGL = (x, y) => {
-  const pixel = regl.read({
+  const pixel = reglInteractor.read({
     x,
     y,
     width: 1,

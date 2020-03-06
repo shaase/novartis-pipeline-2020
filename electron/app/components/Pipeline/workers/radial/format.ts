@@ -12,11 +12,19 @@ const flattenToSubtypes = (list: RadialNode[]): RadialNode[] =>
     [],
   );
 
-export const getFixedNode = (n: RadialNode, path: string): RadialNode => {
+const getRGBArray = (index: number): number[] => {
+  const i = index + 1;
+  const i0 = i % 255;
+  const i1 = Math.floor(i / 255);
+  return [i0, i1, 0];
+};
+
+export const getFixedNode = (n: RadialNode, index: number, path: string): RadialNode => {
   let node: RadialNode = n;
   const { parent, phase, isEmpty, depth, route } = node;
   const { root: pathRoot } = itemsForPath(path);
   let opacity = 1;
+  node.rgbArray = getRGBArray(index);
 
   if (phase !== undefined) {
     const dist = (node.y1 || 0) - (node.y0 || 0);

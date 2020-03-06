@@ -110,6 +110,7 @@ export interface RadialNode {
   name: string;
   color: string;
   fill?: string;
+  rgbArray: number[];
   x0?: number;
   x1?: number;
   y0?: number;

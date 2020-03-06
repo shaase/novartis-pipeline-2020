@@ -1,7 +1,7 @@
 import React, { MouseEvent, TouchEvent, useEffect, useRef } from "react";
 import { scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
-import { startGL, updateGL, readGL } from "./glsl";
+import { startGL, updateGL, updateGLInteractor, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc } from "../../../types";
 import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray } from "../../../utils";
@@ -32,11 +32,33 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const xScale = useRef(scaleLinear());
   const yScale = useRef(scaleSqrt());
   const canvas = useRef<HTMLCanvasElement | null>(null);
+  const interactor = useRef<HTMLCanvasElement | null>(null);
   const xd = useRef(d3interpolate(xScale.current.domain(), xDomain));
   const yd = useRef(d3interpolate(yScale.current.domain(), yDomain));
   const yr = useRef(d3interpolate(yScale.current.range(), yRange));
+  const arcMap = useRef<Map<string, RadialNode>>(new Map());
 
-  const visibleArc = (node: RadialNode): NodeArc => {
+  const onClick = (e: MouseEvent | TouchEvent): void => {
+    if (canvas.current !== null) {
+      const { x: left, y: top, width: size } = canvas.current.getBoundingClientRect();
+      const { x, y } = eventPosition(e);
+      const { x: rotX, y: rotY } = rotatePoint(left + size / 2, top + size / 2, x, y, Math.PI / -2);
+      const px = (rotX - left) / size;
+      const py = (rotY - top) / size;
+      const glx = px * 1574;
+      const gly = py * 1564;
+      const pixel = readGL(glx, gly);
+
+      const key = `${pixel[0]}-${pixel[1]}-${pixel[2]}`;
+      const node = arcMap.current.get(key);
+
+      if (node !== undefined) {
+        onNavigate(node.route);
+      }
+    }
+  };
+
+  const nodeArc = (node: RadialNode): NodeArc => {
     const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, opacity = 1 } = node;
     const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
     const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));
@@ -51,32 +73,36 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     return { theta, radius, color, alpha };
   };
 
-  const onClick = (e: MouseEvent | TouchEvent): void => {
-    if (canvas.current !== null) {
-      const { x: left, y: top, width: size } = canvas.current.getBoundingClientRect();
-      const { x, y } = eventPosition(e);
-      const { x: rotX, y: rotY } = rotatePoint(left + size / 2, top + size / 2, x, y, Math.PI / -2);
-      const px = (rotX - left) / size;
-      const py = (rotY - top) / size;
-      const glx = px * 1574;
-      const gly = py * 1564;
-      const pixel = readGL(glx, gly);
+  const btnArc = (node: RadialNode): NodeArc => {
+    const { theta, radius } = nodeArc(node);
+    const { rgbArray } = node;
+    const color = [rgbArray[0] / 255, rgbArray[1] / 255, 0];
+    const alpha = 1;
 
-      console.log(px, py, pixel);
-      // const key = `${pixel[0]}-${pixel[1]} - ${pixel[2]}`
+    return { theta, radius, color, alpha };
+  };
+
+  const checkMap = (): void => {
+    if (arcMap.current.size === 0) {
+      segments.forEach((node: RadialNode) => {
+        arcMap.current.set(node.rgbArray.join("-"), node);
+      });
     }
   };
 
   const tick = (): void => {
     if (iterator.current < 1) {
       const now = Date.now();
-      const diff = (now - startTime.current) / 600;
+      const diff = (now - startTime.current) / 500;
       iterator.current = Math.min(1, diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
-      // const sliced = segments.slice(0, 1);
-      const arcs = segments.map((node: RadialNode) => visibleArc(node));
+      const arcs = segments.map((node: RadialNode) => nodeArc(node));
       updateGL(arcs);
+
+      const buttons = segments.map((node: RadialNode) => btnArc(node));
+      updateGLInteractor(buttons);
+
       raf.current = window.requestAnimationFrame(tick);
     }
   };
@@ -96,11 +122,12 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     }
 
     tick();
+    checkMap();
   }
 
   useEffect(() => {
     if (canvas.current !== null) {
-      startGL(canvas.current);
+      startGL(canvas.current, interactor.current);
     }
 
     return () => {
@@ -119,7 +146,11 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       {noData ? (
         <img src={emptyRing} className={styles.empty} />
       ) : (
-        <canvas className={styles.canvas} width={size} height={size} ref={canvas} onClick={onClick} />
+        <canvas className={styles.canvas} width={size} height={size} ref={canvas} />
+      )}
+
+      {!noData && (
+        <canvas className={styles.interactor} width={size} height={size} ref={interactor} onClick={onClick} />
       )}
     </div>
   );

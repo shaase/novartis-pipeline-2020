@@ -9,7 +9,7 @@ const getRadialData = (path, compound, phases) =>
       worker.removeEventListener("message", handleEvent);
 
       const { root, flatRoot } = setHierarchy(e.data.radial);
-      const segments = root.descendants().map(n => getFixedNode(n, path));
+      const segments = root.descendants().map((n, index) => getFixedNode(n, index, path));
       const arr = path.split("/");
       const trunc = arr[1] === "Tumors" ? arr.slice(0, 7).join("/") : path;
       const { x0, x1 } = flatRoot[trunc];

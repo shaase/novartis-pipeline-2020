@@ -39,4 +39,12 @@
   height: 787px;
   filter: drop-shadow(0 0 20px rgba($color: #000, $alpha: 0.15));
   transform: rotate(-90deg) scaleY(-1);
+  pointer-events: none;
+}
+
+.interactor {
+  @extend .canvas;
+  pointer-events: all;
+  cursor: pointer;
+  opacity: 0.001;
 }
