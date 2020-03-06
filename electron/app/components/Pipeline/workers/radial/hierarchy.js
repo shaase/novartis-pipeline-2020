@@ -11,6 +11,7 @@ export const setHierarchy = data => {
       /* eslint-disable */
 
       d.isStudyContainer = d.data.isStudyContainer || false;
+      d.textOpacity = 1;
       if (d.parent === null) {
         // ROOT NODE
         d.name = d.data.name;

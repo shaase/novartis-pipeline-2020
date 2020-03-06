@@ -1,0 +1,10 @@
+.container {
+  position: absolute;
+  top: 390px;
+  left: 484px;
+  width: 787px;
+  height: 787px;
+  // filter: drop-shadow(0 0 20px rgba($color: #000, $alpha: 0.15));
+  // transform: rotate(-90deg) scaleY(-1);
+  pointer-events: none;
+}

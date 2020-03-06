@@ -7,6 +7,7 @@ import { RadialNode, RadialData, NodeArc } from "../../../types";
 import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray, lighten } from "../../../utils";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
+import RadialLabels from "../RadialLabels";
 import styles from "./index.module.scss";
 
 type Card = { file: string; label: string };
@@ -26,6 +27,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
 
+  const prevPath = useRef("");
   const iterator = useRef(1);
   const startTime = useRef(Date.now());
   const raf = useRef(0);
@@ -47,7 +49,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     const outerRadius = Math.max(0, yScale.current(y1));
     const diff = outerRadius - innerRadius;
 
-    if (diff > 2 && diff < 20) {
+    if (diff > 4 && diff < 20) {
       innerRadius -= 10;
     }
 
@@ -125,7 +127,44 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
   const onUp = (): void => {
     if (selectedNode.current !== undefined) {
-      onNavigate(selectedNode.current.route);
+      const { name, parent, isStudyContainer } = selectedNode.current;
+      let { route } = selectedNode.current;
+      route =
+        isStudyContainer && route.includes("Content/Tumors")
+          ? route
+              .split("/")
+              .slice(0, -1)
+              .join("/")
+          : route;
+
+      let inferredCompound;
+      if (pathRoot === "Compounds") {
+        if (level === 3) {
+          inferredCompound = name;
+        } else if (level === 4) {
+          inferredCompound = parent.name;
+        } else if (level === 5) {
+          inferredCompound = parent.parent.name;
+        }
+      } else if (isStudyContainer) {
+        inferredCompound = name;
+      } else if (level === 7) {
+        inferredCompound = parent.name;
+      }
+
+      if (studyCode !== undefined) {
+        onNavigate(route, inferredCompound);
+      } else {
+        const compoundStudies = studiesForPath(route, undefined, inferredCompound);
+
+        if (compoundStudies.length > 1) {
+          onNavigate(route, inferredCompound);
+        } else if (compoundStudies.length === 1) {
+          const study = compoundStudies[0];
+          onNavigate(study.path, inferredCompound);
+        }
+      }
+
       selectedNode.current = undefined;
     }
   };
@@ -134,7 +173,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     if (xScale.current.domain().length === 0) {
       xScale.current.domain(xDomain).range(xRange);
       yScale.current.domain(yDomain).range(yRange);
-    } else {
+    } else if (prevPath.current !== path) {
       xd.current = d3interpolate(xScale.current.domain(), xDomain);
       yd.current = d3interpolate(yScale.current.domain(), yDomain);
       yr.current = d3interpolate(yScale.current.range(), yRange);
@@ -142,6 +181,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       iterator.current = 0;
       xScale.current.domain(xd.current(iterator.current)).range(xRange);
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
+      prevPath.current = path;
     }
 
     tick();
@@ -185,6 +225,20 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
           onMouseOut={onUp}
         />
       )}
+
+      {/* {!noData && (
+        <RadialLabels
+          path={path}
+          canvasSize={width}
+          nodes={data.segments}
+          xDomain={xDomain}
+          xRange={xRange}
+          yDomain={yDomain}
+          yRange={yRange}
+          xScale={xScale.current}
+          yScale={yScale.current}
+        />
+      )} */}
     </div>
   );
 };

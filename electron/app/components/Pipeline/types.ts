@@ -116,6 +116,7 @@ export interface RadialNode {
   y0?: number;
   y1?: number;
   opacity: number;
+  textOpacity: number;
   phase?: number;
   label?: string;
   depth: number | undefined;
@@ -142,4 +143,30 @@ export interface NodeArc {
   radius: number[];
   color: number[];
   alpha: number;
+}
+
+export interface NodeLabelLine {
+  id: string;
+  // text: string;
+  elements: JSX.Element | JSX.Element[];
+  curve: string;
+  anchor: string;
+  transform: string;
+}
+
+export interface NodeLabel {
+  display: string;
+  color: string;
+  opacity: number;
+  lines: NodeLabelLine[];
+  fontSize: number;
+  offsets: number[];
+}
+
+export interface CurvePosition {
+  start: number;
+  end: number;
+  center: number;
+  size: number;
+  isUnder: boolean;
 }

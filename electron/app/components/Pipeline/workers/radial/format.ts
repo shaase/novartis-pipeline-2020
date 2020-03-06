@@ -60,7 +60,7 @@ export const getFixedNode = (n: RadialNode, index: number, path: string): Radial
     }
   }
 
-  // let textOpacity = 1;
+  let textOpacity = 1;
 
   if (pathRoot === "Compounds" && node.isStudyContainer && depth === 5) {
     const flattened = flattenToSubtypes(parent.children || []);
@@ -73,8 +73,10 @@ export const getFixedNode = (n: RadialNode, index: number, path: string): Radial
     if (flattened.length === 0) {
       node = { ...node, y0: node.y1 };
     }
-    // textOpacity = 0.8;
+    textOpacity = 0.8;
   }
+
+  node.textOpacity = textOpacity;
 
   return node;
 };
