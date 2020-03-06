@@ -29,3 +29,13 @@ export const hexToRgbArray = (hex: string): number[] => {
     ? [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255]
     : [0, 0, 0];
 };
+
+export const lighten = (color: string, amount: number): string => {
+  const c = color.replace("#", "");
+  const rgb = [parseInt(c.slice(0, 2), 16), parseInt(c.slice(2, 4), 16), parseInt(c.slice(4, 6), 16)];
+  let str = "#";
+  rgb.forEach((n: number) => {
+    str += Math.round((255 - n) * (1 - Math.E ** -amount) + n).toString(16);
+  });
+  return str;
+};
