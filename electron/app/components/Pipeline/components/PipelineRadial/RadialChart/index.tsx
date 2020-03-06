@@ -43,8 +43,13 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, opacity = 1 } = node;
     const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
     const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));
-    const innerRadius = Math.max(0, yScale.current(y0)) - 2;
+    let innerRadius = Math.max(0, yScale.current(y0)) - 2;
     const outerRadius = Math.max(0, yScale.current(y1));
+    const diff = outerRadius - innerRadius;
+
+    if (diff > 2 && diff < 20) {
+      innerRadius -= 10;
+    }
 
     const theta = [startAngle, endAngle];
     const radius = [innerRadius / 789, outerRadius / 789];
@@ -81,7 +86,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const tick = (): void => {
     if (iterator.current < 1 || selectedNode.current !== undefined) {
       const now = Date.now();
-      const diff = (now - startTime.current) / 500;
+      const diff = (now - startTime.current) / 6500;
       iterator.current = Math.min(1, diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
