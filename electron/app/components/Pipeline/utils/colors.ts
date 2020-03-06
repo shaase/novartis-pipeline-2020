@@ -15,3 +15,17 @@ export const hexToRgb = (hex: string): string => {
     ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
     : "255, 255, 255";
 };
+
+interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+export const hexToRgbArray = (hex: string): number[] => {
+  const result = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex);
+
+  return result
+    ? [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255]
+    : [0, 0, 0];
+};

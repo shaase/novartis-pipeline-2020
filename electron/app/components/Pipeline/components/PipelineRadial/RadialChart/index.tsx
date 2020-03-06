@@ -4,8 +4,7 @@ import { interpolate as d3interpolate } from "d3-interpolate";
 import { startGL, updateGL, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc } from "../../../types";
-import { itemsForPath, eventPosition, rotatePoint } from "../../../utils";
-import { hexToRgb } from "./utils";
+import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray } from "../../../utils";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
 import styles from "./index.module.scss";
@@ -14,7 +13,7 @@ type Card = { file: string; label: string };
 const test = (inner: number, outer: number): NodeArc => {
   const theta = [4.5, 4.9];
   const radius = [inner, outer];
-  const color = hexToRgb("#FF0000");
+  const color = hexToRgbArray("#FF0000");
   const alpha = 1;
   return { theta, radius, color, alpha };
 };
@@ -53,7 +52,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
     const theta = [startAngle, endAngle];
     const radius = [innerRadius / 789, outerRadius / 789];
-    const color = hexToRgb(node.fill || "#FFFFFF");
+    const color = hexToRgbArray(node.fill || "#FFFFFF");
     const alpha = opacity;
 
     return { theta, radius, color, alpha };
