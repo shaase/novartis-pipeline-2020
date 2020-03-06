@@ -10,13 +10,6 @@ import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
 import styles from "./index.module.scss";
 
 type Card = { file: string; label: string };
-const test = (inner: number, outer: number): NodeArc => {
-  const theta = [4.5, 4.9];
-  const radius = [inner, outer];
-  const color = hexToRgbArray("#FF0000");
-  const alpha = 1;
-  return { theta, radius, color, alpha };
-};
 
 type Props = {
   isVisible: boolean;
