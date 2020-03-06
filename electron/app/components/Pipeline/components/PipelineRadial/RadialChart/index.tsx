@@ -86,7 +86,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const tick = (): void => {
     if (iterator.current < 1 || selectedNode.current !== undefined) {
       const now = Date.now();
-      const diff = (now - startTime.current) / 6500;
+      const diff = (now - startTime.current) / 500;
       iterator.current = Math.min(1, diff);
       xScale.current.domain(xd.current(iterator.current));
       yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
