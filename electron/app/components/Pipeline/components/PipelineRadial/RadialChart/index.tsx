@@ -88,7 +88,6 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       const arcs = segments.map((node: RadialNode) => nodeArc(node));
 
       if (selectedNode.current !== undefined) {
-        console.log("selected arc");
         arcs.unshift(selectedArc(selectedNode.current));
       }
 
