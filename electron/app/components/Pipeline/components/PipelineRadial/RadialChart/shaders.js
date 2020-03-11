@@ -34,7 +34,13 @@ export const frag = `
   uniform vec3 color;
   void main () {
     float m = mask(size, vpos, radius);
+    vec3 white = vec3(1.0, 1.0, 1.0);
     if (m < 0.01) discard;
-    gl_FragColor = vec4(color, alpha);
+    else if (m < 0.02) gl_FragColor = vec4(mix(color, white, 1.0), alpha);
+    else if (m < 0.04) gl_FragColor = vec4(mix(color, white, 0.8), alpha);
+    else if (m < 0.06) gl_FragColor = vec4(mix(color, white, 0.6), alpha);
+    else if (m < 0.08) gl_FragColor = vec4(mix(color, white, 0.4), alpha);
+    else if (m < 0.10) gl_FragColor = vec4(mix(color, white, 0.2), alpha);
+    else gl_FragColor = vec4(color, alpha);
   }
 `;
