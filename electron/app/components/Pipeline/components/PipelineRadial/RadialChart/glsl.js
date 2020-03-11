@@ -24,7 +24,7 @@ export const startGL = (canvas, interactor) => {
       func: { srcRGB: "src alpha", srcAlpha: 1, dstRGB: "one minus src alpha", dstAlpha: 1 },
     },
     uniforms: {
-      size: [789, 789],
+      size: 789,
       theta: regl.prop("theta"),
       radius: regl.prop("radius"),
       color: regl.prop("color"),
