@@ -10,7 +10,6 @@ let updateInteractor;
 export const startGL = (canvas, interactor, size) => {
   const gl = canvas.getContext("webgl");
   const glInteractor = interactor.getContext("webgl", { preserveDrawingBuffer: true });
-
   regl = reglConstructor({ gl });
   reglInteractor = reglConstructor({ gl: glInteractor });
 

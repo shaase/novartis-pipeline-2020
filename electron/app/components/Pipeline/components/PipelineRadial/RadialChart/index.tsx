@@ -23,7 +23,6 @@ type Props = {
 
 const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
   const { segments, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
-  const size = width * window.devicePixelRatio;
   const { root: pathRoot, level } = itemsForPath(path);
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
@@ -107,11 +106,11 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
   const onDown = (e: MouseEvent | TouchEvent): void => {
     if (canvas.current !== null) {
-      const { x: left, y: top, width: canvasSize } = canvas.current.getBoundingClientRect();
+      const { x: left, y: top, width: size } = canvas.current.getBoundingClientRect();
       const { x, y } = eventPosition(e);
-      const { x: rotX, y: rotY } = rotatePoint(left + size / 2, top + canvasSize / 2, x, y, Math.PI / -2);
-      const px = (rotX - left) / canvasSize;
-      const py = (rotY - top) / canvasSize;
+      const { x: rotX, y: rotY } = rotatePoint(left + size / 2, top + size / 2, x, y, Math.PI / -2);
+      const px = (rotX - left) / size;
+      const py = (rotY - top) / size;
       const glx = px * 1574;
       const gly = py * 1564;
       const pixel = readGL(glx, gly);
@@ -195,6 +194,8 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       window.cancelAnimationFrame(raf.current);
     };
   }, []);
+
+  const size = width * window.devicePixelRatio;
 
   return (
     <div className={isVisible ? styles.sunburst : styles.sunburstHidden}>
