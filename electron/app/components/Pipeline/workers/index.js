@@ -6,7 +6,7 @@ const radialWidth = 789;
 
 const getWorkerData = (path, phases, compound, width, height) => {
   return Promise.all([
-    getTableData(path, phases),
+    getTableData(path, compound, phases),
     getRadialData(path, compound, phases, radialWidth),
     getBubbleData(path, phases, compound, width, height),
   ]);

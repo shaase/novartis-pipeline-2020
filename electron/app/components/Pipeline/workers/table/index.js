@@ -2,7 +2,7 @@ const Worker = require("./web.worker.js");
 
 const worker = new Worker();
 
-const getTableData = (path, phases) =>
+const getTableData = (path, compound, phases) =>
   new Promise(resolve => {
     const handleEvent = e => {
       worker.removeEventListener("message", handleEvent);
@@ -10,7 +10,7 @@ const getTableData = (path, phases) =>
     };
 
     worker.addEventListener("message", handleEvent);
-    worker.postMessage({ path, phases });
+    worker.postMessage({ path, compound, phases });
   });
 
 module.exports = { getTableData };
