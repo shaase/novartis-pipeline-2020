@@ -5,9 +5,10 @@ import { startGL, updateGL, updateGLInteractor, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc } from "../../../types";
 import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray, lighten } from "../../../utils";
+import { subscribe, update, unsubscribe, xScale, yScale } from "./radial-state";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
-import RadialLabels from "../RadialLabels";
+// import RadialLabels from "../RadialLabels";
 import styles from "./index.module.scss";
 
 type Card = { file: string; label: string };
@@ -27,26 +28,18 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
 
-  const prevPath = useRef("");
-  const iterator = useRef(1);
-  const startTime = useRef(Date.now());
-  const raf = useRef(0);
-  const xScale = useRef(scaleLinear());
-  const yScale = useRef(scaleSqrt());
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const interactor = useRef<HTMLCanvasElement | null>(null);
-  const xd = useRef(d3interpolate(xScale.current.domain(), xDomain));
-  const yd = useRef(d3interpolate(yScale.current.domain(), yDomain));
-  const yr = useRef(d3interpolate(yScale.current.range(), yRange));
   const arcMap = useRef<Map<string, RadialNode>>(new Map());
   const selectedNode = useRef<RadialNode | undefined>(undefined);
+  const segmentsRef = useRef<RadialNode[]>([]);
 
   const nodeArc = (node: RadialNode): NodeArc => {
     const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, opacity = 1 } = node;
-    const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
-    const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));
-    let innerRadius = Math.max(0, yScale.current(y0)) - 2;
-    const outerRadius = Math.max(0, yScale.current(y1));
+    const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x0)));
+    const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x1)));
+    let innerRadius = Math.max(0, yScale(y0)) - 2;
+    const outerRadius = Math.max(0, yScale(y1));
     const diff = outerRadius - innerRadius;
     if (diff > 4 && diff < 20) innerRadius -= 10;
 
@@ -82,26 +75,17 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     }
   };
 
-  const tick = (): void => {
-    if (iterator.current < 1 || selectedNode.current !== undefined) {
-      const now = Date.now();
-      const diff = (now - startTime.current) / 500;
-      iterator.current = Math.min(1, diff);
-      xScale.current.domain(xd.current(iterator.current));
-      yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
-      const arcs = segments.map((node: RadialNode) => nodeArc(node));
+  const onInterpolation = (): void => {
+    const arcs = segmentsRef.current.map((node: RadialNode) => nodeArc(node));
 
-      if (selectedNode.current !== undefined) {
-        arcs.unshift(selectedArc(selectedNode.current));
-      }
-
-      updateGL(arcs);
-
-      const buttons = segments.map((node: RadialNode) => btnArc(node));
-      updateGLInteractor(buttons);
-
-      raf.current = window.requestAnimationFrame(tick);
+    if (selectedNode.current !== undefined) {
+      arcs.unshift(selectedArc(selectedNode.current));
     }
+
+    updateGL(arcs);
+
+    const buttons = segments.map((node: RadialNode) => btnArc(node));
+    updateGLInteractor(buttons);
   };
 
   const onDown = (e: MouseEvent | TouchEvent): void => {
@@ -118,7 +102,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       const key = `${pixel[0]}-${pixel[1]}-${pixel[2]}`;
       const node = arcMap.current.get(key);
       selectedNode.current = node;
-      tick();
+      onInterpolation();
     }
   };
 
@@ -167,21 +151,8 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   };
 
   if (data.segments.length > 0) {
-    if (xScale.current.domain().length === 0) {
-      xScale.current.domain(xDomain).range(xRange);
-      yScale.current.domain(yDomain).range(yRange);
-    } else if (prevPath.current !== path) {
-      xd.current = d3interpolate(xScale.current.domain(), xDomain);
-      yd.current = d3interpolate(yScale.current.domain(), yDomain);
-      yr.current = d3interpolate(yScale.current.range(), yRange);
-      startTime.current = Date.now();
-      iterator.current = 0;
-      xScale.current.domain(xd.current(iterator.current)).range(xRange);
-      yScale.current.domain(yd.current(iterator.current)).range(yr.current(iterator.current));
-      prevPath.current = path;
-    }
-
-    tick();
+    segmentsRef.current = data.segments;
+    update(path, xDomain, xRange, yDomain, yRange);
     buildMap();
   }
 
@@ -190,13 +161,14 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       startGL(canvas.current, interactor.current, width);
     }
 
+    subscribe(onInterpolation);
+
     return () => {
-      window.cancelAnimationFrame(raf.current);
+      unsubscribe(onInterpolation);
     };
   }, []);
 
   const size = width * window.devicePixelRatio;
-  console.log(labels);
 
   return (
     <div className={isVisible ? styles.sunburst : styles.sunburstHidden}>
