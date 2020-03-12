@@ -157,27 +157,26 @@ const RadialLabels: React.FC<Props> = ({ path, canvasSize, nodes, xDomain, xRang
     //   const length = arcLength(node);
     //   const width = arcWidth(node);
     //   const display = textDisplay(node, path);
-    //   // const isCurved = display.includes("curved");
-    //   // const w = isCurved ? length - 6 : width - 7;
-    //   // const height = isCurved ? width : length;
-    //   // const { lines: l, fontSize, offsets } = sizedText({
-    //   //   path,
-    //   //   display,
-    //   //   route,
-    //   //   name,
-    //   //   width: w,
-    //   //   height,
-    //   // });
-    //   // const lines: NodeLabelLine[] = l.map((elements: JSX.Element | JSX.Element[], index: number) => {
-    //   //   const id = `${elements}-${index}`;
-    //   //   const curve = getLabelCurve(node, index, l.length, fontSize);
-    //   //   const anchor = getLabelAnchor(node, index);
-    //   //   const transform = getLabelTransform(node, index, l.length, fontSize);
-    //   //   return { id, elements, curve, anchor, transform };
-    //   // });
-    //   return { display, color: "#000000", opacity, lines: [], fontSize: 18, offsets: [] };
+    //   const isCurved = display.includes("curved");
+    //   const w = isCurved ? length - 6 : width - 7;
+    //   const height = isCurved ? width : length;
+    //   const { lines: l, fontSize, offsets } = sizedText({
+    //     path,
+    //     display,
+    //     route,
+    //     name,
+    //     width: w,
+    //     height,
+    //   });
+    //   const lines: NodeLabelLine[] = l.map((elements: JSX.Element | JSX.Element[], index: number) => {
+    //     const id = `${elements}-${index}`;
+    //     const curve = getLabelCurve(node, index, l.length, fontSize);
+    //     const anchor = getLabelAnchor(node, index);
+    //     const transform = getLabelTransform(node, index, l.length, fontSize);
+    //     return { id, elements, curve, anchor, transform };
+    //   });
+    //   return { display, color: "#000000", opacity, lines, fontSize, offsets };
     // });
-    console.log(nodesRef);
   };
 
   useEffect(() => {

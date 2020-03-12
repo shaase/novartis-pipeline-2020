@@ -171,3 +171,9 @@ export interface CurvePosition {
   size: number;
   isUnder: boolean;
 }
+
+export interface SVGAttributes {
+  curve: string;
+  anchor: string;
+  transform: string;
+}
