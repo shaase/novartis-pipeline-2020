@@ -1,6 +1,4 @@
 import React, { MouseEvent, TouchEvent, useEffect, useRef } from "react";
-import { scaleLinear, scaleSqrt } from "d3-scale";
-import { interpolate as d3interpolate } from "d3-interpolate";
 import { startGL, updateGL, updateGLInteractor, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc } from "../../../types";

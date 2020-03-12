@@ -7,7 +7,7 @@ import WrappedLabel from "./wrapped-label";
 import lineRotation from "./line-rotation";
 import lineOffset from "./line-offset";
 import sizedText from "./sized-text";
-import textDisplay from "./text-display";
+import { getTextDisplay } from "./text-display";
 import styles from "./index.module.scss";
 
 interface Arc extends DefaultArcObject {
