@@ -7,7 +7,7 @@ let update;
 let reglInteractor;
 let updateInteractor;
 
-export const startGL = (canvas, interactor) => {
+export const startGL = (canvas, interactor, size) => {
   const gl = canvas.getContext("webgl");
   const glInteractor = interactor.getContext("webgl", { preserveDrawingBuffer: true });
 
@@ -24,7 +24,7 @@ export const startGL = (canvas, interactor) => {
       func: { srcRGB: "src alpha", srcAlpha: 1, dstRGB: "one minus src alpha", dstAlpha: 1 },
     },
     uniforms: {
-      size: 789,
+      size,
       theta: regl.prop("theta"),
       radius: regl.prop("radius"),
       color: regl.prop("color"),

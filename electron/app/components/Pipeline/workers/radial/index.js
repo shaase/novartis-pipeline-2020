@@ -3,7 +3,7 @@ const { getFixedNode } = require("./format");
 const Worker = require("./web.worker.js");
 const worker = new Worker();
 
-const getRadialData = (path, compound, phases) =>
+const getRadialData = (path, compound, phases, width) =>
   new Promise(resolve => {
     const handleEvent = e => {
       worker.removeEventListener("message", handleEvent);
@@ -15,12 +15,11 @@ const getRadialData = (path, compound, phases) =>
       const { x0, x1 } = flatRoot[trunc];
       const xDomain = [x0, x1];
       const xRange = [0, 2 * Math.PI];
-
       resolve({ ...e.data, segments, xDomain, xRange });
     };
 
     worker.addEventListener("message", handleEvent);
-    worker.postMessage({ path, compound, phases });
+    worker.postMessage({ path, compound, phases, width });
   });
 
 module.exports = { getRadialData };

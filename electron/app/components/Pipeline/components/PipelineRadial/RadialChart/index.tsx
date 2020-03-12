@@ -23,6 +23,7 @@ type Props = {
 
 const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
   const { segments, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
+  const size = width * window.devicePixelRatio;
   const { root: pathRoot, level } = itemsForPath(path);
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
@@ -48,13 +49,10 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     let innerRadius = Math.max(0, yScale.current(y0)) - 2;
     const outerRadius = Math.max(0, yScale.current(y1));
     const diff = outerRadius - innerRadius;
-
-    if (diff > 4 && diff < 20) {
-      innerRadius -= 10;
-    }
+    if (diff > 4 && diff < 20) innerRadius -= 10;
 
     const theta = [startAngle, endAngle];
-    const radius = [innerRadius / 789, outerRadius / 789];
+    const radius = [innerRadius / width, outerRadius / width];
     const color = hexToRgbArray(node.fill || "#FFFFFF");
     const alpha = opacity;
 
@@ -109,11 +107,11 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
   const onDown = (e: MouseEvent | TouchEvent): void => {
     if (canvas.current !== null) {
-      const { x: left, y: top, width: size } = canvas.current.getBoundingClientRect();
+      const { x: left, y: top, width: canvasSize } = canvas.current.getBoundingClientRect();
       const { x, y } = eventPosition(e);
-      const { x: rotX, y: rotY } = rotatePoint(left + size / 2, top + size / 2, x, y, Math.PI / -2);
-      const px = (rotX - left) / size;
-      const py = (rotY - top) / size;
+      const { x: rotX, y: rotY } = rotatePoint(left + size / 2, top + canvasSize / 2, x, y, Math.PI / -2);
+      const px = (rotX - left) / canvasSize;
+      const py = (rotY - top) / canvasSize;
       const glx = px * 1574;
       const gly = py * 1564;
       const pixel = readGL(glx, gly);
@@ -190,15 +188,13 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
   useEffect(() => {
     if (canvas.current !== null) {
-      startGL(canvas.current, interactor.current);
+      startGL(canvas.current, interactor.current, width);
     }
 
     return () => {
       window.cancelAnimationFrame(raf.current);
     };
   }, []);
-
-  const size = 789 * window.devicePixelRatio;
 
   return (
     <div className={isVisible ? styles.sunburst : styles.sunburstHidden}>
