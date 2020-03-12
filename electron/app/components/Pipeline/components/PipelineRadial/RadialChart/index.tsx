@@ -6,7 +6,7 @@ import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray, lighten } from
 import { subscribe, update, unsubscribe, xScale, yScale } from "./radial-state";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
-// import RadialLabels from "../RadialLabels";
+import RadialLabels from "../RadialLabels";
 import styles from "./index.module.scss";
 
 type Card = { file: string; label: string };
@@ -75,14 +75,9 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
   const onInterpolation = (): void => {
     const arcs = segmentsRef.current.map((node: RadialNode) => nodeArc(node));
-
-    if (selectedNode.current !== undefined) {
-      arcs.unshift(selectedArc(selectedNode.current));
-    }
-
+    const buttons = segmentsRef.current.map((node: RadialNode) => btnArc(node));
+    if (selectedNode.current !== undefined) arcs.unshift(selectedArc(selectedNode.current));
     updateGL(arcs);
-
-    const buttons = segments.map((node: RadialNode) => btnArc(node));
     updateGLInteractor(buttons);
   };
 
@@ -167,6 +162,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   }, []);
 
   const size = width * window.devicePixelRatio;
+  console.log(!noData, isVisible);
 
   return (
     <div className={isVisible ? styles.sunburst : styles.sunburstHidden}>
@@ -182,7 +178,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
         <canvas className={styles.canvas} width={size} height={size} ref={canvas} />
       )}
 
-      {!noData && isVisible && (
+      {!noData && (
         <canvas
           className={styles.interactor}
           width={size}
@@ -196,19 +192,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
         />
       )}
 
-      {/* {!noData && (
-        <RadialLabels
-          path={path}
-          canvasSize={width}
-          nodes={data.segments}
-          xDomain={xDomain}
-          xRange={xRange}
-          yDomain={yDomain}
-          yRange={yRange}
-          xScale={xScale.current}
-          yScale={yScale.current}
-        />
-      )} */}
+      {!noData && <RadialLabels path={path} canvasSize={width} nodes={data.labels} xDomain={xDomain} xRange={xRange} />}
     </div>
   );
 };
