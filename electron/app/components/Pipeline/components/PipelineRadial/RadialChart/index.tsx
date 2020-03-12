@@ -201,10 +201,12 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const size = 789 * window.devicePixelRatio;
 
   return (
-    <div className={styles.sunburst}>
-      <div className={styles.phaseContainer}>
-        <img src={phaseRing} className={styles.phaseRing} alt="phase-ring" />
-      </div>
+    <div className={isVisible ? styles.sunburst : styles.sunburstHidden}>
+      {isVisible && (
+        <div className={styles.phaseContainer}>
+          <img src={phaseRing} className={styles.phaseRing} alt="phase-ring" />
+        </div>
+      )}
 
       {noData ? (
         <img src={emptyRing} className={styles.empty} />
@@ -212,7 +214,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
         <canvas className={styles.canvas} width={size} height={size} ref={canvas} />
       )}
 
-      {!noData && (
+      {!noData && isVisible && (
         <canvas
           className={styles.interactor}
           width={size}

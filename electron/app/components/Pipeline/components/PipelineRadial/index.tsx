@@ -20,16 +20,14 @@ const PipelineRadial: React.FC<Props> = ({ path, compound, phases, data, onNavig
     <div className={styles.container}>
       {cards.length === 0 && <Header cards={cards} />}
 
-      {cards.length === 0 && (
-        <RadialChart
-          isVisible={cards.length === 0}
-          path={path}
-          compound={compound}
-          phases={phases}
-          data={data}
-          onNavigate={onNavigate}
-        />
-      )}
+      <RadialChart
+        isVisible={cards.length === 0}
+        path={path}
+        compound={compound}
+        phases={phases}
+        data={data}
+        onNavigate={onNavigate}
+      />
 
       {cards.length > 0 && <CardViewer type="MOA" color="#333333" items={cards} />}
 

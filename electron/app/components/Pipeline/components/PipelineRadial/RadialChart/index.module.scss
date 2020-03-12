@@ -6,6 +6,11 @@
   opacity: 1;
 }
 
+.sunburstHidden {
+  @extend .sunburst;
+  display: none;
+}
+
 .phaseContainer {
   position: absolute;
   top: 0;
