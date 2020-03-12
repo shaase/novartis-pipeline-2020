@@ -11,13 +11,13 @@ const empty: number[] = [];
 let xd = d3interpolate(xScale.domain(), empty);
 let yd = d3interpolate(xScale.domain(), empty);
 let yr = d3interpolate(xScale.domain(), empty);
-const subscibers: { (): void }[] = [];
+const subscibers: { (n: number): void }[] = [];
 
-export const subscribe = (callback: () => void): void => {
+export const subscribe = (callback: (n: number) => void): void => {
   subscibers.push(callback);
 };
 
-export const unsubscribe = (callback: () => void): void => {
+export const unsubscribe = (callback: (n: number) => void): void => {
   cancelAnimationFrame(raf);
   subscibers.splice(subscibers.indexOf(callback));
 };
@@ -29,7 +29,7 @@ const tick = (): void => {
     iterator = Math.min(1, diff);
     xScale.domain(xd(iterator));
     yScale.domain(yd(iterator)).range(yr(iterator));
-    subscibers.forEach((cb: { (): void }) => cb());
+    subscibers.forEach((cb: { (n: number): void }) => cb(iterator));
     raf = window.requestAnimationFrame(tick);
   }
 };

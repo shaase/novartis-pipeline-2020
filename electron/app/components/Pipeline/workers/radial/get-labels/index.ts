@@ -1,19 +1,16 @@
 import { scaleLinear, scaleSqrt } from "d3-scale";
+import { interpolate as d3interpolate } from "d3-interpolate";
 import { RadialNode, NodeLabel, CurvePosition, NodeLabelLine } from "../../../types";
 import { itemsForPath } from "../../../utils";
-import { getTextDisplay } from "./text-display";
-import { getArcLength, getArcWidth } from "./arc-sizes";
-import { updateDomain, getAttributes } from "./svg-attributes";
+import { labelArc } from "./label-arc";
 
 import sizedText from "./sized-text";
 
 const xScale = scaleLinear();
 const yScale = scaleSqrt();
-let prevLabels: NodeLabel[] = [];
-
-const arcLength = (node: RadialNode): number => getArcLength(node, xScale, yScale);
-const arcWidth = (node: RadialNode): number => getArcWidth(node, yScale);
-const textDisplay = (node: RadialNode, path: string): string => getTextDisplay(node, path, arcLength, arcLength);
+const prevXScale = scaleLinear();
+const prevYScale = scaleSqrt();
+let hasSetScale = false;
 
 export const getLabels = (
   nodes: RadialNode[],
@@ -23,47 +20,29 @@ export const getLabels = (
   yDomain: number[],
   yRange: number[],
 ): NodeLabel[] => {
-  const { root: pathRoot } = itemsForPath(path);
   xScale.domain(xDomain).range(xRange);
   yScale.domain(yDomain).range(yRange);
-  updateDomain(xScale, yScale, xDomain, xRange);
 
-  // filter out hidden node labels
-  const labelNodes: RadialNode[] = nodes.filter(
-    (node: RadialNode) => getTextDisplay(node, path, arcLength, arcWidth) !== "none",
-  );
+  if (!hasSetScale) {
+    prevXScale.domain(xDomain).range(xRange);
+    prevYScale.domain(yDomain).range(yRange);
+    hasSetScale = true;
+  }
 
   // format labels
-  const labels: NodeLabel[] = labelNodes.map((node: RadialNode) => {
-    const { name, route, color, textOpacity: opacity } = node;
-    const length = arcLength(node);
-    const width = arcWidth(node);
-    const display = textDisplay(node, path);
-    const isCurved = display.includes("curved");
-    const w = isCurved ? length - 6 : width - 7;
-    const height = isCurved ? width : length;
-    const { lines: l, fontSize, offsets } = sizedText({
-      path,
-      display,
-      route,
-      name,
-      width: w,
-      height,
-    });
+  const labels: NodeLabel[] = nodes.map((node: RadialNode) => {
+    const { textOpacity: opacity } = node;
+    const startArc = labelArc(node, path, prevXScale, prevYScale);
+    const endArc = labelArc(node, path, xScale, yScale);
+    const { display } = endArc;
 
-    const lines: NodeLabelLine[] = l.map((elements: JSX.Element | JSX.Element[], index: number) => {
-      const id = `${elements}-${index}`;
-      const { curve, anchor, transform } = getAttributes(node, pathRoot, index, l.length, fontSize);
-      return { id, elements, curve, anchor, transform };
-    });
-
-    return { display, color: "#000000", opacity, lines, fontSize, offsets };
+    return { display, color: "#000000", opacity, startArc, endArc };
   });
 
-  const allLabels: NodeLabel[] = [...prevLabels, ...labels];
-  prevLabels = labels;
+  // filter out hidden node labels
+  const filtered: NodeLabel[] = labels.filter(
+    (label: NodeLabel) => label.startArc.display !== "none" || label.endArc.display !== "none",
+  );
 
-  console.log(allLabels);
-
-  return allLabels;
+  return filtered;
 };

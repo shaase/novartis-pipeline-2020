@@ -132,11 +132,20 @@ export interface RadialText {
   offsets: number[];
 }
 
+export interface Origin {
+  x: number;
+  y: number;
+}
+
 export interface RadialArc extends DefaultArcObject {
-  x0: number;
-  x1: number;
-  y0: number;
-  y1: number;
+  startAngle: number;
+  endAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  length: number;
+  width: number;
+  centroid: Origin;
+  display: string;
 }
 
 export interface NodeArc {
@@ -159,9 +168,11 @@ export interface NodeLabel {
   display: string;
   color: string;
   opacity: number;
-  lines: NodeLabelLine[];
-  fontSize: number;
-  offsets: number[];
+  startArc: RadialArc;
+  endArc: RadialArc;
+  // lines: NodeLabelLine[];
+  // fontSize: number;
+  // offsets: number[];
 }
 
 export interface CurvePosition {
