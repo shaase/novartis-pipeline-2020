@@ -1,7 +1,7 @@
 import { RadialNode } from "../../../types";
 import { itemsForPath, slicePath } from "../../../utils";
 
-const textDisplay = (
+export const getTextDisplay = (
   node: RadialNode,
   path: string,
   getArcLength: (n: RadialNode) => number,
@@ -73,5 +73,3 @@ const textDisplay = (
 
   return "inline";
 };
-
-export default textDisplay;

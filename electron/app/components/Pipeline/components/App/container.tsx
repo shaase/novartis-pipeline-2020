@@ -18,6 +18,7 @@ const defaultData: WorkerData = {
   tableData: { sections: [], allChildren: [], studyCode: "", cards: [] },
   radialData: {
     segments: [],
+    labels: [],
     xDomain: [],
     xRange: [],
     yDomain: [],

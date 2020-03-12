@@ -22,7 +22,7 @@ type Props = {
 };
 
 const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
-  const { segments, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
+  const { segments, labels, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
   const { root: pathRoot, level } = itemsForPath(path);
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
@@ -196,6 +196,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   }, []);
 
   const size = width * window.devicePixelRatio;
+  console.log(labels);
 
   return (
     <div className={isVisible ? styles.sunburst : styles.sunburstHidden}>

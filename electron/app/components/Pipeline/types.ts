@@ -81,6 +81,7 @@ export interface TableData {
 
 export interface RadialData {
   segments: RadialNode[];
+  labels: RadialNode[];
   xDomain: number[];
   xRange: number[];
   yDomain: number[];
