@@ -17,12 +17,10 @@ export const vert = `
   }
 `;
 
-// length(components): square root of the sum of squared components
-// step(edge, x): x < edge ? 0.0 : 1.0
-// smoothstep(edge0, edge1, x): x < edge0 ? 0.0 : x > edge1 ? 1.0 : [INTERPOLATED] 0.0 -> 1.0
-
 export const frag = `
   precision highp float;
+  const float PI = 3.1415926535897932384626433832795;
+  const float PI2 = PI * 2.0;
 
   float radialEdge(float size_0, vec2 pos, vec2 radius_0) {
     float dz = 10.0 / size_0;
@@ -33,11 +31,10 @@ export const frag = `
 
   float angleEdge(vec2 pos, vec2 radius_0, vec2 theta_0) {
     float r = sqrt(pow(pos.x, 2.0) + pow(pos.y, 2.0));
-    float angle = atan(pos.y, pos.x);
-    float diff0 = angle - theta_0.x;
-    float diff1 = theta_0.y - angle;
-    float diff = min(diff0, diff1);
-    return diff0 * r * 3.14;
+    float roughAngle = atan(pos.y, pos.x);
+    float angle = roughAngle > 0.0 ? roughAngle : PI2 + roughAngle;
+    float diff = max(angle, theta_0.x) - min(angle, theta_0.x);
+    return diff * r * 3.14;
   }
 
   varying vec2 vpos;
@@ -45,19 +42,24 @@ export const frag = `
   uniform vec2 radius, theta;
   uniform vec3 color;
   void main () {
-    float dist = 0.02;
+    float rd = 0.02;
     float re = radialEdge(size, vpos, radius);
     float ae = angleEdge(vpos, radius, theta);
     vec3 white = vec3(1.0, 1.0, 1.0);
     if (re < 0.01) discard;
-    else if (re < dist * 1.0) gl_FragColor = vec4(mix(color, white, 1.0), alpha);
-    else if (re < dist * 2.0) gl_FragColor = vec4(mix(color, white, 0.8), alpha);
-    else if (re < dist * 3.0) gl_FragColor = vec4(mix(color, white, 0.6), alpha);
-    else if (re < dist * 4.0) gl_FragColor = vec4(mix(color, white, 0.4), alpha);
-    else if (re < dist * 5.0) gl_FragColor = vec4(mix(color, white, 0.2), alpha);
+    else if (re < rd * 1.0) gl_FragColor = vec4(mix(color, white, 1.0), alpha);
+    else if (re < rd * 2.0) gl_FragColor = vec4(mix(color, white, 0.8), alpha);
+    else if (re < rd * 3.0) gl_FragColor = vec4(mix(color, white, 0.6), alpha);
+    else if (re < rd * 4.0) gl_FragColor = vec4(mix(color, white, 0.4), alpha);
     else if (ae < 0.003) gl_FragColor = vec4(mix(color, white, 0.8), alpha);
     else if (ae < 0.004) gl_FragColor = vec4(mix(color, white, 0.4), alpha);
     else if (ae < 0.005) gl_FragColor = vec4(mix(color, white, 0.2), alpha);
     else gl_FragColor = vec4(color, alpha);
   }
 `;
+
+// if angle > 0 ? angle :
+
+// else if (ae < 0.003) gl_FragColor = vec4(mix(color, white, 0.8), alpha);
+// else if (ae < 0.004) gl_FragColor = vec4(mix(color, white, 0.4), alpha);
+// else if (ae < 0.005) gl_FragColor = vec4(mix(color, white, 0.2), alpha);
