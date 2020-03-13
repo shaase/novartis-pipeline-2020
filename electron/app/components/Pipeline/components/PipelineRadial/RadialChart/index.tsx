@@ -1,14 +1,17 @@
 import React, { MouseEvent, TouchEvent, useEffect, useRef } from "react";
+import { ScaleLinear, ScalePower, scaleLinear, scaleSqrt } from "d3-scale";
+import { interpolate as d3interpolate } from "d3-interpolate";
 import { startGL, updateGL, updateGLInteractor, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc } from "../../../types";
 import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray, lighten } from "../../../utils";
-import { subscribe, update, unsubscribe, xScale, yScale } from "./radial-state";
+import { subscribe, unsubscribe, interpolate } from "./radial-state";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
-// import RadialLabels from "../RadialLabels";
+import RadialLabels from "../RadialLabels";
 import styles from "./index.module.scss";
 
+const empty: number[] = [];
 type Card = { file: string; label: string };
 
 type Props = {
@@ -26,18 +29,24 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
 
+  const prevPath = useRef("");
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const interactor = useRef<HTMLCanvasElement | null>(null);
   const arcMap = useRef<Map<string, RadialNode>>(new Map());
   const selectedNode = useRef<RadialNode | undefined>(undefined);
   const segmentsRef = useRef<RadialNode[]>([]);
+  const xScale = useRef<ScaleLinear<number, number>>(scaleLinear());
+  const yScale = useRef<ScalePower<number, number>>(scaleSqrt());
+  const xd = useRef(d3interpolate(xScale.current.domain(), empty));
+  const yd = useRef(d3interpolate(xScale.current.domain(), empty));
+  const yr = useRef(d3interpolate(xScale.current.domain(), empty));
 
   const nodeArc = (node: RadialNode): NodeArc => {
     const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, opacity = 1 } = node;
-    const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x0)));
-    const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x1)));
-    let innerRadius = Math.max(0, yScale(y0)) - 2;
-    const outerRadius = Math.max(0, yScale(y1));
+    const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
+    const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));
+    let innerRadius = Math.max(0, yScale.current(y0)) - 2;
+    const outerRadius = Math.max(0, yScale.current(y1));
     const diff = outerRadius - innerRadius;
     if (diff > 4 && diff < 20) innerRadius -= 10;
 
@@ -73,7 +82,9 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     }
   };
 
-  const onInterpolation = (): void => {
+  const onInterpolation = (i: number): void => {
+    xScale.current.domain(xd.current(i));
+    yScale.current.domain(yd.current(i)).range(yr.current(i));
     const arcs = segmentsRef.current.map((node: RadialNode) => nodeArc(node));
     const buttons = segmentsRef.current.map((node: RadialNode) => btnArc(node));
     if (selectedNode.current !== undefined) arcs.unshift(selectedArc(selectedNode.current));
@@ -95,7 +106,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
       const key = `${pixel[0]}-${pixel[1]}-${pixel[2]}`;
       const node = arcMap.current.get(key);
       selectedNode.current = node;
-      onInterpolation();
+      onInterpolation(1);
     }
   };
 
@@ -145,8 +156,20 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
   if (data.segments.length > 0) {
     segmentsRef.current = data.segments;
-    update(path, xDomain, xRange, yDomain, yRange);
+    if (xScale.current.domain().length === 0) {
+      xScale.current.domain(xDomain).range(xRange);
+      yScale.current.domain(yDomain).range(yRange);
+    } else if (prevPath.current !== path) {
+      xd.current = d3interpolate(xScale.current.domain(), xDomain);
+      yd.current = d3interpolate(yScale.current.domain(), yDomain);
+      yr.current = d3interpolate(yScale.current.range(), yRange);
+      xScale.current.domain(xd.current(0)).range(xRange);
+      yScale.current.domain(yd.current(0)).range(yr.current(0));
+      prevPath.current = path;
+    }
+
     buildMap();
+    interpolate();
   }
 
   useEffect(() => {
@@ -191,7 +214,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
         />
       )}
 
-      {/* {!noData && <RadialLabels path={path} canvasSize={width} labels={labels} />} */}
+      {!noData && <RadialLabels size={size} labels={labels} />}
     </div>
   );
 };

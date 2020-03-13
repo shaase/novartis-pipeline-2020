@@ -29,6 +29,7 @@ const rules = {
   "no-bitwise": "off",
   "no-nested-ternary": "off",
   "no-prototype-builtins": "off",
+  "no-param-reassign": "off",
   "object-curly-newline": "off",
   "react/button-has-type": "off",
   "react/destructuring-assignment": "off",

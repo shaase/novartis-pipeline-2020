@@ -1,5 +1,5 @@
 import { ScaleLinear, ScalePower } from "d3-scale";
-import { RadialNode, RadialArc, Origin } from "../../../types";
+import { RadialNode, RadialArc } from "../../../types";
 import { textDisplay } from "./text-display";
 
 export const labelArc = (
@@ -9,21 +9,24 @@ export const labelArc = (
   yScale: ScalePower<number, number>,
 ): RadialArc => {
   const { x0 = 0, x1 = 0, y0 = 0, y1 = 0 } = node;
-  const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x0)));
-  const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x1)));
+  const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x0))) - Math.PI / 2;
+  const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x1))) - Math.PI / 2;
   const centerAngle = startAngle + (endAngle - startAngle) / 2;
 
-  const innerRadius = Math.max(0, yScale(y0));
-  const outerRadius = Math.max(0, yScale(y1));
+  // window.devicePixelRatio
+  const innerRadius = Math.max(0, yScale(y0)) * window.devicePixelRatio;
+  const outerRadius = Math.max(0, yScale(y1)) * window.devicePixelRatio;
   const centerRadius = innerRadius + (outerRadius - innerRadius) / 2;
 
-  const centerX = centerRadius * Math.cos(centerAngle);
-  const centerY = centerRadius * Math.sin(centerAngle);
-  const centroid: Origin = { x: centerX, y: centerY };
-
-  const length = (endAngle - startAngle) * centerRadius;
-  const width = outerRadius - innerRadius;
+  const length = ((endAngle - startAngle) * centerRadius) / window.devicePixelRatio;
+  const width = (outerRadius - innerRadius) / window.devicePixelRatio;
   const display = textDisplay(node, path, length, width);
+
+  if (node.route === "Content/Tumors/Heme/Malignant/Leukemia") {
+    // need to set at 789,789
+
+    console.log(length, width);
+  }
 
   return {
     startAngle,
@@ -34,7 +37,6 @@ export const labelArc = (
     centerRadius,
     length,
     width,
-    centroid,
     display,
   };
 };

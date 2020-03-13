@@ -147,7 +147,6 @@ export interface RadialArc extends DefaultArcObject {
   centerRadius: number;
   length: number;
   width: number;
-  centroid: Origin;
   display: string;
 }
 
