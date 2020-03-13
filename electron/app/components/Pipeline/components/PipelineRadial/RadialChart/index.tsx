@@ -5,14 +5,15 @@ import { startGL, updateGL, updateGLInteractor, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc, LabelArc } from "../../../types";
 import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray, lighten } from "../../../utils";
-import { textDisplay } from "../RadialLabels/text-display";
+import { textDisplay } from "./text-display";
+import formatRoute from "./format-route";
+import updateLabels from "./update-labels";
 import { subscribe, unsubscribe, interpolate } from "./radial-state";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
 import styles from "./index.module.scss";
 
 const empty: number[] = [];
-type Card = { file: string; label: string };
 
 type Props = {
   isVisible: boolean;
@@ -21,35 +22,6 @@ type Props = {
   phases: number[];
   data: RadialData;
   onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
-};
-
-const wrapText = (context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number): void => {
-  const words = text.split(" ");
-  let line = "";
-  const lineHeight = 18 * 1.286; // a good approx for 10-18px sizes
-
-  context.font = "18px sans-serif";
-  context.textBaseline = "top";
-
-  for (let n = 0; n < words.length; n += 1) {
-    const testLine = `${line + words[n]} `;
-    const metrics = context.measureText(testLine);
-    const testWidth = metrics.width;
-    if (testWidth > maxWidth) {
-      context.fillText(line, x, y);
-      if (n < words.length - 1) {
-        line = `${words[n]} `;
-        y += lineHeight;
-      }
-    } else {
-      line = testLine;
-    }
-  }
-
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.fillStyle = "#FFFFFF";
-  context.fillText(line, x, y);
 };
 
 const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
@@ -105,7 +77,6 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     const innerRadius = Math.max(0, yScale.current(y0)) * window.devicePixelRatio;
     const outerRadius = Math.max(0, yScale.current(y1)) * window.devicePixelRatio;
     const centerRadius = innerRadius + (outerRadius - innerRadius) / 2;
-
     const length = ((endAngle - startAngle) * centerRadius) / window.devicePixelRatio;
     const w = (outerRadius - innerRadius) / window.devicePixelRatio;
     const display = textDisplay(node, path, length, width);
@@ -139,26 +110,6 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     }
   };
 
-  const updateLabels = (arcs: LabelArc[]): void => {
-    if (labels.current !== null) {
-      const context = labels.current.getContext("2d");
-      if (context !== null) {
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        context.beginPath();
-
-        arcs.forEach((arc: LabelArc) => {
-          const { text, centerAngle, centerRadius, display, width: w, length } = arc;
-          const x = 789 + centerRadius * Math.cos(centerAngle);
-          const y = 789 + centerRadius * Math.sin(centerAngle);
-
-          if (display !== "none" && w > 10 && length > 10) {
-            wrapText(context, text, x, y, length);
-          }
-        });
-      }
-    }
-  };
-
   const onInterpolation = (i: number): void => {
     xScale.current.domain(xd.current(i));
     yScale.current.domain(yd.current(i)).range(yr.current(i));
@@ -168,7 +119,13 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     if (selectedNode.current !== undefined) arcs.unshift(selectedArc(selectedNode.current));
     updateGL(arcs);
     updateGLInteractor(buttons);
-    updateLabels(labelArcs);
+
+    if (labels.current !== null) {
+      const context = labels.current.getContext("2d");
+      if (context !== null) {
+        updateLabels(context, labelArcs);
+      }
+    }
   };
 
   const onDown = (e: MouseEvent | TouchEvent): void => {
@@ -191,41 +148,18 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
 
   const onUp = (): void => {
     if (selectedNode.current !== undefined) {
-      const { name, parent, isStudyContainer } = selectedNode.current;
-      let { route } = selectedNode.current;
-      route =
-        isStudyContainer && route.includes("Content/Tumors")
-          ? route
-              .split("/")
-              .slice(0, -1)
-              .join("/")
-          : route;
-
-      let inferredCompound;
-      if (pathRoot === "Compounds") {
-        if (level === 3) {
-          inferredCompound = name;
-        } else if (level === 4) {
-          inferredCompound = parent.name;
-        } else if (level === 5) {
-          inferredCompound = parent.parent.name;
-        }
-      } else if (isStudyContainer) {
-        inferredCompound = name;
-      } else if (level === 7) {
-        inferredCompound = parent.name;
-      }
+      const { route, derivedCompound } = formatRoute(selectedNode.current, pathRoot, level);
 
       if (studyCode !== undefined) {
-        onNavigate(route, inferredCompound);
+        onNavigate(route, derivedCompound);
       } else {
-        const compoundStudies = studiesForPath(route, undefined, inferredCompound);
+        const compoundStudies = studiesForPath(route, undefined, derivedCompound);
 
         if (compoundStudies.length > 1) {
-          onNavigate(route, inferredCompound);
+          onNavigate(route, derivedCompound);
         } else if (compoundStudies.length === 1) {
           const study = compoundStudies[0];
-          onNavigate(study.path, inferredCompound);
+          onNavigate(study.path, derivedCompound);
         }
       }
 

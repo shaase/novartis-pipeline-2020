@@ -1,5 +1,3 @@
-import { DefaultArcObject } from "d3-shape";
-
 export interface PipelineItem {
   type?: string;
   name?: string;
@@ -126,29 +124,6 @@ export interface RadialNode {
   isStudyContainer: boolean;
 }
 
-export interface RadialText {
-  lines: (JSX.Element | JSX.Element[])[];
-  fontSize: number;
-  offsets: number[];
-}
-
-export interface Origin {
-  x: number;
-  y: number;
-}
-
-export interface RadialArc extends DefaultArcObject {
-  startAngle: number;
-  endAngle: number;
-  centerAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  centerRadius: number;
-  length: number;
-  width: number;
-  display: string;
-}
-
 export interface NodeArc {
   theta: number[];
   radius: number[];
@@ -167,33 +142,4 @@ export interface LabelArc {
   length: number;
   width: number;
   display: string;
-}
-
-export interface NodeLabelLine {
-  id: string;
-  // text: string;
-  elements: JSX.Element | JSX.Element[];
-  curve: string;
-  anchor: string;
-  transform: string;
-}
-
-export interface NodeLabel {
-  node: RadialNode;
-  display: string;
-  color: string;
-  opacity: number;
-  startArc: RadialArc;
-  endArc: RadialArc;
-  lines: NodeLabelLine[];
-  fontSize: number;
-  offsets: number[];
-}
-
-export interface CurvePosition {
-  start: number;
-  end: number;
-  center: number;
-  size: number;
-  isUnder: boolean;
 }
