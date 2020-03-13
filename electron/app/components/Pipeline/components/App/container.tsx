@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useRef, useState } from "react";
-// import FPSStats from "react-fps-stats";
+import FPSStats from "react-fps-stats";
 import { defaultPhases } from "../../data";
 import { FilterContext, PipelineContext } from "../../state";
 import { WorkerData } from "../../types";
@@ -93,7 +93,7 @@ const AppContainer: React.FC = () => {
           <Definitions />
           <Lightbox />
           <div className={styles.topShadow} />
-          {/* <FPSStats /> */}
+          <FPSStats />
         </div>
       </div>
     </div>

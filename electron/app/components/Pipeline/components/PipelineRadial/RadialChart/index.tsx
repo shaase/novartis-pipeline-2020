@@ -6,7 +6,7 @@ import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray, lighten } from
 import { subscribe, update, unsubscribe, xScale, yScale } from "./radial-state";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
-import RadialLabels from "../RadialLabels";
+// import RadialLabels from "../RadialLabels";
 import styles from "./index.module.scss";
 
 type Card = { file: string; label: string };
@@ -191,7 +191,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
         />
       )}
 
-      {!noData && <RadialLabels path={path} canvasSize={width} labels={labels} />}
+      {/* {!noData && <RadialLabels path={path} canvasSize={width} labels={labels} />} */}
     </div>
   );
 };
