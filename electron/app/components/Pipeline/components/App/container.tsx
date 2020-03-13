@@ -53,7 +53,6 @@ const AppContainer: React.FC = () => {
   }
 
   const { tableData, radialData, bubbleData } = workerData;
-  console.log(tableData);
   const appHeader = useMemo(() => <Header path={tableData.path} />, [tableData]);
 
   const pipelineTable = useMemo(

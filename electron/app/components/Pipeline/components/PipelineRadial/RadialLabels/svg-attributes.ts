@@ -54,7 +54,7 @@ export const labelTransform = (
   if (Number.isNaN(startAngle)) return "translate(0, 0) rotate(-90) rotate(0)";
 
   const isRight = centerAngle < Math.PI;
-  const rDiff = lineRotation(index, length, fontSize, startAngle, endAngle, isRight);
+  const rDiff = lineRotation(index, length, startAngle, endAngle, isRight);
   const { x, y } = centroid;
   const rot = isRight ? rDiff : rDiff + Math.PI;
   const style = `translate(${x}, ${y}) rotate(-90) rotate(${(rot * 180) / Math.PI})`;

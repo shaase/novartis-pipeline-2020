@@ -1,11 +1,4 @@
-const lineRotation = (
-  index: number,
-  length: number,
-  fontSize: number,
-  start: number,
-  end: number,
-  isRight: boolean,
-): number => {
+const lineRotation = (index: number, length: number, start: number, end: number, isRight: boolean): number => {
   let rDiff = start / 2 + end / 2;
   const mod = isRight ? 1 : -1;
 
@@ -19,7 +12,7 @@ const lineRotation = (
     if (index === 0) {
       rDiff -= 0.035 * mod;
     } else if (index === 1) {
-      // centered
+      // at center
     } else {
       rDiff += 0.035 * mod;
     }
@@ -39,7 +32,7 @@ const lineRotation = (
     } else if (index === 1) {
       rDiff -= 0.035 * mod;
     } else if (index === 2) {
-      // centered
+      // at center
     } else if (index === 3) {
       rDiff += 0.035 * mod;
     } else {
