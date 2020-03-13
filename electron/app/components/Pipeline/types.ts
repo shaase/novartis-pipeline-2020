@@ -73,6 +73,7 @@ export interface Bubble {
 }
 
 export interface TableData {
+  path: string;
   sections: PipelineItem[];
   allChildren: PipelineItem[];
   studyCode: string;

@@ -7,8 +7,10 @@ import imgNext from "../../../../images/pipeline/next.svg";
 import novartis from "../../../../images/pipeline/novartis.svg";
 import styles from "./index.module.scss";
 
-const AppHeader: React.FC = () => {
-  const { path, compound, history, nextHistory, onNavigate, onBack, onNext, onReset } = useContext(PipelineContext);
+type Props = { path: string };
+
+const AppHeader: React.FC<Props> = ({ path }: Props) => {
+  const { compound, history, nextHistory, onNavigate, onBack, onNext, onReset } = useContext(PipelineContext);
 
   return (
     <div className={styles.header}>

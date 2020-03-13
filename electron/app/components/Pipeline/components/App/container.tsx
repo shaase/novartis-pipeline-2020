@@ -15,7 +15,7 @@ import Lightbox from "../Lightbox";
 import styles from "./index.module.scss";
 
 const defaultData: WorkerData = {
-  tableData: { sections: [], allChildren: [], studyCode: "", cards: [] },
+  tableData: { path: "Content/Tumors", sections: [], allChildren: [], studyCode: "", cards: [] },
   radialData: {
     segments: [],
     labels: [],
@@ -53,6 +53,9 @@ const AppContainer: React.FC = () => {
   }
 
   const { tableData, radialData, bubbleData } = workerData;
+  console.log(tableData);
+  const appHeader = useMemo(() => <Header path={tableData.path} />, [tableData]);
+
   const pipelineTable = useMemo(
     () => <PipelineTable scale={scale} path={path} compound={compound} data={tableData} onNavigate={onNavigate} />,
     [tableData],
@@ -82,7 +85,7 @@ const AppContainer: React.FC = () => {
       {/* {idlePaths.length > 0 && <Idler paths={idlePaths} />} */}
 
       <div className={styles.pipeline}>
-        <Header />
+        {appHeader}
         <div className={styles.panels}>
           {pipelineTable}
           {pipelineRadial}

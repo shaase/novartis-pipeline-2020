@@ -21,7 +21,7 @@ self.addEventListener(
       }
     }
 
-    self.postMessage({ sections, allChildren, studyCode, cards });
+    self.postMessage({ path, sections, allChildren, studyCode, cards });
   },
   false,
 );
