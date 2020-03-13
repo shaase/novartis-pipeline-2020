@@ -12,7 +12,7 @@ const lineOffset = (index: number, length: number, fontSize: number, isUnder: bo
     if (index === 0) {
       yOffset -= fontSize * mod;
     } else if (index === 1) {
-      // no modification;
+      // at center
     } else {
       yOffset += fontSize * mod;
     }
@@ -32,7 +32,7 @@ const lineOffset = (index: number, length: number, fontSize: number, isUnder: bo
     } else if (index === 1) {
       yOffset -= fontSize * 1.2 * mod;
     } else if (index === 2) {
-      // no modification;
+      // at center
     } else if (index === 3) {
       yOffset += fontSize * 1.2 * mod;
     } else {

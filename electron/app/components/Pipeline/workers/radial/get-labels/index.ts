@@ -1,10 +1,6 @@
 import { scaleLinear, scaleSqrt } from "d3-scale";
-import { interpolate as d3interpolate } from "d3-interpolate";
-import { RadialNode, NodeLabel, CurvePosition, NodeLabelLine } from "../../../types";
-import { itemsForPath } from "../../../utils";
+import { RadialNode, NodeLabel, NodeLabelLine } from "../../../types";
 import { labelArc } from "./label-arc";
-
-import sizedText from "./sized-text";
 
 const xScale = scaleLinear();
 const yScale = scaleSqrt();
@@ -36,13 +32,20 @@ export const getLabels = (
     const endArc = labelArc(node, path, xScale, yScale);
     const { display } = endArc;
 
-    return { display, color: "#000000", opacity, startArc, endArc };
+    const lines: NodeLabelLine[] = [];
+    const fontSize = 18;
+    const offsets: number[] = [];
+
+    return { node, display, color: "#FFFFFF", opacity, startArc, endArc, lines, fontSize, offsets };
   });
 
   // filter out hidden node labels
   const filtered: NodeLabel[] = labels.filter(
     (label: NodeLabel) => label.startArc.display !== "none" || label.endArc.display !== "none",
   );
+
+  prevXScale.domain(xDomain).range(xRange);
+  prevYScale.domain(yDomain).range(yRange);
 
   return filtered;
 };

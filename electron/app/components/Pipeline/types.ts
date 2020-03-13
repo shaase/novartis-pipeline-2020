@@ -81,7 +81,7 @@ export interface TableData {
 
 export interface RadialData {
   segments: RadialNode[];
-  labels: RadialNode[];
+  labels: NodeLabel[];
   xDomain: number[];
   xRange: number[];
   yDomain: number[];
@@ -140,8 +140,10 @@ export interface Origin {
 export interface RadialArc extends DefaultArcObject {
   startAngle: number;
   endAngle: number;
+  centerAngle: number;
   innerRadius: number;
   outerRadius: number;
+  centerRadius: number;
   length: number;
   width: number;
   centroid: Origin;
@@ -165,14 +167,15 @@ export interface NodeLabelLine {
 }
 
 export interface NodeLabel {
+  node: RadialNode;
   display: string;
   color: string;
   opacity: number;
   startArc: RadialArc;
   endArc: RadialArc;
-  // lines: NodeLabelLine[];
-  // fontSize: number;
-  // offsets: number[];
+  lines: NodeLabelLine[];
+  fontSize: number;
+  offsets: number[];
 }
 
 export interface CurvePosition {
@@ -181,10 +184,4 @@ export interface CurvePosition {
   center: number;
   size: number;
   isUnder: boolean;
-}
-
-export interface SVGAttributes {
-  curve: string;
-  anchor: string;
-  transform: string;
 }
