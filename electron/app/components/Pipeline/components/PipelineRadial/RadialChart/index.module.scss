@@ -47,6 +47,15 @@
   pointer-events: none;
 }
 
+.labels {
+  position: absolute;
+  top: -1px;
+  left: 84px;
+  width: 787px;
+  height: 787px;
+  pointer-events: none;
+}
+
 .interactor {
   @extend .canvas;
   pointer-events: all;

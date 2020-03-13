@@ -157,6 +157,19 @@ export interface NodeArc {
   alpha: number;
 }
 
+export interface LabelArc {
+  text: string;
+  startAngle: number;
+  endAngle: number;
+  centerAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  centerRadius: number;
+  length: number;
+  width: number;
+  display: string;
+}
+
 export interface NodeLabelLine {
   id: string;
   // text: string;

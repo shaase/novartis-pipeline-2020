@@ -16,7 +16,7 @@ export const unsubscribe = (callback: (n: number) => void): void => {
 const tick = (): void => {
   if (iterator < 1) {
     const now = Date.now();
-    const diff = (now - startTime) / 4000;
+    const diff = (now - startTime) / 500;
     iterator = Math.min(1, diff);
 
     if (iterator >= 0.5 && iterator < 0.51) {

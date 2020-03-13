@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { interpolate as d3interpolate } from "d3-interpolate";
-import { NodeLabel } from "../../../types";
-import { subscribe, unsubscribe } from "../RadialChart/radial-state";
+import { RadialNode, NodeLabel } from "../../../types";
+// import { subscribe, unsubscribe } from "../RadialChart/radial-state";
 import styles from "./index.module.scss";
 
 type Props = { size: number; labels: NodeLabel[] };
@@ -39,7 +39,7 @@ const RadialLabels: React.FC<Props> = ({ size, labels }: Props) => {
   const labelsRef = useRef<NodeLabel[]>([]);
   const canvas = useRef<HTMLCanvasElement | null>(null);
 
-  const onInterpolation = (i: number): void => {
+  const onInterpolation = (nodes: RadialNode): void => {
     if (canvas.current !== null) {
       const context = canvas.current.getContext("2d");
       if (context !== null) {
@@ -78,12 +78,14 @@ const RadialLabels: React.FC<Props> = ({ size, labels }: Props) => {
     labelsRef.current = labels;
   }
 
-  useEffect(() => {
-    subscribe(onInterpolation);
-    return () => {
-      unsubscribe(onInterpolation);
-    };
-  }, []);
+  useEffect(
+    () =>
+      // subscribe(onInterpolation);
+      () => {
+        // unsubscribe(onInterpolation);
+      },
+    [],
+  );
 
   return <canvas className={styles.canvas} width={size} height={size} ref={canvas} />;
 };

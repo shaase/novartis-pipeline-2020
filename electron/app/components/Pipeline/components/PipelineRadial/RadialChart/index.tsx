@@ -3,12 +3,12 @@ import { ScaleLinear, ScalePower, scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
 import { startGL, updateGL, updateGLInteractor, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
-import { RadialNode, RadialData, NodeArc } from "../../../types";
+import { RadialNode, RadialData, NodeArc, LabelArc } from "../../../types";
 import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray, lighten } from "../../../utils";
+import { textDisplay } from "../RadialLabels/text-display";
 import { subscribe, unsubscribe, interpolate } from "./radial-state";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
-import RadialLabels from "../RadialLabels";
 import styles from "./index.module.scss";
 
 const empty: number[] = [];
@@ -23,14 +23,44 @@ type Props = {
   onNavigate: (definedPath: string, definedCompound?: string, idling?: boolean) => void;
 };
 
+const wrapText = (context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number): void => {
+  const words = text.split(" ");
+  let line = "";
+  const lineHeight = 18 * 1.286; // a good approx for 10-18px sizes
+
+  context.font = "18px sans-serif";
+  context.textBaseline = "top";
+
+  for (let n = 0; n < words.length; n += 1) {
+    const testLine = `${line + words[n]} `;
+    const metrics = context.measureText(testLine);
+    const testWidth = metrics.width;
+    if (testWidth > maxWidth) {
+      context.fillText(line, x, y);
+      if (n < words.length - 1) {
+        line = `${words[n]} `;
+        y += lineHeight;
+      }
+    } else {
+      line = testLine;
+    }
+  }
+
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillStyle = "#FFFFFF";
+  context.fillText(line, x, y);
+};
+
 const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data, onNavigate }: Props) => {
-  const { segments, labels, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
+  const { segments, xDomain, xRange, yDomain, yRange, studyCode, width } = data;
   const { root: pathRoot, level } = itemsForPath(path);
   const studies = studiesForPathAndPhases(path, phases, compound);
   const noData = studies.length === 0;
 
   const prevPath = useRef("");
   const canvas = useRef<HTMLCanvasElement | null>(null);
+  const labels = useRef<HTMLCanvasElement | null>(null);
   const interactor = useRef<HTMLCanvasElement | null>(null);
   const arcMap = useRef<Map<string, RadialNode>>(new Map());
   const selectedNode = useRef<RadialNode | undefined>(undefined);
@@ -67,6 +97,33 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     return { theta, radius, color, alpha };
   };
 
+  const labelArc = (node: RadialNode): LabelArc => {
+    const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, name: text } = node;
+    const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0))) - Math.PI / 2;
+    const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1))) - Math.PI / 2;
+    const centerAngle = startAngle + (endAngle - startAngle) / 2;
+    const innerRadius = Math.max(0, yScale.current(y0)) * window.devicePixelRatio;
+    const outerRadius = Math.max(0, yScale.current(y1)) * window.devicePixelRatio;
+    const centerRadius = innerRadius + (outerRadius - innerRadius) / 2;
+
+    const length = ((endAngle - startAngle) * centerRadius) / window.devicePixelRatio;
+    const w = (outerRadius - innerRadius) / window.devicePixelRatio;
+    const display = textDisplay(node, path, length, width);
+
+    return {
+      text,
+      startAngle,
+      endAngle,
+      centerAngle,
+      innerRadius,
+      outerRadius,
+      centerRadius,
+      length,
+      width: w,
+      display,
+    };
+  };
+
   const selectedArc = (node: RadialNode): NodeArc => {
     const { theta, radius, alpha } = nodeArc(node);
     const color = hexToRgbArray(lighten(node.fill || "#FFFFFF", 0.4));
@@ -82,14 +139,36 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     }
   };
 
+  const updateLabels = (arcs: LabelArc[]): void => {
+    if (labels.current !== null) {
+      const context = labels.current.getContext("2d");
+      if (context !== null) {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        context.beginPath();
+
+        arcs.forEach((arc: LabelArc) => {
+          const { text, centerAngle, centerRadius, display, width: w, length } = arc;
+          const x = 789 + centerRadius * Math.cos(centerAngle);
+          const y = 789 + centerRadius * Math.sin(centerAngle);
+
+          if (display !== "none" && w > 10 && length > 10) {
+            wrapText(context, text, x, y, length);
+          }
+        });
+      }
+    }
+  };
+
   const onInterpolation = (i: number): void => {
     xScale.current.domain(xd.current(i));
     yScale.current.domain(yd.current(i)).range(yr.current(i));
     const arcs = segmentsRef.current.map((node: RadialNode) => nodeArc(node));
     const buttons = segmentsRef.current.map((node: RadialNode) => btnArc(node));
+    const labelArcs = segmentsRef.current.map((node: RadialNode) => labelArc(node));
     if (selectedNode.current !== undefined) arcs.unshift(selectedArc(selectedNode.current));
     updateGL(arcs);
     updateGLInteractor(buttons);
+    updateLabels(labelArcs);
   };
 
   const onDown = (e: MouseEvent | TouchEvent): void => {
@@ -214,7 +293,7 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
         />
       )}
 
-      {!noData && <RadialLabels size={size} labels={labels} />}
+      {!noData && <canvas className={styles.labels} width={size} height={size} ref={labels} />}
     </div>
   );
 };
