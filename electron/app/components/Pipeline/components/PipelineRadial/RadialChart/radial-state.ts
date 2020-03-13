@@ -18,10 +18,6 @@ const tick = (): void => {
     const now = Date.now();
     const diff = (now - startTime) / 500;
     iterator = Math.min(1, diff);
-
-    if (iterator >= 0.5 && iterator < 0.51) {
-      console.log("HALF");
-    }
     subscibers.forEach((cb: { (n: number): void }) => cb(iterator));
     raf = window.requestAnimationFrame(tick);
   }

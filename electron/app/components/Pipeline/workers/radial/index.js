@@ -1,6 +1,5 @@
 const { setHierarchy } = require("./hierarchy");
 const { getFixedNode } = require("./format");
-const { getLabels } = require("./get-labels");
 const Worker = require("./web.worker.js");
 const worker = new Worker();
 
@@ -16,11 +15,9 @@ const getRadialData = (path, compound, phases, width) =>
       const { x0, x1 } = flatRoot[trunc];
       const xDomain = [x0, x1];
       const xRange = [0, 2 * Math.PI];
-      const { yDomain, yRange } = e.data;
-      const labels = getLabels(segments, path, xDomain, xRange, yDomain, yRange);
 
       // radial, yDomain, yRange, cards, studyCode, width
-      resolve({ ...e.data, segments, labels, xDomain, xRange });
+      resolve({ ...e.data, segments, xDomain, xRange });
     };
 
     worker.addEventListener("message", handleEvent);

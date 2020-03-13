@@ -18,7 +18,6 @@ const defaultData: WorkerData = {
   tableData: { path: "Content/Tumors", sections: [], allChildren: [], studyCode: "", cards: [] },
   radialData: {
     segments: [],
-    labels: [],
     xDomain: [],
     xRange: [],
     yDomain: [],
