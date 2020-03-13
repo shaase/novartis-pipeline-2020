@@ -1,8 +1,13 @@
-import { arc } from "d3-shape";
+import { arc, DefaultArcObject } from "d3-shape";
 import { interpolate as d3interpolate } from "d3-interpolate";
 import { NodeLabel } from "../../../types";
 import lineRotation from "./line-rotation";
 import lineOffset from "./line-offset";
+
+const getCurve = arc()
+  .startAngle((d: DefaultArcObject) => d.startAngle)
+  .endAngle((d: DefaultArcObject) => d.endAngle)
+  .outerRadius((d: DefaultArcObject) => d.outerRadius);
 
 export const labelCurve = (
   label: NodeLabel,
@@ -19,13 +24,9 @@ export const labelCurve = (
   const a0 = isUnder ? endAngle : startAngle;
   const a1 = isUnder ? startAngle : endAngle;
   const yOffset = lineOffset(index, length, fontSize, isUnder);
-  const offsetRadius = centerRadius + yOffset;
+  const outerRadius = centerRadius + yOffset;
 
-  const curve = arc()
-    .startAngle(a0)
-    .endAngle(a1)
-    .outerRadius(offsetRadius);
-
+  const curve = getCurve({ startAngle: a0, endAngle: a1, innerRadius: outerRadius, outerRadius });
   return String(curve).replace("LNaN,NaNZ", "");
 };
 
@@ -42,7 +43,6 @@ export const labelAnchor = (label: NodeLabel, pathRoot: string, lines: number): 
 export const labelTransform = (
   label: NodeLabel,
   iterator: number,
-  pathRoot: string,
   index: number,
   length: number,
   fontSize: number,
