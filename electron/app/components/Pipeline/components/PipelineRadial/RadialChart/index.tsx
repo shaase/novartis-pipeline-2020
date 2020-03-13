@@ -4,10 +4,10 @@ import { interpolate as d3interpolate } from "d3-interpolate";
 import { startGL, updateGL, updateGLInteractor, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
 import { RadialNode, RadialData, NodeArc, LabelArc } from "../../../types";
-import { itemsForPath, eventPosition, rotatePoint, hexToRgbArray, lighten } from "../../../utils";
-import { textDisplay } from "./text-display";
+import { itemsForPath, eventPosition, rotatePoint } from "../../../utils";
 import formatRoute from "./format-route";
 import updateLabels from "./update-labels";
+import { nodeArc, btnArc, labelArc, selectedArc } from "./radial-arcs";
 import { subscribe, unsubscribe, interpolate } from "./radial-state";
 import emptyRing from "../../../../../images/pipeline/radial-empty.svg";
 import phaseRing from "../../../../../images/pipeline/phase-ring.svg";
@@ -43,65 +43,6 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const yd = useRef(d3interpolate(xScale.current.domain(), empty));
   const yr = useRef(d3interpolate(xScale.current.domain(), empty));
 
-  const nodeArc = (node: RadialNode): NodeArc => {
-    const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, opacity = 1 } = node;
-    const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0)));
-    const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1)));
-    let innerRadius = Math.max(0, yScale.current(y0)) - 2;
-    const outerRadius = Math.max(0, yScale.current(y1));
-    const diff = outerRadius - innerRadius;
-    if (diff > 4 && diff < 20) innerRadius -= 10;
-
-    const theta = [startAngle, endAngle];
-    const radius = [innerRadius / width, outerRadius / width];
-    const color = hexToRgbArray(node.fill || "#FFFFFF");
-    const alpha = opacity;
-
-    return { theta, radius, color, alpha };
-  };
-
-  const btnArc = (node: RadialNode): NodeArc => {
-    const { theta, radius } = nodeArc(node);
-    const { rgbArray } = node;
-    const color = [rgbArray[0] / 255, rgbArray[1] / 255, 0];
-    const alpha = 1;
-
-    return { theta, radius, color, alpha };
-  };
-
-  const labelArc = (node: RadialNode): LabelArc => {
-    const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, name: text } = node;
-    const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x0))) - Math.PI / 2;
-    const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale.current(x1))) - Math.PI / 2;
-    const centerAngle = startAngle + (endAngle - startAngle) / 2;
-    const innerRadius = Math.max(0, yScale.current(y0)) * window.devicePixelRatio;
-    const outerRadius = Math.max(0, yScale.current(y1)) * window.devicePixelRatio;
-    const centerRadius = innerRadius + (outerRadius - innerRadius) / 2;
-    const length = ((endAngle - startAngle) * centerRadius) / window.devicePixelRatio;
-    const w = (outerRadius - innerRadius) / window.devicePixelRatio;
-    const display = textDisplay(node, path, length, width);
-
-    return {
-      text,
-      startAngle,
-      endAngle,
-      centerAngle,
-      innerRadius,
-      outerRadius,
-      centerRadius,
-      length,
-      width: w,
-      display,
-    };
-  };
-
-  const selectedArc = (node: RadialNode): NodeArc => {
-    const { theta, radius, alpha } = nodeArc(node);
-    const color = hexToRgbArray(lighten(node.fill || "#FFFFFF", 0.4));
-
-    return { theta, radius, color, alpha };
-  };
-
   const buildMap = (): void => {
     if (arcMap.current.size === 0) {
       segments.forEach((node: RadialNode) => {
@@ -113,10 +54,17 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
   const onInterpolation = (i: number): void => {
     xScale.current.domain(xd.current(i));
     yScale.current.domain(yd.current(i)).range(yr.current(i));
-    const arcs = segmentsRef.current.map((node: RadialNode) => nodeArc(node));
-    const buttons = segmentsRef.current.map((node: RadialNode) => btnArc(node));
-    const labelArcs = segmentsRef.current.map((node: RadialNode) => labelArc(node));
-    if (selectedNode.current !== undefined) arcs.unshift(selectedArc(selectedNode.current));
+    const arcs = segmentsRef.current.map((node: RadialNode) => nodeArc(node, width, xScale.current, yScale.current));
+    const buttons = segmentsRef.current.map((node: RadialNode) => btnArc(node, width, xScale.current, yScale.current));
+    const labelArcs = segmentsRef.current.map((node: RadialNode) =>
+      labelArc(node, path, xScale.current, yScale.current),
+    );
+
+    if (selectedNode.current !== undefined) {
+      const selected = selectedArc(selectedNode.current, width, xScale.current, yScale.current);
+      arcs.unshift(selected);
+    }
+
     updateGL(arcs);
     updateGLInteractor(buttons);
 
