@@ -55,6 +55,9 @@ export const labelArc = (
   const length = ((endAngle - startAngle) * centerRadius) / window.devicePixelRatio;
   const width = (outerRadius - innerRadius) / window.devicePixelRatio;
   const display = textDisplay(node, path, length, width);
+  if (node.route === "Content/Tumors/Solid Tumors/*/*/Liver") {
+    console.log(display, "length", length, "width", width);
+  }
 
   return {
     text,

@@ -3,9 +3,9 @@ import { LabelArc } from "../../../types";
 const drawLabel = (context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number): void => {
   const words = text.split(" ");
   let line = "";
-  const lineHeight = 18 * 1.286; // a good approx for 10-18px sizes
+  const lineHeight = 24 * 1.286; // a good approx for 10-18px sizes
 
-  context.font = "18px sans-serif";
+  context.font = "24px sans-serif";
   context.textBaseline = "top";
 
   for (let n = 0; n < words.length; n += 1) {
@@ -35,12 +35,12 @@ const updateLabels = (context: CanvasRenderingContext2D, arcs: LabelArc[]): void
     context.beginPath();
 
     arcs.forEach((arc: LabelArc) => {
-      const { text, centerAngle, centerRadius, display, width: w, length } = arc;
+      const { text, centerAngle, centerRadius, display, width, length } = arc;
       const x = 789 + centerRadius * Math.cos(centerAngle);
       const y = 789 + centerRadius * Math.sin(centerAngle);
 
-      if (display !== "none" && w > 10 && length > 10) {
-        drawLabel(context, text, x, y, length);
+      if (display !== "none" && width > 10 && length > 10) {
+        drawLabel(context, text.charAt(0), x, y, length);
       }
     });
   }
