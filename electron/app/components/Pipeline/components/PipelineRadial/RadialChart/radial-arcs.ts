@@ -1,7 +1,7 @@
 import { ScaleLinear, ScalePower } from "d3-scale";
 import { RadialNode, NodeArc, LabelArc } from "../../../types";
 import { hexToRgbArray, lighten } from "../../../utils";
-import { textDisplay } from "./text-display";
+import { textDisplay } from "./labels/text-display";
 
 export const nodeArc = (
   node: RadialNode,
@@ -55,9 +55,6 @@ export const labelArc = (
   const length = ((endAngle - startAngle) * centerRadius) / window.devicePixelRatio;
   const width = (outerRadius - innerRadius) / window.devicePixelRatio;
   const display = textDisplay(node, path, length, width);
-  if (node.route === "Content/Tumors/Solid Tumors/*/*/Liver") {
-    console.log(display, "length", length, "width", width);
-  }
 
   return {
     text,

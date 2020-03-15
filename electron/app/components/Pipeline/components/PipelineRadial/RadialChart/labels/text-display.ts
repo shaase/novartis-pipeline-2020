@@ -1,5 +1,5 @@
-import { RadialNode } from "../../../types";
-import { itemsForPath, slicePath } from "../../../utils";
+import { RadialNode } from "../../../../types";
+import { itemsForPath, slicePath } from "../../../../utils";
 
 export const textDisplay = (node: RadialNode, path: string, length: number, width: number): string => {
   const { route, name = "", parent, depth = 0, isStudyContainer } = node;
@@ -22,7 +22,7 @@ export const textDisplay = (node: RadialNode, path: string, length: number, widt
   // hide all child labels when viewing root of Compounds
   if (root === "Compounds" && level < 2 && depth > 2) return "none";
 
-  // hide if arc length is thin
+  // hide if arc length is short
   if (length < 25) return "none";
 
   if (!parent.isEmpty && width < 1) return "none";

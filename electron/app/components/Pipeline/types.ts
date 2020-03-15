@@ -143,3 +143,7 @@ export interface LabelArc {
   width: number;
   display: string;
 }
+
+export interface Context extends CanvasRenderingContext2D {
+  justAnAlias?: boolean;
+}
