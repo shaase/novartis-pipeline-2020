@@ -98,7 +98,10 @@ const RadialChart: React.FC<Props> = ({ isVisible, path, compound, phases, data,
     if (selectedNode.current !== undefined) {
       const { route, derivedCompound } = formatRoute(selectedNode.current, pathRoot, level);
 
-      if (studyCode !== undefined) {
+      if (route === path) {
+        selectedNode.current = undefined;
+        onInterpolation(1);
+      } else if (studyCode !== undefined) {
         onNavigate(route, derivedCompound);
       } else {
         const compoundStudies = studiesForPath(route, undefined, derivedCompound);

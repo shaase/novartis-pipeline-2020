@@ -91,8 +91,6 @@ const updateLabels = (context: Context, arcs: LabelArc[]): void => {
         if (display === "inline" && text === "Non-Hodgkin's Lymphoma") labelText = "NHL";
         if (display === "curved-capped") labelText = labelText.toUpperCase();
 
-        console.log(text, length, width);
-
         layout(context, labelText, color, centerRadius, maxWidth, maxHeight, display, centerAngle);
       }
     });
