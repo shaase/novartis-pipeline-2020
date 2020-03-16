@@ -1,4 +1,4 @@
-import { LabelArc, Context } from "../../../../types";
+import { LabelArc, Context, FormattedText } from "../../../../types";
 
 let canvasWidth = 789;
 
@@ -35,39 +35,46 @@ const rotate = (context: Context, textDisplay: string, angle: number, radius: nu
 
 const layout = (
   context: Context,
-  text: string,
+  formattedName: FormattedText[],
   color: string,
   radius: number,
   maxWidth: number,
   maxHeight: number,
-  textDisplay: string,
+  display: string,
   angle: number,
 ): void => {
-  const words = text.split(" ");
-  let textY = 0;
-  let line = "";
-  const lineHeight = 24 * 1.286;
-  context.save();
+  formattedName.forEach((group: FormattedText) => {
+    const { text } = group;
+    let labelText: string = text;
+    if (display === "inline" && labelText === "Non-Hodgkin's Lymphoma") labelText = "NHL";
+    if (display === "curved-capped") labelText = labelText.toUpperCase();
 
-  rotate(context, textDisplay, angle, radius);
+    const words = text.split(" ");
+    const textY = 0;
+    const line = "";
+    const lineHeight = 24 * 1.286;
+    context.save();
 
-  for (let n = 0; n < words.length; n += 1) {
-    const testLine = `${line + words[n]} `;
-    const metrics = context.measureText(testLine);
-    const testWidth = metrics.width;
-    if (testWidth > maxWidth) {
-      drawLabel(context, text, color);
-      if (n < words.length - 1) {
-        line = `${words[n]} `;
-        textY += lineHeight;
-      }
-    } else {
-      line = testLine;
-    }
-  }
+    rotate(context, display, angle, radius);
 
-  drawLabel(context, text, color);
-  context.restore();
+    // for (let n = 0; n < words.length; n += 1) {
+    //   const testLine = `${line + words[n]} `;
+    //   const metrics = context.measureText(testLine);
+    //   const testWidth = metrics.width;
+    //   if (testWidth > maxWidth) {
+    //     drawLabel(context, text, color);
+    //     if (n < words.length - 1) {
+    //       line = `${words[n]} `;
+    //       textY += lineHeight;
+    //     }
+    //   } else {
+    //     line = testLine;
+    //   }
+    // }
+
+    drawLabel(context, text, color);
+    context.restore();
+  });
 };
 
 const updateLabels = (context: Context, arcs: LabelArc[]): void => {
@@ -79,19 +86,14 @@ const updateLabels = (context: Context, arcs: LabelArc[]): void => {
     context.translate(canvasWidth, canvasWidth);
 
     arcs.forEach((arc: LabelArc) => {
-      const { text, centerAngle, centerRadius, display, width, length, color } = arc;
+      const { formattedName, centerAngle, centerRadius, display, width, length, color } = arc;
 
       if (display !== "none") {
         const maxWidth = display === "inline" ? width - 7 : length - 6;
         const maxHeight = display === "inline" ? length : width;
         // const x = 789 + centerRadius * Math.cos(centerAngle);
         // const y = 789 + centerRadius * Math.sin(centerAngle);
-
-        let labelText = text;
-        if (display === "inline" && text === "Non-Hodgkin's Lymphoma") labelText = "NHL";
-        if (display === "curved-capped") labelText = labelText.toUpperCase();
-
-        layout(context, labelText, color, centerRadius, maxWidth, maxHeight, display, centerAngle);
+        layout(context, formattedName, color, centerRadius, maxWidth, maxHeight, display, centerAngle);
       }
     });
 

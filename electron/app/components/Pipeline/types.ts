@@ -103,10 +103,18 @@ export interface WorkerData {
   bubbleData: BubbleData;
 }
 
+export interface FormattedText {
+  text: string;
+  bold: boolean;
+  italics: boolean;
+  superscript: boolean;
+}
+
 export interface RadialNode {
   parent: RadialNode;
   route: string;
   name: string;
+  formattedName: FormattedText[];
   color: string;
   fill?: string;
   rgbArray: number[];
@@ -132,7 +140,7 @@ export interface NodeArc {
 }
 
 export interface LabelArc {
-  text: string;
+  formattedName: FormattedText[];
   route: string;
   startAngle: number;
   endAngle: number;

@@ -1,4 +1,4 @@
-import { RadialNode } from "../../types";
+import { RadialNode, FormattedText } from "../../types";
 import { itemsForPath } from "../../utils";
 
 const flattenToSubtypes = (list: RadialNode[]): RadialNode[] =>
@@ -77,6 +77,49 @@ export const getFixedNode = (n: RadialNode, index: number, path: string): Radial
   }
 
   node.textOpacity = textOpacity;
+
+  // Formatted Name
+  const formattedName: FormattedText[] = [];
+  let text = "";
+  let bold = false;
+  let italics = false;
+  let superscript = false;
+
+  if (!node.name.includes("<")) {
+    formattedName.push({ text: node.name, bold: false, italics: false, superscript: false });
+  } else {
+    node.name.split(/(?=[\s()<])/g).forEach((word: string) => {
+      const stripped = word.replace(/(<([^>]+)>)/gi, "").replace(/\s/g, "");
+      if (word.includes("<b>") || word.includes("<i>") || word.includes("<sup>")) {
+        if (text.length > 0) {
+          formattedName.push({ text, bold, italics, superscript });
+          text = "";
+        }
+        text += stripped;
+        bold = word.includes("<b>") ? true : bold;
+        italics = word.includes("<i>") ? true : italics;
+        superscript = word.includes("<sup>") ? true : superscript;
+      } else if (word.includes("</b>") || word.includes("</i>") || word.includes("</sup>")) {
+        text += stripped;
+        formattedName.push({ text, bold, italics, superscript });
+        bold = word.includes("</b>") ? false : bold;
+        italics = word.includes("</i>") ? false : italics;
+        superscript = word.includes("</sup>") ? false : superscript;
+        text = "";
+      } else {
+        let spaced = stripped;
+        if (stripped === "+") spaced = ` ${stripped} `;
+        if (stripped.includes("(")) spaced = ` ${stripped}`;
+        text += spaced;
+      }
+    });
+
+    if (text.length > 0) {
+      formattedName.push({ text, bold, italics, superscript });
+    }
+  }
+
+  node.formattedName = formattedName;
 
   return node;
 };

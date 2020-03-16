@@ -1,5 +1,5 @@
 import { ScaleLinear, ScalePower } from "d3-scale";
-import { RadialNode, NodeArc, LabelArc } from "../../../types";
+import { RadialNode, NodeArc, LabelArc, FormattedText } from "../../../types";
 import { hexToRgbArray, lighten } from "../../../utils";
 import { textDisplay } from "./labels/text-display";
 
@@ -45,7 +45,7 @@ export const labelArc = (
   xScale: ScaleLinear<number, number>,
   yScale: ScalePower<number, number>,
 ): LabelArc => {
-  const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, name: text, parent, route } = node;
+  const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, formattedName, parent, route } = node;
   let parentWidth = 0;
 
   if (parent !== null && parent.isEmpty) {
@@ -65,7 +65,7 @@ export const labelArc = (
   const color = node.color || "#FF0000";
 
   return {
-    text,
+    formattedName,
     route,
     startAngle,
     endAngle,
