@@ -30,7 +30,7 @@ export const setHierarchy = data => {
         d.name = d.data.name;
         d.route = d.data.path;
         d.fill = d.data.color;
-        d.color = colorForBackground(d.data.color, "#FFFFFF");
+        d.color = colorForBackground("#FFFFFF", d.data.color);
 
         d.isEmpty =
           d.data.path === "Content/Tumors/Solid Tumors" ||

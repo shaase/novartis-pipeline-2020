@@ -55,6 +55,7 @@ export const labelArc = (
   const length = ((endAngle - startAngle) * centerRadius) / window.devicePixelRatio;
   const width = (outerRadius - innerRadius) / window.devicePixelRatio;
   const display = textDisplay(node, path, length, width);
+  const color = node.color || "#FF0000";
 
   return {
     text,
@@ -67,6 +68,7 @@ export const labelArc = (
     length,
     width,
     display,
+    color,
   };
 };
 

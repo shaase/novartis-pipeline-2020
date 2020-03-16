@@ -142,6 +142,7 @@ export interface LabelArc {
   length: number;
   width: number;
   display: string;
+  color: string;
 }
 
 export interface Context extends CanvasRenderingContext2D {
