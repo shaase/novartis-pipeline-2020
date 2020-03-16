@@ -3,7 +3,7 @@ import { ScaleLinear, ScalePower, scaleLinear, scaleSqrt } from "d3-scale";
 import { interpolate as d3interpolate } from "d3-interpolate";
 import { startGL, updateGL, updateGLInteractor, readGL } from "./glsl";
 import { studiesForPath, studiesForPathAndPhases } from "../../../data";
-import { RadialNode, RadialData } from "../../../types";
+import { RadialNode, RadialData, LabelArc } from "../../../types";
 import { itemsForPath, eventPosition, rotatePoint } from "../../../utils";
 import formatRoute from "./format-route";
 import updateLabels from "./labels/update-labels";

@@ -45,7 +45,14 @@ export const labelArc = (
   xScale: ScaleLinear<number, number>,
   yScale: ScalePower<number, number>,
 ): LabelArc => {
-  const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, name: text } = node;
+  const { x0 = 0, x1 = 0, y0 = 0, y1 = 0, name: text, parent, route } = node;
+  let parentWidth = 0;
+
+  if (parent !== null && parent.isEmpty) {
+    const parentArc = labelArc(parent, path, xScale, yScale);
+    parentWidth = parentArc.width;
+  }
+
   const startAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x0))) - Math.PI / 2;
   const endAngle = Math.max(0, Math.min(2 * Math.PI, xScale(x1))) - Math.PI / 2;
   const centerAngle = startAngle + (endAngle - startAngle) / 2;
@@ -54,11 +61,12 @@ export const labelArc = (
   const centerRadius = innerRadius + (outerRadius - innerRadius) / 2;
   const length = ((endAngle - startAngle) * centerRadius) / window.devicePixelRatio;
   const width = (outerRadius - innerRadius) / window.devicePixelRatio;
-  const display = textDisplay(node, path, length, width);
+  const display = textDisplay(node, path, length, width, parentWidth);
   const color = node.color || "#FF0000";
 
   return {
     text,
+    route,
     startAngle,
     endAngle,
     centerAngle,

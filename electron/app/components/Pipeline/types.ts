@@ -133,6 +133,7 @@ export interface NodeArc {
 
 export interface LabelArc {
   text: string;
+  route: string;
   startAngle: number;
   endAngle: number;
   centerAngle: number;
