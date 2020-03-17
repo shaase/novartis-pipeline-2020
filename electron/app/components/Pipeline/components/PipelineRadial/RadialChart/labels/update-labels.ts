@@ -1,4 +1,5 @@
 import { LabelArc, Context, FormattedText } from "../../../../types";
+import { nodeArc } from "../radial-arcs";
 
 let canvasWidth = 789;
 
@@ -17,20 +18,54 @@ const drawLabel = (context: Context, text: string, color: string): void => {
   context.fillText(text, 0, 0);
 };
 
-const rotate = (context: Context, textDisplay: string, angle: number, radius: number): void => {
+const drawInline = (context: Context, text: string, color: string, angle: number, radius: number): void => {
   const position = anglePosition(angle);
   context.rotate(angle);
   context.translate(radius, 0);
 
-  if (textDisplay === "inline") {
-    if (position.includes("left")) {
-      context.rotate(Math.PI);
-    }
-  } else if (position.includes("top")) {
+  if (position.includes("left")) {
+    context.rotate(Math.PI);
+  }
+
+  drawLabel(context, text, color);
+};
+
+const drawCurve = (context: Context, text: string, color: string, angle: number, radius: number): void => {
+  const position = anglePosition(angle);
+  context.rotate(angle);
+  context.translate(radius, 0);
+  let rotation = angle;
+
+  if (position.includes("top")) {
+    rotation += Math.PI / 2;
     context.rotate(Math.PI / 2);
   } else {
+    rotation += Math.PI / -2;
     context.rotate(Math.PI / -2);
   }
+
+  if (text === "SOLID TUMORS") {
+    const x = radius * Math.cos(angle);
+    const y = radius * Math.sin(angle);
+    console.log(rotation, angle, x, y);
+  }
+
+  for (let i = 0; i < text.length; i += 1) {
+    context.rotate(rotation / text.length);
+    // context.save();
+
+    context.translate(0, -radius);
+    drawLabel(context, text.charAt(i), color);
+    // context.restore();
+  }
+
+  // context.save();
+  // context.rotate((-1 * angle) / 2);
+  // context.rotate((-1 * (angle / text.length)) / 2);
+
+  // context.restore();
+
+  // drawLabel(context, text, color);
 };
 
 const layout = (
@@ -48,31 +83,36 @@ const layout = (
     let labelText: string = text;
     if (display === "inline" && labelText === "Non-Hodgkin's Lymphoma") labelText = "NHL";
     if (display === "curved-capped") labelText = labelText.toUpperCase();
-
-    const words = text.split(" ");
-    const textY = 0;
-    const line = "";
-    const lineHeight = 24 * 1.286;
     context.save();
 
-    rotate(context, display, angle, radius);
+    if (display === "inline") {
+      const words = text.split(" ");
+      const textY = 0;
+      const line = "";
+      const lineHeight = 24 * 1.286;
 
-    // for (let n = 0; n < words.length; n += 1) {
-    //   const testLine = `${line + words[n]} `;
-    //   const metrics = context.measureText(testLine);
-    //   const testWidth = metrics.width;
-    //   if (testWidth > maxWidth) {
-    //     drawLabel(context, text, color);
-    //     if (n < words.length - 1) {
-    //       line = `${words[n]} `;
-    //       textY += lineHeight;
-    //     }
-    //   } else {
-    //     line = testLine;
-    //   }
-    // }
+      // for (let n = 0; n < words.length; n += 1) {
+      //   const testLine = `${line + words[n]} `;
+      //   const metrics = context.measureText(testLine);
+      //   const testWidth = metrics.width;
+      //   if (testWidth > maxWidth) {
+      //     drawLabel(context, text, color);
+      //     if (n < words.length - 1) {
+      //       line = `${words[n]} `;
+      //       textY += lineHeight;
+      //     }
+      //   } else {
+      //     line = testLine;
+      //   }
+      // }
 
-    drawLabel(context, text, color);
+      drawInline(context, labelText, color, angle, radius);
+    } else {
+      // rotate(context, display, angle, radius);
+      // drawCurve(context, text, color, radius, angle);
+      drawCurve(context, labelText, color, angle, radius);
+    }
+
     context.restore();
   });
 };
